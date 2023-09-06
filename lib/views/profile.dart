@@ -98,6 +98,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           UserModel.saveUserDataToHIVE(userModelData);
           Hive.box(miscellaneousDataHIVE)
               .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
+          Hive.box(miscellaneousDataHIVE)
+              .put('membershipExpiry', userModelData.membershipExpiry);
 
           // final UserModel user = UserModel.toModel(
           //     data); // Gives you the data map
@@ -266,7 +268,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     )
                                   : Container()
                               : Container(),
-                          (userModelData.isAwaitingEnrollment &&
+                          (userModelData.isAwaitingEnrollment! &&
                                   userModelData.userType == 'user' &&
                                   userModelData.enrolledGym != null)
                               ? Container(
@@ -358,7 +360,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           profileDataBlock(
                               'Phone', userModelData.phoneNumber!, true),
                           (userModelData.enrolledGym != null &&
-                                  !userModelData.isAwaitingEnrollment)
+                                  !userModelData.isAwaitingEnrollment!)
                               ? Column(children: [
                                   Padding(
                                     padding:
@@ -400,8 +402,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       // indent: 20.w,
                                     ),
                                   ),
-                                  profileDataBlock('MemberShip expiry',
-                                      userModelData.membershipExpiry, false),
+                                  (userModelData.recentRenewedOn != null)
+                                      ? profileDataBlock(
+                                          'Membership renewed on',
+                                          userModelData.recentRenewedOn,
+                                          false)
+                                      : Container(),
+                                  (userModelData.recentRenewedOn != null)
+                                      ? Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.h),
+                                          child: Divider(
+                                            color: color_gt_greenHalfOpacity
+                                                .withOpacity(0.3),
+                                            height: 1.h,
+                                            thickness: 1,
+                                            // endIndent: 10.w,
+                                            // indent: 20.w,
+                                          ),
+                                        )
+                                      : Container(),
+                                  membershipExpiryBlock('MemberShip expiry',
+                                      userModelData.membershipExpiry!, false),
                                   Padding(
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.h),
@@ -565,6 +587,67 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     //await _signOut();
                   },
                   child: Text('Update'),
+                ),
+              )
+            : Container(
+                height: 40.h,
+              ),
+      ],
+    );
+  }
+
+  membershipExpiryBlock(
+      String tagName, DateTime tagData, bool enableUpdateButton) {
+    var expiresOn = DateTime(tagData.year, tagData.month, tagData.day);
+    int days = (expiresOn.difference(DateTime.now()).inHours / 24).round();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 13.h),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: RichText(
+              text: TextSpan(
+                text: (days < 0) ? 'MemberShip expired on :  ' : '$tagName :  ',
+                style: TextStyle(
+                    color: color_gt_green,
+                    fontSize: 12.sp,
+                    fontFamily: 'gilroy_bold'),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: DateFormat('dd-MMM-yyyy').format(tagData),
+                      style: TextStyle(
+                          fontFamily: 'gilroy_regular',
+                          color: (days < 0)
+                              ? Colors.red[500]
+                              : color_gt_headersTextColorWhite,
+                          fontSize: 12.sp)),
+                ],
+              ),
+            ),
+          ),
+        ),
+        (days < 0)
+            ? Padding(
+                padding: EdgeInsets.only(right: 13.h),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    //onPrimary: Colors.black,  //to change text color
+                    padding: EdgeInsets.symmetric(vertical: 7.h),
+                    primary: Colors.red[500], // button color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r), // <-- Radius
+                    ),
+                    textStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12.sp,
+                        fontFamily: 'gilroy_bold'),
+                  ),
+                  onPressed: () async {
+                    //await _signOut();
+                  },
+                  child: Text('Renew'),
                 ),
               )
             : Container(

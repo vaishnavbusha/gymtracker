@@ -63,30 +63,70 @@ class _ScanPageState extends ConsumerState<ScanPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ValueListenableBuilder<Box<dynamic>>(
-                  valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
-                  builder: (context, box, __) {
-                    return (box.get('isAwaitingEnrollment'))
-                        ? Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.07,
-                            color: Color(0xff2D77D0),
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: EdgeInsets.all(10.sp),
-                              child: Center(
-                                child: Text(
-                                  'Awaiting approval from ${(Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).enrolledGym}. QR Scanner button has been disabled.',
-                                  style: TextStyle(
-                                      color: color_gt_headersTextColorWhite,
-                                      fontSize: 12.sp,
-                                      fontFamily: 'gilroy_regularitalic'),
+              (Hive.box(miscellaneousDataHIVE).get("isAwaitingEnrollment") !=
+                      null)
+                  ? ValueListenableBuilder<Box<dynamic>>(
+                      valueListenable:
+                          Hive.box(miscellaneousDataHIVE).listenable(),
+                      builder: (context, box, __) {
+                        return (box.get('isAwaitingEnrollment'))
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.07,
+                                color: Color(0xff2D77D0),
+                                alignment: Alignment.topCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.all(10.sp),
+                                  child: Center(
+                                    child: Text(
+                                      'Awaiting approval from ${(Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).enrolledGym}. QR Scanner button has been disabled.',
+                                      style: TextStyle(
+                                          color: color_gt_headersTextColorWhite,
+                                          fontSize: 13.sp,
+                                          fontFamily: 'gilroy_regularitalic'),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )
-                        : Container();
-                  }),
+                              )
+                            : Container();
+                      })
+                  : Container(),
+              (Hive.box(miscellaneousDataHIVE).get("membershipExpiry") != null)
+                  ? ValueListenableBuilder<Box<dynamic>>(
+                      valueListenable:
+                          Hive.box(miscellaneousDataHIVE).listenable(),
+                      builder: (context, box, __) {
+                        final date = box.get('membershipExpiry');
+                        var expiresOn =
+                            DateTime(date.year, date.month, date.day);
+                        int days =
+                            (expiresOn.difference(DateTime.now()).inHours / 24)
+                                .round();
+
+                        return (days < 0)
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.07,
+                                color: Colors.red,
+                                alignment: Alignment.topCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.all(10.sp),
+                                  child: Center(
+                                    child: Text(
+                                      'Your membership with ${(Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).enrolledGym} has been expired, kindly renew your membership to start using the QR feature.',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13.sp,
+                                          fontFamily: 'gilroy_regularitalic'),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container();
+                      })
+                  : Container(),
               Consumer(builder: (context, ref, __) {
                 final scanState = ref.watch(scanControllerProvider);
                 return Flexible(
@@ -95,18 +135,84 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 90.w),
-                          child: ValueListenableBuilder<Box<dynamic>>(
-                              valueListenable:
-                                  Hive.box(miscellaneousDataHIVE).listenable(),
-                              builder: (context, box, __) {
-                                return ElevatedButton(
+                          child: (Hive.box(miscellaneousDataHIVE)
+                                      .get("membershipExpiry") !=
+                                  null)
+                              ? ValueListenableBuilder<Box<dynamic>>(
+                                  valueListenable:
+                                      Hive.box(miscellaneousDataHIVE)
+                                          .listenable(),
+                                  builder: (context, box, __) {
+                                    final date = box.get('membershipExpiry');
+
+                                    var expiresOn = DateTime(
+                                        date.year, date.month, date.day);
+                                    int days = (expiresOn
+                                                .difference(DateTime.now())
+                                                .inHours /
+                                            24)
+                                        .round();
+
+                                    return ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        //onPrimary: Colors.black,  //to change text color
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 7.h),
+                                        primary: (box.get(
+                                                    'isAwaitingEnrollment') ||
+                                                (days < 0))
+                                            ? Colors.grey
+                                            : color_gt_green, // button color
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              10.r), // <-- Radius
+                                        ),
+                                        textStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20.sp,
+                                            fontFamily: 'gilroy_bold'),
+                                      ),
+                                      onPressed: () async {
+                                        if (box.get('isAwaitingEnrollment') ||
+                                            days < 0) {
+                                          null;
+                                        } else {
+                                          String barcodeScanRes =
+                                              await FlutterBarcodeScanner
+                                                  .scanBarcode(
+                                                      "#ff6666",
+                                                      'cancel',
+                                                      false,
+                                                      ScanMode.QR);
+                                          scanState.getScannedData(
+                                              barcodeScanRes, context);
+                                          // scanState.validateScannedResult(context);
+                                          // x.updateQRButtonClick();
+                                          // barCode = null;
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.qr_code_scanner_rounded,
+                                            size: 40.w,
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          Text(
+                                            'Scan QR',
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  })
+                              : ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     //onPrimary: Colors.black,  //to change text color
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 7.h),
-                                    primary: (box.get('isAwaitingEnrollment'))
-                                        ? Colors.grey
-                                        : color_gt_green, // button color
+                                    primary: color_gt_green, // button color
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           10.r), // <-- Radius
@@ -117,19 +223,17 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                         fontFamily: 'gilroy_bold'),
                                   ),
                                   onPressed: () async {
-                                    if (box.get('isAwaitingEnrollment')) {
-                                      null;
-                                    } else {
-                                      String barcodeScanRes =
-                                          await FlutterBarcodeScanner
-                                              .scanBarcode("#ff6666", 'cancel',
-                                                  false, ScanMode.QR);
-                                      scanState.getScannedData(
-                                          barcodeScanRes, context);
-                                      // scanState.validateScannedResult(context);
-                                      // x.updateQRButtonClick();
-                                      // barCode = null;
-                                    }
+                                    String barcodeScanRes =
+                                        await FlutterBarcodeScanner.scanBarcode(
+                                            "#ff6666",
+                                            'cancel',
+                                            false,
+                                            ScanMode.QR);
+                                    scanState.getScannedData(
+                                        barcodeScanRes, context);
+                                    // scanState.validateScannedResult(context);
+                                    // x.updateQRButtonClick();
+                                    // barCode = null;
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -144,9 +248,8 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                       ),
                                     ],
                                   ),
-                                );
-                              }),
-                        ),
+                                ),
+                        )
                       ]),
                 );
               }),

@@ -85,6 +85,12 @@ class LoginController extends ChangeNotifier {
     final userdataJSON =
         await fireBaseFireStore.collection('users').doc(uid).get();
     print('jsondata = $userdataJSON');
-    UserModel.saveUserDataToHIVE(UserModel.toModel(userdataJSON));
+    UserModel userModelData = UserModel.toModel(userdataJSON);
+    UserModel.saveUserDataToHIVE(userModelData);
+
+    Hive.box(miscellaneousDataHIVE)
+        .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
+    Hive.box(miscellaneousDataHIVE)
+        .put('membershipExpiry', userModelData.membershipExpiry);
   }
 }

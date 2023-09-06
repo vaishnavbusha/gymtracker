@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unused_local_variable
 
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,12 +9,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/user_model.dart';
 
-import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/navigation.dart';
-import 'package:gymtracker/views/profile.dart';
+
 import 'package:gymtracker/views/signin.dart';
-import 'package:gymtracker/widgets/animated_route.dart';
-import 'package:gymtracker/widgets/loader.dart';
+
 import 'package:hive_flutter/adapters.dart';
 
 void main() async {
@@ -42,6 +38,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Hive.box(miscellaneousDataHIVE).get('isLoggedIn') == null) {
       Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
+    }
+    if (Hive.box(miscellaneousDataHIVE).get('isAwaitingEnrollment') == null) {
+      Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment',
+          Hive.box(userDetailsHIVE).get('usermodeldata').isAwaitingEnrollment);
+    }
+    if (Hive.box(miscellaneousDataHIVE).get('membershipExpiry') == null) {
+      Hive.box(miscellaneousDataHIVE).put('membershipExpiry',
+          Hive.box(userDetailsHIVE).get('usermodeldata').membershipExpiry);
     }
     return ScreenUtilInit(builder: (context, child) {
       return MaterialApp(

@@ -1,7 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:gymtracker/constants.dart';
-import 'package:hive/hive.dart';
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
+
+import 'package:gymtracker/constants.dart';
+
 part 'user_model.g.dart';
 
 // ignore_for_file: non_constant_identifier_names
@@ -34,16 +38,15 @@ class UserModel extends HiveObject {
   @HiveField(12)
   String? phoneNumber;
   @HiveField(13)
-  bool isAwaitingEnrollment;
+  bool? isAwaitingEnrollment;
   @HiveField(14)
   List? pendingApprovals;
   @HiveField(15)
   int? memberShipFeesPaid;
+  @HiveField(16)
+  DateTime? recentRenewedOn;
 
   UserModel({
-    this.isAwaitingEnrollment = false,
-    required this.pendingApprovals,
-    required this.phoneNumber,
     required this.userType,
     required this.userName,
     this.uid,
@@ -56,12 +59,16 @@ class UserModel extends HiveObject {
     this.enrolledGym,
     this.enrolledGymDate,
     this.membershipExpiry,
+    required this.phoneNumber,
+    this.isAwaitingEnrollment = false,
+    required this.pendingApprovals,
     this.memberShipFeesPaid,
+    this.recentRenewedOn,
   });
 
   @override
   String toString() {
-    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry)';
+    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, profilephoto: $profilephoto, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry, phoneNumber: $phoneNumber, isAwaitingEnrollment: $isAwaitingEnrollment, pendingApprovals: $pendingApprovals, memberShipFeesPaid: $memberShipFeesPaid, recentRenewedOn: $recentRenewedOn)';
   }
 
   @override
@@ -71,6 +78,7 @@ class UserModel extends HiveObject {
     return other.userType == userType &&
         other.userName == userName &&
         other.uid == uid &&
+        other.profilephoto == profilephoto &&
         other.email == email &&
         other.gender == gender &&
         other.DOB == DOB &&
@@ -78,7 +86,12 @@ class UserModel extends HiveObject {
         other.registeredDate == registeredDate &&
         other.enrolledGym == enrolledGym &&
         other.enrolledGymDate == enrolledGymDate &&
-        other.membershipExpiry == membershipExpiry;
+        other.membershipExpiry == membershipExpiry &&
+        other.phoneNumber == phoneNumber &&
+        other.isAwaitingEnrollment == isAwaitingEnrollment &&
+        other.pendingApprovals == pendingApprovals &&
+        other.memberShipFeesPaid == memberShipFeesPaid &&
+        other.recentRenewedOn == recentRenewedOn;
   }
 
   @override
@@ -86,6 +99,7 @@ class UserModel extends HiveObject {
     return userType.hashCode ^
         userName.hashCode ^
         uid.hashCode ^
+        profilephoto.hashCode ^
         email.hashCode ^
         gender.hashCode ^
         DOB.hashCode ^
@@ -93,7 +107,12 @@ class UserModel extends HiveObject {
         registeredDate.hashCode ^
         enrolledGym.hashCode ^
         enrolledGymDate.hashCode ^
-        membershipExpiry.hashCode;
+        membershipExpiry.hashCode ^
+        phoneNumber.hashCode ^
+        isAwaitingEnrollment.hashCode ^
+        pendingApprovals.hashCode ^
+        memberShipFeesPaid.hashCode ^
+        recentRenewedOn.hashCode;
   }
 
   Map<String, dynamic> toJson() {
@@ -114,6 +133,7 @@ class UserModel extends HiveObject {
       'pendingApprovals': pendingApprovals,
       'isAwaitingEnrollment': isAwaitingEnrollment,
       'memberShipFeesPaid': memberShipFeesPaid,
+      'recentRenewedOn': recentRenewedOn,
     };
   }
 
@@ -140,6 +160,9 @@ class UserModel extends HiveObject {
       membershipExpiry: (mapData['membershipExpiry'] == null)
           ? null
           : mapData['membershipExpiry'].toDate(),
+      recentRenewedOn: (mapData['recentRenewedOn'] == null)
+          ? null
+          : mapData['recentRenewedOn'].toDate(),
     );
   }
 
@@ -155,23 +178,25 @@ class UserModel extends HiveObject {
     Hive.box(miscellaneousDataHIVE).put('isLoggedIn', true);
   }
 
-  UserModel copyWith(
-      {String? userType,
-      String? userName,
-      String? uid,
-      String? profilephoto,
-      String? email,
-      String? gender,
-      String? DOB,
-      bool? isUser,
-      DateTime? registeredDate,
-      String? enrolledGym,
-      DateTime? enrolledGymDate,
-      DateTime? membershipExpiry,
-      String? phoneNumber,
-      List? pendingApprovals,
-      bool? isAwaitingEnrollment,
-      int? memberShipFeesPaid}) {
+  UserModel copyWith({
+    String? userType,
+    String? userName,
+    String? uid,
+    String? profilephoto,
+    String? email,
+    String? gender,
+    String? DOB,
+    bool? isUser,
+    DateTime? registeredDate,
+    String? enrolledGym,
+    DateTime? enrolledGymDate,
+    DateTime? membershipExpiry,
+    String? phoneNumber,
+    List? pendingApprovals,
+    bool? isAwaitingEnrollment,
+    int? memberShipFeesPaid,
+    DateTime? recentRenewedOn,
+  }) {
     return UserModel(
       memberShipFeesPaid: this.memberShipFeesPaid,
       isAwaitingEnrollment: this.isAwaitingEnrollment,
@@ -189,6 +214,7 @@ class UserModel extends HiveObject {
       enrolledGym: enrolledGym ?? this.enrolledGym,
       enrolledGymDate: enrolledGymDate ?? this.enrolledGymDate,
       membershipExpiry: membershipExpiry ?? this.membershipExpiry,
+      recentRenewedOn: recentRenewedOn ?? this.recentRenewedOn,
     );
   }
 }
