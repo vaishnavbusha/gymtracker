@@ -1,0 +1,60 @@
+// ignore_for_file: implementation_imports
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/src/size_extension.dart';
+
+class CustomSnackBar {
+  CustomSnackBar._();
+  static buildSnackbar(
+      {required BuildContext context,
+      required String message,
+      required Color color,
+      required Color textcolor,
+      required bool iserror}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        // margin: EdgeInsets.only(
+        //     left: 10.w,
+        //     right: 10.w,
+        //     bottom: MediaQuery.of(context).size.height *
+        //         0.88), // displays snackbar at the top
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Text(
+                message,
+                style: TextStyle(
+                    fontFamily: 'gilroy_bolditalic',
+                    color: textcolor,
+                    fontSize: 13.sp),
+              ),
+            ),
+            SizedBox(
+              width: 10.w,
+            ),
+            iserror
+                ? Icon(
+                    Icons.error_outline_rounded,
+                    color: textcolor,
+                  )
+                : Icon(
+                    Icons.check_circle_outline_rounded,
+                    color: textcolor,
+                  ),
+          ],
+        ),
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.r))),
+        // duration: const Duration(milliseconds: 1000),
+        // margin: EdgeInsets.only(
+        //     bottom: MediaQuery.of(context).size.height - 100,
+        //     right: 20,
+        //     left: 20),
+      ),
+    );
+  }
+}
