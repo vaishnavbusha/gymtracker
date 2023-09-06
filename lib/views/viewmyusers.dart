@@ -169,27 +169,54 @@ class _MyUsersState extends ConsumerState<MyUsers> {
 
     return Padding(
       padding: EdgeInsets.only(right: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: (noOfDays > 15)
-              ? color_gt_green
-              : (noOfDays >= 8)
-                  ? Colors.orange
-                  : Colors.red,
-          borderRadius: BorderRadius.circular(5.r),
-          border: Border.all(width: 1, color: Colors.white12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Text(
-            '$noOfDays day(s)',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: color_gt_headersTextColorWhite,
-              fontFamily: 'gilroy_bolditalic',
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: (noOfDays > 15)
+                  ? color_gt_green
+                  : (noOfDays >= 8)
+                      ? Colors.orange
+                      : Colors.red,
+              borderRadius: BorderRadius.circular(5.r),
+              border: Border.all(width: 1, color: Colors.white12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Text(
+                (noOfDays < 0) ? 'Renew' : '$noOfDays day(s)',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: color_gt_headersTextColorWhite,
+                  fontFamily: 'gilroy_bolditalic',
+                ),
+              ),
             ),
           ),
-        ),
+          (noOfDays < 0)
+              ? Padding(
+                  padding: EdgeInsets.only(top: 15.h),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(5.r),
+                      border: Border.all(width: 1, color: Colors.white12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Text(
+                        'Remove',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: color_gt_headersTextColorWhite,
+                          fontFamily: 'gilroy_bolditalic',
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : Container(),
+        ],
       ),
     );
   }

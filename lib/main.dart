@@ -39,14 +39,14 @@ class MyApp extends StatelessWidget {
     if (Hive.box(miscellaneousDataHIVE).get('isLoggedIn') == null) {
       Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
     }
-    if (Hive.box(miscellaneousDataHIVE).get('isAwaitingEnrollment') == null) {
-      Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment',
-          Hive.box(userDetailsHIVE).get('usermodeldata').isAwaitingEnrollment);
-    }
-    if (Hive.box(miscellaneousDataHIVE).get('membershipExpiry') == null) {
-      Hive.box(miscellaneousDataHIVE).put('membershipExpiry',
-          Hive.box(userDetailsHIVE).get('usermodeldata').membershipExpiry);
-    }
+    // if (Hive.box(miscellaneousDataHIVE).get('isAwaitingEnrollment') == null) {
+    //   Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment',
+    //       Hive.box(userDetailsHIVE).get('usermodeldata').isAwaitingEnrollment);
+    // }
+    // if (Hive.box(miscellaneousDataHIVE).get('membershipExpiry') == null) {
+    //   Hive.box(miscellaneousDataHIVE).put('membershipExpiry',
+    //       Hive.box(userDetailsHIVE).get('usermodeldata').membershipExpiry);
+    // }
     return ScreenUtilInit(builder: (context, child) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,

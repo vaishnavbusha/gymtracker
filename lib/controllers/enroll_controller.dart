@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 
 import '../constants.dart';
 import '../models/enroll_model.dart';
+import '../widgets/customsnackbar.dart';
 
 class EnrollController extends ChangeNotifier {
   CollectionReference usersCollection =
@@ -46,7 +47,7 @@ class EnrollController extends ChangeNotifier {
     notifyListeners();
   }
 
-  updateEnrollmentInfo() async {
+  updateEnrollmentInfo(BuildContext context) async {
     notifyListeners();
     isLoading = true;
     isEnrolled = false;
@@ -79,6 +80,13 @@ class EnrollController extends ChangeNotifier {
         print('admin data update un-successful  $error');
       },
     ); // admin
+    CustomSnackBar.buildSnackbar(
+        color: Color(0xff4CB944),
+        context: context,
+        iserror: false,
+        message:
+            'Enrollment request has been sent to $dropdownvalue. You can exit this page.',
+        textcolor: color_gt_headersTextColorWhite);
     isLoading = false;
     isEnrolled = true;
     notifyListeners();

@@ -92,5 +92,7 @@ class LoginController extends ChangeNotifier {
         .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
     Hive.box(miscellaneousDataHIVE)
         .put('membershipExpiry', userModelData.membershipExpiry);
+    Hive.box(miscellaneousDataHIVE)
+        .put('awaitingRenewal', userModelData.awaitingRenewal);
   }
 }

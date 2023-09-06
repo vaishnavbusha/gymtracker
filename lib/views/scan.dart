@@ -115,7 +115,10 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                   padding: EdgeInsets.all(10.sp),
                                   child: Center(
                                     child: Text(
-                                      'Your membership with ${(Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).enrolledGym} has been expired, kindly renew your membership to start using the QR feature.',
+                                      (Hive.box(miscellaneousDataHIVE)
+                                              .get('awaitingRenewal'))
+                                          ? 'Renewal request sent to ${(Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).enrolledGym}. QR scanner will be enabled post approval.'
+                                          : 'Your membership with ${(Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).enrolledGym} has been expired, kindly renew your membership to start using the QR feature.',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 13.sp,

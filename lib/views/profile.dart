@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 
 import 'package:gymtracker/models/user_model.dart';
+import 'package:gymtracker/providers/authentication_providers.dart';
 
 import 'package:gymtracker/widgets/approvals.dart';
 import 'package:gymtracker/widgets/generate_qr.dart';
@@ -18,6 +19,7 @@ import 'package:gymtracker/views/signin.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/customsnackbar.dart';
 import '../widgets/enroll.dart';
 import '../widgets/loader.dart';
 
@@ -100,6 +102,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
           Hive.box(miscellaneousDataHIVE)
               .put('membershipExpiry', userModelData.membershipExpiry);
+          Hive.box(miscellaneousDataHIVE)
+              .put('awaitingRenewal', userModelData.awaitingRenewal);
 
           // final UserModel user = UserModel.toModel(
           //     data); // Gives you the data map
@@ -375,7 +379,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     ),
                                   ),
                                   profileDataBlock('Enrolled Gym',
-                                      userModelData.enrolledGym!, true),
+                                      userModelData.enrolledGym!, false),
                                   Padding(
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.h),
@@ -423,7 +427,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         )
                                       : Container(),
                                   membershipExpiryBlock('MemberShip expiry',
-                                      userModelData.membershipExpiry!, false),
+                                      userModelData, false),
                                   Padding(
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.h),
@@ -534,6 +538,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     await fireBaseAuth.signOut();
     await Hive.box(userDetailsHIVE).clear();
     Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
+
+    Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', null);
+    Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
+    Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
     Navigator.of(context, rootNavigator: true)
         .pushReplacement(MaterialPageRoute(builder: (context) => SignInPage()));
   }
@@ -597,8 +605,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   membershipExpiryBlock(
-      String tagName, DateTime tagData, bool enableUpdateButton) {
-    var expiresOn = DateTime(tagData.year, tagData.month, tagData.day);
+      String tagName, UserModel userdata, bool enableUpdateButton) {
+    var expiresOn = DateTime(userdata.membershipExpiry!.year,
+        userdata.membershipExpiry!.month, userdata.membershipExpiry!.day);
     int days = (expiresOn.difference(DateTime.now()).inHours / 24).round();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -616,7 +625,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     fontFamily: 'gilroy_bold'),
                 children: <TextSpan>[
                   TextSpan(
-                      text: DateFormat('dd-MMM-yyyy').format(tagData),
+                      text: DateFormat('dd-MMM-yyyy')
+                          .format(userdata.membershipExpiry!),
                       style: TextStyle(
                           fontFamily: 'gilroy_regular',
                           color: (days < 0)
@@ -631,24 +641,40 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         (days < 0)
             ? Padding(
                 padding: EdgeInsets.only(right: 13.h),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    //onPrimary: Colors.black,  //to change text color
-                    padding: EdgeInsets.symmetric(vertical: 7.h),
-                    primary: Colors.red[500], // button color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r), // <-- Radius
-                    ),
-                    textStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12.sp,
-                        fontFamily: 'gilroy_bold'),
-                  ),
-                  onPressed: () async {
-                    //await _signOut();
-                  },
-                  child: Text('Renew'),
-                ),
+                child: Consumer(builder: (context, ref, __) {
+                  final profileState = ref.watch(profileControllerProvider);
+                  print(profileState.isLoading);
+                  return (profileState.isLoading)
+                      ? Loader(
+                          loadercolor: Colors.green,
+                        )
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            //onPrimary: Colors.black,  //to change text color
+                            padding: EdgeInsets.symmetric(
+                                vertical: 7.h, horizontal: 5.w),
+                            primary: (userdata.awaitingRenewal!)
+                                ? Colors.grey
+                                : Colors.red[500], // button color
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10.r), // <-- Radius
+                            ),
+                            textStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12.sp,
+                                fontFamily: 'gilroy_bold'),
+                          ),
+                          onPressed: () {
+                            (userdata.awaitingRenewal!)
+                                ? null
+                                : profileState.renewRequest(context);
+                          },
+                          child: (userdata.awaitingRenewal!)
+                              ? Text('Requested')
+                              : Text('Renew'),
+                        );
+                }),
               )
             : Container(
                 height: 40.h,

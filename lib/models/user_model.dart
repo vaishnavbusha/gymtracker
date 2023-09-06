@@ -33,6 +33,7 @@ class UserModel extends HiveObject {
   String? enrolledGym;
   @HiveField(10)
   DateTime? enrolledGymDate;
+
   @HiveField(11)
   DateTime? membershipExpiry;
   @HiveField(12)
@@ -45,6 +46,14 @@ class UserModel extends HiveObject {
   int? memberShipFeesPaid;
   @HiveField(16)
   DateTime? recentRenewedOn;
+  @HiveField(17)
+  List? pendingRenewals;
+  @HiveField(18)
+  String? enrolledGymOwnerName;
+  @HiveField(19)
+  String? enrolledGymOwnerUID;
+  @HiveField(20)
+  bool? awaitingRenewal;
 
   UserModel({
     required this.userType,
@@ -64,11 +73,15 @@ class UserModel extends HiveObject {
     required this.pendingApprovals,
     this.memberShipFeesPaid,
     this.recentRenewedOn,
+    this.pendingRenewals,
+    this.enrolledGymOwnerName,
+    this.enrolledGymOwnerUID,
+    this.awaitingRenewal = false,
   });
 
   @override
   String toString() {
-    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, profilephoto: $profilephoto, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry, phoneNumber: $phoneNumber, isAwaitingEnrollment: $isAwaitingEnrollment, pendingApprovals: $pendingApprovals, memberShipFeesPaid: $memberShipFeesPaid, recentRenewedOn: $recentRenewedOn)';
+    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, profilephoto: $profilephoto, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry, phoneNumber: $phoneNumber, isAwaitingEnrollment: $isAwaitingEnrollment, pendingApprovals: $pendingApprovals, memberShipFeesPaid: $memberShipFeesPaid, recentRenewedOn: $recentRenewedOn, pendingRenewals: $pendingRenewals, enrolledGymOwnerName: $enrolledGymOwnerName, enrolledGymOwnerUID: $enrolledGymOwnerUID, awaitingRenewal: $awaitingRenewal)';
   }
 
   @override
@@ -91,7 +104,11 @@ class UserModel extends HiveObject {
         other.isAwaitingEnrollment == isAwaitingEnrollment &&
         other.pendingApprovals == pendingApprovals &&
         other.memberShipFeesPaid == memberShipFeesPaid &&
-        other.recentRenewedOn == recentRenewedOn;
+        other.recentRenewedOn == recentRenewedOn &&
+        other.pendingRenewals == pendingRenewals &&
+        other.enrolledGymOwnerName == enrolledGymOwnerName &&
+        other.enrolledGymOwnerUID == enrolledGymOwnerUID &&
+        other.awaitingRenewal == awaitingRenewal;
   }
 
   @override
@@ -112,7 +129,11 @@ class UserModel extends HiveObject {
         isAwaitingEnrollment.hashCode ^
         pendingApprovals.hashCode ^
         memberShipFeesPaid.hashCode ^
-        recentRenewedOn.hashCode;
+        recentRenewedOn.hashCode ^
+        pendingRenewals.hashCode ^
+        enrolledGymOwnerName.hashCode ^
+        enrolledGymOwnerUID.hashCode ^
+        awaitingRenewal.hashCode;
   }
 
   Map<String, dynamic> toJson() {
@@ -134,18 +155,25 @@ class UserModel extends HiveObject {
       'isAwaitingEnrollment': isAwaitingEnrollment,
       'memberShipFeesPaid': memberShipFeesPaid,
       'recentRenewedOn': recentRenewedOn,
+      'pendingRenewals': pendingRenewals,
+      'awaitingRenewal': awaitingRenewal,
+      'enrolledGymOwnerName': enrolledGymOwnerName,
+      'enrolledGymOwnerUID': enrolledGymOwnerUID
     };
   }
 
   static UserModel toModel(DocumentSnapshot data) {
     final mapData = data.data() as Map<String, dynamic>;
     return UserModel(
+      awaitingRenewal: mapData['awaitingRenewal'],
       pendingApprovals: mapData['pendingApprovals'],
       isAwaitingEnrollment: mapData['isAwaitingEnrollment'],
       phoneNumber: mapData['phoneNumber'],
       profilephoto: mapData['profilephoto'],
       DOB: mapData['DOB'],
       email: mapData['email'],
+      enrolledGymOwnerName: mapData['enrolledGymOwnerName'],
+      enrolledGymOwnerUID: mapData['enrolledGymOwnerUID'],
       gender: mapData['gender'],
       isUser: mapData['isUser'],
       registeredDate: mapData['registeredDate'].toDate(),
@@ -153,6 +181,7 @@ class UserModel extends HiveObject {
       userName: mapData['userName'],
       userType: mapData['userType'],
       enrolledGym: mapData['enrolledGym'],
+      pendingRenewals: mapData['pendingRenewals'],
       memberShipFeesPaid: mapData['memberShipFeesPaid'],
       enrolledGymDate: (mapData['enrolledGymDate'] == null)
           ? null
@@ -192,16 +221,16 @@ class UserModel extends HiveObject {
     DateTime? enrolledGymDate,
     DateTime? membershipExpiry,
     String? phoneNumber,
-    List? pendingApprovals,
     bool? isAwaitingEnrollment,
+    List? pendingApprovals,
     int? memberShipFeesPaid,
     DateTime? recentRenewedOn,
+    List? pendingRenewals,
+    String? enrolledGymOwnerName,
+    String? enrolledGymOwnerUID,
+    bool? awaitingRenewal,
   }) {
     return UserModel(
-      memberShipFeesPaid: this.memberShipFeesPaid,
-      isAwaitingEnrollment: this.isAwaitingEnrollment,
-      pendingApprovals: this.pendingApprovals,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
       userType: userType ?? this.userType,
       userName: userName ?? this.userName,
       uid: uid ?? this.uid,
@@ -214,7 +243,15 @@ class UserModel extends HiveObject {
       enrolledGym: enrolledGym ?? this.enrolledGym,
       enrolledGymDate: enrolledGymDate ?? this.enrolledGymDate,
       membershipExpiry: membershipExpiry ?? this.membershipExpiry,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      isAwaitingEnrollment: isAwaitingEnrollment ?? this.isAwaitingEnrollment,
+      pendingApprovals: pendingApprovals ?? this.pendingApprovals,
+      memberShipFeesPaid: memberShipFeesPaid ?? this.memberShipFeesPaid,
       recentRenewedOn: recentRenewedOn ?? this.recentRenewedOn,
+      pendingRenewals: pendingRenewals ?? this.pendingRenewals,
+      enrolledGymOwnerName: enrolledGymOwnerName ?? this.enrolledGymOwnerName,
+      enrolledGymOwnerUID: enrolledGymOwnerUID ?? this.enrolledGymOwnerUID,
+      awaitingRenewal: awaitingRenewal ?? this.awaitingRenewal,
     );
   }
 }

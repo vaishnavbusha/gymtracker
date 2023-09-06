@@ -242,7 +242,8 @@ class _EnrollPageState extends ConsumerState<EnrollPage> {
                             onPressed: () {
                               (enrollcontroller.isEnrolled)
                                   ? null
-                                  : enrollcontroller.updateEnrollmentInfo();
+                                  : enrollcontroller
+                                      .updateEnrollmentInfo(context);
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,

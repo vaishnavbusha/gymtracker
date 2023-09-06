@@ -41,9 +41,9 @@ final navigationBarProvider = ChangeNotifierProvider.autoDispose(
 final authChangesProvider = ChangeNotifierProvider(
   (ref) => AuthController(),
 );
-// final profileControllerProvider = ChangeNotifierProvider(
-//   (ref) => ProfileController(),
-// );
+final profileControllerProvider = ChangeNotifierProvider(
+  (ref) => ProfileController(),
+);
 final scanControllerProvider = ChangeNotifierProvider.autoDispose(
   (ref) => ScanController(),
 );

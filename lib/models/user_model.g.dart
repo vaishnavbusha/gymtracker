@@ -34,13 +34,17 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       pendingApprovals: (fields[14] as List?)?.cast<dynamic>(),
       memberShipFeesPaid: fields[15] as int?,
       recentRenewedOn: fields[16] as DateTime?,
+      pendingRenewals: (fields[17] as List?)?.cast<dynamic>(),
+      enrolledGymOwnerName: fields[18] as String?,
+      enrolledGymOwnerUID: fields[19] as String?,
+      awaitingRenewal: fields[20] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(21)
       ..writeByte(0)
       ..write(obj.userType)
       ..writeByte(1)
@@ -74,7 +78,15 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(15)
       ..write(obj.memberShipFeesPaid)
       ..writeByte(16)
-      ..write(obj.recentRenewedOn);
+      ..write(obj.recentRenewedOn)
+      ..writeByte(17)
+      ..write(obj.pendingRenewals)
+      ..writeByte(18)
+      ..write(obj.enrolledGymOwnerName)
+      ..writeByte(19)
+      ..write(obj.enrolledGymOwnerUID)
+      ..writeByte(20)
+      ..write(obj.awaitingRenewal);
   }
 
   @override

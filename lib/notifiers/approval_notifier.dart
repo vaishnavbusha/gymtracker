@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymtracker/models/user_model.dart';
+import 'package:hive/hive.dart';
 
 import '../constants.dart';
 import '../models/enroll_model.dart';
@@ -101,7 +103,7 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
     CollectionReference? usersCollection =
         fireBaseFireStore.collection('users');
     final membershipExpiry = DateTime.now();
-
+    UserModel adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
     var newDate = DateTime(
         membershipExpiry.year,
         membershipExpiry.month + int.parse(validityController.text),
@@ -109,6 +111,8 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
     updateDetails();
     await usersCollection.doc(approveeUID).update({
       'membershipExpiry': newDate,
+      'enrolledGymOwnerName': adminData.userName,
+      'enrolledGymOwnerUID': adminData.uid,
       'enrolledGymDate': DateTime.now(),
       'memberShipFeesPaid': int.parse(moneyPaidController.text),
       'isAwaitingEnrollment': false,
