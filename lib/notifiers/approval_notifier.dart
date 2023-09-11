@@ -76,9 +76,6 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
   TextEditingController validityController = TextEditingController();
   TextEditingController moneyPaidController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  updateIsDetailsUpdating() {
-    state.isDetailsUpdating = true;
-  }
 
   updateDetails() {
     state = state.copyWith(isApproved: false, isDetailsUpdating: true);
@@ -116,6 +113,7 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
       'enrolledGymDate': DateTime.now(),
       'memberShipFeesPaid': int.parse(moneyPaidController.text),
       'isAwaitingEnrollment': false,
+      'recentRenewedOn': DateTime.now(),
     }).then(
       (value) {
         print('user approved');
@@ -197,5 +195,12 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
     restoreDetails();
   }
 
+  @override
+  void dispose() {
+    validityController.dispose();
+    moneyPaidController.dispose();
+
+    super.dispose();
+  }
   // ApprovalNotifier() : super(ApprovalState());
 }

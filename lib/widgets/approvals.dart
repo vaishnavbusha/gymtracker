@@ -24,7 +24,7 @@ class ApprovalsPage extends ConsumerStatefulWidget {
 class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
   // TextEditingController? _validityController;
   // TextEditingController? _moneyPaidController;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     // _validityController = TextEditingController();
@@ -155,7 +155,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                                   controller: approveButtonNotifierState
                                       .moneyPaidController,
                                   isObscure: false,
-                                  labeltext: 'Amount Paid (₹)',
+                                  labeltext: 'Membership fees (₹)',
                                   tia: TextInputAction.next,
                                 ),
                                 Padding(
@@ -427,25 +427,5 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
         ],
       ),
     );
-  }
-}
-
-class CustomTextField extends StatefulWidget {
-  const CustomTextField({
-    Key? key,
-    required TextEditingController controller,
-    required TextInputAction tia,
-    required String labeltext,
-    required bool isObscure,
-  }) : super(key: key);
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import '../constants.dart';
 
 class TodaysAttendance extends ConsumerStatefulWidget {
-  TodaysAttendance({Key? key}) : super(key: key);
+  const TodaysAttendance({Key? key}) : super(key: key);
 
   @override
   ConsumerState<TodaysAttendance> createState() => _TodaysAttendanceState();
@@ -32,7 +32,7 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
   getData() async {
     TodaysAttendanceController x = ref.read(todaysAttendanceProvider);
 
-    await x.getGymName();
+    //await x.getGymName();
     await x.fetchTodaysAttendance();
   }
 

@@ -77,6 +77,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
                   enrolledUsersState.usersUIDsList.isNotEmpty &&
                   enrolledUsersState.enrolledUsersData.isNotEmpty)
               ? ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemCount: enrolledUsersState.enrolledUsersData.length,
                   itemBuilder: (context, index) {
                     return dataWidget(
@@ -108,6 +109,8 @@ class _MyUsersState extends ConsumerState<MyUsers> {
       required String Gender,
       required var joinedOn,
       required var expiresOn}) {
+    final noOfDays =
+        ref.read(enrolledUsersProvider).calculateNoOfDays(expiresOn);
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Column(children: [
@@ -116,7 +119,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Colors.white10,
+              color: noOfDays < 0 ? Colors.white30 : Colors.white10,
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(width: 1, color: Colors.white12),
             ),
@@ -184,7 +187,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
             child: Padding(
               padding: const EdgeInsets.all(6.0),
               child: Text(
-                (noOfDays < 0) ? 'Renew' : '$noOfDays day(s)',
+                (noOfDays < 0) ? 'Expired' : '$noOfDays day(s)',
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: color_gt_headersTextColorWhite,
@@ -193,29 +196,29 @@ class _MyUsersState extends ConsumerState<MyUsers> {
               ),
             ),
           ),
-          (noOfDays < 0)
-              ? Padding(
-                  padding: EdgeInsets.only(top: 15.h),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(5.r),
-                      border: Border.all(width: 1, color: Colors.white12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Text(
-                        'Remove',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          color: color_gt_headersTextColorWhite,
-                          fontFamily: 'gilroy_bolditalic',
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : Container(),
+          // (noOfDays < 0)
+          //     ? Padding(
+          //         padding: EdgeInsets.only(top: 15.h),
+          //         child: Container(
+          //           decoration: BoxDecoration(
+          //             color: Colors.red,
+          //             borderRadius: BorderRadius.circular(5.r),
+          //             border: Border.all(width: 1, color: Colors.white12),
+          //           ),
+          //           child: Padding(
+          //             padding: const EdgeInsets.all(6.0),
+          //             child: Text(
+          //               'Remove',
+          //               style: TextStyle(
+          //                 fontSize: 13.sp,
+          //                 color: color_gt_headersTextColorWhite,
+          //                 fontFamily: 'gilroy_bolditalic',
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       )
+          //     : Container(),
         ],
       ),
     );

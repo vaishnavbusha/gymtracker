@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymtracker/controllers/attendance_bydate_controller.dart';
 import 'package:gymtracker/controllers/enrolled_users_controller.dart';
 import 'package:gymtracker/controllers/profile_controller.dart';
+import 'package:gymtracker/controllers/renew_controller.dart';
 import 'package:gymtracker/controllers/scan_controller.dart';
 import 'package:gymtracker/controllers/sign_in_controller.dart';
 import 'package:gymtracker/controllers/sign_up_controller.dart';
@@ -11,6 +12,7 @@ import 'package:gymtracker/notifiers/approval_notifier.dart';
 
 import 'package:gymtracker/notifiers/login_notifier.dart';
 import 'package:gymtracker/notifiers/register_notifier.dart';
+import 'package:gymtracker/notifiers/renew_notifier.dart';
 
 import '../controllers/approval_controller.dart';
 import '../controllers/attendance_bymonth_controller.dart';
@@ -59,6 +61,7 @@ final testApprovalProvider = StateNotifierProvider.family
     return ApprovalNotifier(ApprovalState(), id);
   },
 );
+
 final enrolledUsersProvider = ChangeNotifierProvider.autoDispose(
   (ref) {
     return EnrolledUsersNotifier();
@@ -72,6 +75,17 @@ final todaysAttendanceProvider = ChangeNotifierProvider.autoDispose(
 final attendanceByDateProvider = ChangeNotifierProvider.autoDispose(
   (ref) {
     return AttendanceByDateController();
+  },
+);
+final renewMemberShipProvider = ChangeNotifierProvider.autoDispose(
+  (ref) {
+    return RenewMemberShipController();
+  },
+);
+final renewMemberShipFamilyProvider =
+    StateNotifierProvider.family.autoDispose<RenewNotifer, RenewState, int>(
+  (ref, id) {
+    return RenewNotifer(RenewState(), id);
   },
 );
 final attendanceByMonthProvider = ChangeNotifierProvider.autoDispose(

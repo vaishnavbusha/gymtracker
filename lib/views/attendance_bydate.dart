@@ -31,7 +31,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
 
   getdates() async {
     final x = ref.read(attendanceByDateProvider);
-    x.getGymName();
+    await x.getDatesListFromGymPartner();
   }
 
   final monthData = DateFormat('MMM').format(DateTime.now());

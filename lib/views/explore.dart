@@ -10,6 +10,7 @@ import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/attendance_bydate.dart';
 import 'package:gymtracker/views/attendance_bymonth.dart';
+import 'package:gymtracker/views/renewmembership.dart';
 import 'package:gymtracker/views/today_attendance.dart';
 import 'package:gymtracker/views/viewmyusers.dart';
 import 'package:gymtracker/widgets/loader.dart';
@@ -48,7 +49,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
               title: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  (isUser == false) ? 'Enrolled Users' : 'Exercises',
+                  (isUser == false) ? 'DashBoard' : 'Exercises',
                   style: TextStyle(
                       fontFamily: 'gilroy_bold',
                       color: color_gt_green,
@@ -93,37 +94,49 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                       mainAxisSpacing: 10.0,
                       crossAxisSpacing: 10.0,
                       children: <Widget>[
-                        viewButton('View my users', () {
+                        viewButton(' my users', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => MyUsers(),
                             ),
                           );
                         }),
-                        viewButton('View today\'s attendance', () {
+                        viewButton(' today\'s attendance', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => TodaysAttendance(),
                             ),
                           );
                         }),
-                        viewButton('View attendance by date in current month',
-                            () {
+                        viewButton(' attendance by date in current month', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => AttendanceByDate(),
                             ),
                           );
                         }),
-                        viewButton('View attendance monthly basis', () {
+                        viewButton(' attendance monthly basis', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => AttendanceByMonth(),
                             ),
                           );
                         }),
-                        viewButton('Download Monthly report', () {}),
-                        viewButton('Renew Membership(s)', () {}),
+                        // viewButton('Expired User(s)', () {
+                        //   Navigator.of(context, rootNavigator: true).push(
+                        //     MaterialPageRoute(
+                        //       builder: (_) => RenewMembershipsPage(),
+                        //     ),
+                        //   );
+                        // }),
+                        // viewButton('Download Monthly report', () {}),
+                        viewButton('Renewal Request(s) ', () {
+                          Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                              builder: (_) => RenewMembershipsPage(),
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ),

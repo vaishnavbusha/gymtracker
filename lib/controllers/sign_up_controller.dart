@@ -1,8 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -111,9 +109,9 @@ class SignUpController extends ChangeNotifier {
 
       CustomSnackBar.buildSnackbar(
         context: ctx,
-        color: Color(0xff4CB944),
+        color: const Color(0xff4CB944),
         message: 'Account Created. Redirecting to sign-in page',
-        textcolor: Color(0xffFDFFFC),
+        textcolor: const Color(0xffFDFFFC),
         iserror: false,
       );
 
@@ -140,7 +138,7 @@ class SignUpController extends ChangeNotifier {
         context: ctx,
         color: Colors.red[500]!,
         message: e.message!,
-        textcolor: Color(0xffFDFFFC),
+        textcolor: const Color(0xffFDFFFC),
         iserror: true,
       );
       is_register_details_uploading = false;
@@ -165,7 +163,7 @@ class SignUpController extends ChangeNotifier {
       context: ctx,
       color: Colors.red[500]!,
       message: 'You have de-selected your profile picture!',
-      textcolor: Color(0xffFDFFFC),
+      textcolor: const Color(0xffFDFFFC),
       iserror: true,
     );
     print(await convertImageToFile());

@@ -9,7 +9,7 @@ import '../models/attendance_display_model.dart';
 class AttendanceByDateController extends ChangeNotifier {
   List attendanceData = [];
   List availabledatesList = [];
-  String? _gymName;
+  //String? _gymName;
   bool _disposed = false;
   bool isDateSelected = false;
   String? dropdownvalue;
@@ -20,21 +20,21 @@ class AttendanceByDateController extends ChangeNotifier {
     //getDatesListFromGymPartner();
     //initialiseGymPartnerCollection();
   }
-  Future getGymName() async {
-    isLoading = true;
-    await fireBaseFireStore
-        .collection('gympartners')
-        .doc(Hive.box(miscellaneousDataHIVE).get('uid'))
-        .get()
-        .then(
-      (value) {
-        _gymName = (value.data() as Map<String, dynamic>)['gymPartnerGYMName'];
-      },
-    );
-    isLoading = false;
-    await getDatesListFromGymPartner();
-    notifyListeners();
-  }
+  // Future getGymName() async {
+  //   isLoading = true;
+  //   await fireBaseFireStore
+  //       .collection('gympartners')
+  //       .doc(Hive.box(miscellaneousDataHIVE).get('uid'))
+  //       .get()
+  //       .then(
+  //     (value) {
+  //       _gymName = (value.data() as Map<String, dynamic>)['gymPartnerGYMName'];
+  //     },
+  //   );
+  //   isLoading = false;
+  //   await getDatesListFromGymPartner();
+  //   notifyListeners();
+  // }
 
   changeselectedDate(String newValue) {
     //selectedIndexOfGymPartnersData = gymNames.indexOf(newValue);
@@ -50,7 +50,11 @@ class AttendanceByDateController extends ChangeNotifier {
   }
 
   Future getDatesListFromGymPartner() async {
-    await fireBaseFireStore.collection(_gymName!).doc(monthData).get().then(
+    await fireBaseFireStore
+        .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
+        .doc(monthData)
+        .get()
+        .then(
       (value) {
         availabledatesList =
             (value.data() as Map<String, dynamic>)['datesList'];
@@ -63,7 +67,7 @@ class AttendanceByDateController extends ChangeNotifier {
   Future getAttendanceListByDate() async {
     int index = 1;
     await fireBaseFireStore
-        .collection(_gymName!)
+        .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
         .doc(monthData)
         .collection(dropdownvalue!)
         .get()

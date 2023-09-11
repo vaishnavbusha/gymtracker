@@ -109,7 +109,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                 width: MediaQuery.of(context).size.width,
                                 height:
                                     MediaQuery.of(context).size.height * 0.07,
-                                color: Colors.red,
+                                color: Color(0xff2D77D0),
                                 alignment: Alignment.topCenter,
                                 child: Padding(
                                   padding: EdgeInsets.all(10.sp),

@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../models/attendance_display_model.dart';
 
 class AttendanceByMonthController extends ChangeNotifier {
-  String? _gymName;
+  //String? _gymName;
   List allEnrolledUsers = [];
   List availabledatesList = [];
   List availableMonths = [];
@@ -31,7 +31,7 @@ class AttendanceByMonthController extends ChangeNotifier {
         .then(
       (value) {
         enrollModel = EnrollModel.fromMap(value.data() as Map<String, dynamic>);
-        _gymName = enrollModel!.gymPartnerGYMName!;
+        // _gymName = enrollModel!.gymPartnerGYMName!;
         allEnrolledUsers = enrollModel!.users!;
       },
     );
@@ -65,7 +65,10 @@ class AttendanceByMonthController extends ChangeNotifier {
   }
 
   Future getAvailableMonths() async {
-    await fireBaseFireStore.collection(_gymName!).get().then(
+    await fireBaseFireStore
+        .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
+        .get()
+        .then(
       (value) {
         for (var x in value.docs) {
           availableMonths.add(x.id);
@@ -77,7 +80,11 @@ class AttendanceByMonthController extends ChangeNotifier {
   }
 
   Future getDatesListFromGymPartner() async {
-    await fireBaseFireStore.collection(_gymName!).doc(dropdownvalue).get().then(
+    await fireBaseFireStore
+        .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
+        .doc(dropdownvalue)
+        .get()
+        .then(
       (value) {
         availabledatesList =
             (value.data() as Map<String, dynamic>)['datesList'];
@@ -96,7 +103,8 @@ class AttendanceByMonthController extends ChangeNotifier {
     // int index = 1;
     for (String x in availabledatesList) {
       await fireBaseFireStore
-          .collection(_gymName!)
+          .collection(
+              Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
           .doc(dropdownvalue)
           .collection(x)
           .get()

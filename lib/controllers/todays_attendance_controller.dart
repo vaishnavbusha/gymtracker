@@ -8,7 +8,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class TodaysAttendanceController extends ChangeNotifier {
-  String? gymName;
+  //String? gymName;
   bool _disposed = false;
   List attendanceData = [];
   bool isDataAvailable = false;
@@ -28,19 +28,19 @@ class TodaysAttendanceController extends ChangeNotifier {
     }
   }
 
-  Future getGymName() async {
-    await fireBaseFireStore
-        .collection('gympartners')
-        .doc(Hive.box(miscellaneousDataHIVE).get('uid'))
-        .get()
-        .then(
-      (value) {
-        gymName = (value.data() as Map<String, dynamic>)['gymPartnerGYMName'];
-      },
-    );
+  // Future getGymName() async {
+  //   await fireBaseFireStore
+  //       .collection('gympartners')
+  //       .doc(Hive.box(miscellaneousDataHIVE).get('uid'))
+  //       .get()
+  //       .then(
+  //     (value) {
+  //       gymName = (value.data() as Map<String, dynamic>)['gymPartnerGYMName'];
+  //     },
+  //   );
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
   Future fetchTodaysAttendance() async {
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
@@ -48,7 +48,7 @@ class TodaysAttendanceController extends ChangeNotifier {
     isLoading = true;
     int index = 1;
     await fireBaseFireStore
-        .collection(gymName!)
+        .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
         .doc(monthData)
         .collection(datetime)
         .get()
