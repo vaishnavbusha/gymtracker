@@ -329,6 +329,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             //   child:
                             //       displayProfilePic(userModelData.profilephoto!),
                             // ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.h),
+                              child: Divider(
+                                color:
+                                    color_gt_greenHalfOpacity.withOpacity(0.3),
+                                height: 1.h,
+                                thickness: 1,
+                                // endIndent: 10.w,
+                                // indent: 20.w,
+                              ),
+                            ),
                             profileDataBlock(
                                 'UserName', userModelData.userName, false),
                             Padding(
@@ -535,7 +546,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 84.h, vertical: 5.h),
+                                  horizontal: 84.h, vertical: 20.h),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   //onPrimary: Colors.black,  //to change text color

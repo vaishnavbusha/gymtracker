@@ -359,9 +359,10 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
                         )
                       : Center(
                           child: Text(
-                            'No Renewal request(s) recieved to display',
+                            'No Renewal request(s) yet. Kindly check again later !',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 17.sp,
                               color: color_gt_green,
                               fontFamily: 'gilroy_bold',
                             ),

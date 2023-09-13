@@ -56,7 +56,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xff122B32), Colors.black],
+            colors: const [Color(0xff122B32), Colors.black],
           ),
         ),
         child: SafeArea(
@@ -187,8 +187,9 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                                       'cancel',
                                                       false,
                                                       ScanMode.QR);
-                                          scanState.getScannedData(
+                                          await scanState.getScannedData(
                                               barcodeScanRes, context);
+
                                           // scanState.validateScannedResult(context);
                                           // x.updateQRButtonClick();
                                           // barCode = null;

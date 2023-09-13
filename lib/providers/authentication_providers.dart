@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymtracker/controllers/attendance_bydate_controller.dart';
-import 'package:gymtracker/controllers/enrolled_users_controller.dart';
+import 'package:gymtracker/controllers/view_users_controller.dart';
 import 'package:gymtracker/controllers/profile_controller.dart';
 import 'package:gymtracker/controllers/renew_controller.dart';
 import 'package:gymtracker/controllers/scan_controller.dart';

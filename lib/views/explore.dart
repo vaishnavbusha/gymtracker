@@ -11,6 +11,8 @@ import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/attendance_bydate.dart';
 import 'package:gymtracker/views/attendance_bymonth.dart';
 import 'package:gymtracker/views/renewmembership.dart';
+import 'package:gymtracker/views/datatable.dart';
+import 'package:gymtracker/views/searchusers.dart';
 import 'package:gymtracker/views/today_attendance.dart';
 import 'package:gymtracker/views/viewmyusers.dart';
 import 'package:gymtracker/widgets/loader.dart';
@@ -98,6 +100,13 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => MyUsers(),
+                            ),
+                          );
+                        }),
+                        viewButton('Search user(s)', () {
+                          Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                              builder: (_) => SearchUsers(),
                             ),
                           );
                         }),

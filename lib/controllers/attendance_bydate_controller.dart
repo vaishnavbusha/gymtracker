@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -13,12 +14,21 @@ class AttendanceByDateController extends ChangeNotifier {
   bool _disposed = false;
   bool isDateSelected = false;
   String? dropdownvalue;
+  List<DataRow> dataRowvar = [];
+  var isAscending = true;
+  var sortColumnIndex = 1;
   final String monthData = DateFormat('MMM').format(DateTime.now());
 
   bool? isLoading;
   AttendanceByDateController() {
     //getDatesListFromGymPartner();
     //initialiseGymPartnerCollection();
+  }
+  sortColumn(bool isAscending, int sortColumnIndex) {
+    this.isAscending = isAscending;
+    this.sortColumnIndex = sortColumnIndex;
+    print('$sortColumnIndex,$isAscending');
+    notifyListeners();
   }
   // Future getGymName() async {
   //   isLoading = true;

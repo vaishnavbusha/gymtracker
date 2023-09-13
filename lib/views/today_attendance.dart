@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/controllers/todays_attendance_controller.dart';
 import 'package:gymtracker/models/attendance_display_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/views/datatable.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:intl/intl.dart';
 
@@ -87,8 +88,10 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
                         ? SingleChildScrollView(
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.vertical,
-                            child: getDataTableWidget(
-                                todaysAttendanceState.attendanceData))
+                            child: DataTableWidget(
+                              attendanceData:
+                                  todaysAttendanceState.attendanceData,
+                            ))
                         : Center(
                             child: Text(
                               'No data yet, kindly check again later.',

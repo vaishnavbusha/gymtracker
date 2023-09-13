@@ -19,10 +19,10 @@ class ProfileController extends ChangeNotifier {
 
   Future<void> signOut(BuildContext context) async {
     await fireBaseAuth.signOut();
+    await Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
+    await Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', null);
+    await Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
     await Hive.box(userDetailsHIVE).clear();
-    Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
-    Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', null);
-    Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
     Navigator.of(context, rootNavigator: true).pushReplacement(
         MaterialPageRoute(builder: (context) => const SignInPage()));
   }

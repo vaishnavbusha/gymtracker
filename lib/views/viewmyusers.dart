@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -5,18 +7,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants.dart';
 import '../providers/authentication_providers.dart';
 
 class MyUsers extends ConsumerStatefulWidget {
-  const MyUsers({Key? key}) : super(key: key);
+  MyUsers({Key? key}) : super(key: key);
 
   @override
   ConsumerState<MyUsers> createState() => _MyUsersState();
 }
 
 class _MyUsersState extends ConsumerState<MyUsers> {
+  final ScrollController scrollController = ScrollController();
   @override
   void initState() {
     getData();
@@ -25,7 +29,9 @@ class _MyUsersState extends ConsumerState<MyUsers> {
   }
 
   getData() async {
-    ref.read(enrolledUsersProvider).getEnrolledUsersData();
+    final viewUsersState = ref.read(enrolledUsersProvider);
+    await viewUsersState.getEnrolledUsersData();
+    await viewUsersState.loadInitialUserData();
   }
 
   @override
@@ -71,34 +77,89 @@ class _MyUsersState extends ConsumerState<MyUsers> {
             colors: [Color(0xff122B32), Colors.black],
           ),
         ),
-        child: Consumer(builder: (context, ref, child) {
-          final enrolledUsersState = ref.watch(enrolledUsersProvider);
-          return (enrolledUsersState.isLoading == false &&
-                  enrolledUsersState.usersUIDsList.isNotEmpty &&
-                  enrolledUsersState.enrolledUsersData.isNotEmpty)
-              ? ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: enrolledUsersState.enrolledUsersData.length,
-                  itemBuilder: (context, index) {
-                    return dataWidget(
-                      Gender:
-                          enrolledUsersState.enrolledUsersData[index].gender,
-                      Name:
-                          enrolledUsersState.enrolledUsersData[index].userName,
-                      Phone: enrolledUsersState
-                          .enrolledUsersData[index].phoneNumber
-                          .toString(),
-                      joinedOn: enrolledUsersState
-                          .enrolledUsersData[index].enrolledGymDate,
-                      expiresOn: enrolledUsersState
-                          .enrolledUsersData[index].membershipExpiry,
-                    );
-                  },
-                )
-              : const Loader(
-                  loadercolor: Colors.green,
-                );
-        }),
+        child: Center(
+          child: Consumer(builder: (context, ref, child) {
+            final enrolledUsersState = ref.watch(enrolledUsersProvider);
+            print(enrolledUsersState.isLoading);
+            return (enrolledUsersState.isLoading == false &&
+                    enrolledUsersState.initialPaginationLoading == false)
+                ? SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount:
+                              enrolledUsersState.enrolledUsersData.length,
+                          itemBuilder: (context, index) {
+                            return dataWidget(
+                              Gender: enrolledUsersState
+                                  .enrolledUsersData[index].gender,
+                              Name: enrolledUsersState
+                                  .enrolledUsersData[index].userName,
+                              Phone: enrolledUsersState
+                                  .enrolledUsersData[index].phoneNumber
+                                  .toString(),
+                              joinedOn: enrolledUsersState
+                                  .enrolledUsersData[index].enrolledGymDate,
+                              expiresOn: enrolledUsersState
+                                  .enrolledUsersData[index].membershipExpiry,
+                            );
+                          },
+                        ),
+                        (!enrolledUsersState.paginationLoading)
+                            ? (enrolledUsersState.hasMoreData)
+                                ? GestureDetector(
+                                    onTap: () async {
+                                      (enrolledUsersState.hasMoreData)
+                                          ? await enrolledUsersState
+                                              .paginatedUsersData()
+                                          : null;
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: Container(
+                                        padding: EdgeInsets.all(10.w),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.r)),
+                                          color: Colors.green,
+                                        ),
+                                        child: Text(
+                                          'load more',
+                                          style: TextStyle(
+                                              color:
+                                                  color_gt_headersTextColorWhite,
+                                              fontSize: 13.sp,
+                                              fontFamily: 'gilroy_bolditalic'),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.all(10.h),
+                                    child: Text(
+                                      'All users have been fetched.',
+                                      style: TextStyle(
+                                          color: Colors.orange,
+                                          fontSize: 13.sp,
+                                          fontFamily: 'gilroy_bolditalic'),
+                                    ),
+                                  )
+                            : LoadingAnimationWidget.staggeredDotsWave(
+                                color: Colors.redAccent,
+                                size: 30,
+                              ),
+                      ],
+                    ),
+                  )
+                : Loader(
+                    loadercolor: Colors.green,
+                  );
+          }),
+        ),
       ),
     );
   }

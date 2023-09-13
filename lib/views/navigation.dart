@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:gymtracker/widgets/persistent_bottombar_scaffold.dart';
 import 'package:hive/hive.dart';
@@ -77,7 +78,9 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
                 navBarStyle: NavBarStyle
                     .style12, // Choose the nav bar style with this property.
               )
-            : Text('ass')
+            : Loader(
+                loadercolor: Colors.green,
+              )
         : NoInternetWidget();
   }
 

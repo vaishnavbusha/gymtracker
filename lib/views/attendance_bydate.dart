@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/views/datatable.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +25,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
   @override
   void initState() {
     getdates();
-
+    print('initstate of attendance by date');
     // TODO: implement initState
     super.initState();
   }
@@ -205,14 +206,16 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                             ref.watch(attendanceByDateProvider);
                         return Padding(
                           padding: EdgeInsets.only(top: 20),
-                          child:
-                              (attendanceByDateState.attendanceData.isNotEmpty)
-                                  ? SingleChildScrollView(
-                                      physics: BouncingScrollPhysics(),
-                                      scrollDirection: Axis.vertical,
-                                      child: getDataTableWidget(
-                                          attendanceByDateState.attendanceData))
-                                  : Container(),
+                          child: (attendanceByDateState
+                                  .attendanceData.isNotEmpty)
+                              ? SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  child: DataTableWidget(
+                                    attendanceData:
+                                        attendanceByDateState.attendanceData,
+                                  ))
+                              : Container(),
                           //
                         );
                       })
@@ -222,84 +225,5 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                 )),
           )
         : NoInternetWidget();
-  }
-
-  getDataTableWidget(List rowData) {
-    List columnHeadings = ['S.No', 'UserName', 'marked at'];
-    List<DataRow> rowDatavar = returnRowData(rowData);
-
-    return DataTable(
-      border: TableBorder.all(
-          color: color_gt_textColorBlueGrey,
-          borderRadius: BorderRadius.circular(10)),
-      headingRowColor: MaterialStateProperty.all(Colors.white10),
-      sortColumnIndex: 1,
-      sortAscending: true,
-      dataRowHeight: 40,
-      headingTextStyle: TextStyle(
-        fontSize: 13.sp,
-        color: color_gt_green,
-        fontFamily: 'gilroy_bold',
-      ),
-      columns: columnHeadings.map((columnName) {
-        return DataColumn(
-          onSort: (columnIndex, ascending) {
-            setState(() {
-              rowData.sort((a, b) => a.userName.compareTo(b.userName));
-            });
-          },
-          label: Text(
-            columnName,
-          ),
-        );
-      }).toList(),
-      rows: rowDatavar,
-    );
-  }
-
-  returnRowData(List rowData) {
-    List<DataRow> dataRowvar = [];
-
-    for (AttendanceDisplayModel attendanceDisplayModel in rowData) {
-      final time = DateFormat.jm()
-          .format(attendanceDisplayModel.scannedDateTime!)
-          .toString();
-      final y = DataRow(
-        cells: [
-          DataCell(
-            Text(
-              attendanceDisplayModel.index.toString(),
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: color_gt_headersTextColorWhite,
-                fontFamily: 'gilroy_bold',
-              ),
-            ),
-          ),
-          DataCell(
-            Text(
-              attendanceDisplayModel.userName!,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: color_gt_headersTextColorWhite,
-                fontFamily: 'gilroy_regularitalic',
-              ),
-            ),
-          ),
-          DataCell(
-            Text(
-              time,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: color_gt_headersTextColorWhite,
-                fontFamily: 'gilroy_regularitalic',
-              ),
-            ),
-          ),
-        ],
-      );
-      dataRowvar.add(y);
-    }
-    return dataRowvar;
   }
 }
