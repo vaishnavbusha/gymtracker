@@ -1,6 +1,5 @@
-// ignore_for_file: unnecessary_cast
+// ignore_for_file: unnecessary_cast, avoid_print
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/attendance_display_model.dart';

@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -44,7 +44,9 @@ class ProfileController extends ChangeNotifier {
       },
     ).onError(
       (error, stackTrace) {
-        print('fetching pending renewals failed $error');
+        if (kDebugMode) {
+          print('fetching pending renewals failed $error');
+        }
       },
     );
     pendingRenewalsData.add(userModelData.uid);
@@ -55,26 +57,34 @@ class ProfileController extends ChangeNotifier {
       'pendingRenewals': pendingRenewalsData,
     }).then(
       (value) {
-        print('admin data for pendingRenewals updated');
+        if (kDebugMode) {
+          print('admin data for pendingRenewals updated');
+        }
       },
     ).onError(
       (error, stackTrace) {
-        print('updating pending renewals failed $error');
+        if (kDebugMode) {
+          print('updating pending renewals failed $error');
+        }
       },
     );
     await fireBaseFireStore.collection('users').doc(userModelData.uid).update({
       'awaitingRenewal': true,
     }).then(
       (value) {
-        print('user data for awaitingRenewal updated to true');
+        if (kDebugMode) {
+          print('user data for awaitingRenewal updated to true');
+        }
       },
     ).onError(
       (error, stackTrace) {
-        print('updating awaitingRenewal  failed $error');
+        if (kDebugMode) {
+          print('updating awaitingRenewal  failed $error');
+        }
       },
     );
     CustomSnackBar.buildSnackbar(
-        color: Color(0xff4CB944),
+        color: const Color(0xff4CB944),
         context: context,
         iserror: false,
         message:
@@ -92,7 +102,9 @@ class ProfileController extends ChangeNotifier {
         fireBaseFireStore.collection(collPath).doc(docPath);
 
     documentReference.snapshots().listen((snapshot) {
-      print(snapshot.data);
+      if (kDebugMode) {
+        print(snapshot.data);
+      }
     });
   }
 }

@@ -10,6 +10,7 @@ import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/attendance_bydate.dart';
 import 'package:gymtracker/views/attendance_bymonth.dart';
+import 'package:gymtracker/views/expiredusers.dart';
 import 'package:gymtracker/views/renewmembership.dart';
 import 'package:gymtracker/views/datatable.dart';
 import 'package:gymtracker/views/searchusers.dart';
@@ -96,17 +97,24 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                       mainAxisSpacing: 10.0,
                       crossAxisSpacing: 10.0,
                       children: <Widget>[
-                        viewButton(' my users', () {
+                        viewButton(' My Users', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => MyUsers(),
                             ),
                           );
                         }),
-                        viewButton('Search user(s)', () {
+                        viewButton('Search User(s)', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => SearchUsers(),
+                            ),
+                          );
+                        }),
+                        viewButton('Expired User(s)', () {
+                          Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                              builder: (_) => ExpiredUsers(),
                             ),
                           );
                         }),

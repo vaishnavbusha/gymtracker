@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/attendance_model.dart';
@@ -49,10 +49,14 @@ class ScanController extends ChangeNotifier {
   Future getScannedData(String scannedData, BuildContext context) async {
     try {
       this.scannedData = scannedData;
-      print('scanned data = $scannedData');
+      if (kDebugMode) {
+        print('scanned data = $scannedData');
+      }
 
       if (scannedData == '-1' || scannedData == '') {
-        print('cancelled');
+        if (kDebugMode) {
+          print('cancelled');
+        }
         throw 'Successfully exited the QR Scanner';
       } else {
         var jsonDecodedData = jsonDecode(this.scannedData);
@@ -102,9 +106,13 @@ class ScanController extends ChangeNotifier {
           throw 'Your membership has been expired, contact your gym-partner';
         } else {
           if (userModel!.membershipExpiry!.isAtSameMomentAs(DateTime.now())) {
-            print('membership expires today, kindly extend your membership');
+            if (kDebugMode) {
+              print('membership expires today, kindly extend your membership');
+            }
           }
-          print('not expired');
+          if (kDebugMode) {
+            print('not expired');
+          }
 
           await gymPartnersCollection!.doc(scannedQRModel!.uid).get().then(
             (value) {
@@ -115,7 +123,9 @@ class ScanController extends ChangeNotifier {
 
               if (isUserExist) {
                 createNewAttendanceData(enrollModel);
-                print('attendance marked');
+                if (kDebugMode) {
+                  print('attendance marked');
+                }
                 CustomSnackBar.buildSnackbar(
                     iserror: false,
                     color: Colors.green[500]!,
@@ -135,7 +145,9 @@ class ScanController extends ChangeNotifier {
             },
           ).onError(
             (error, stackTrace) {
-              print(error);
+              if (kDebugMode) {
+                print(error);
+              }
             },
           );
         }
@@ -148,7 +160,9 @@ class ScanController extends ChangeNotifier {
           context: context,
           message: e.toString(),
           textcolor: Colors.white);
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     notifyListeners();
@@ -157,8 +171,6 @@ class ScanController extends ChangeNotifier {
   void createNewAttendanceData(EnrollModel enrollModel) async {
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
     final monthData = DateFormat('MMM').format(DateTime.now());
-    AttendanceModel attendanceModel = AttendanceModel(
-        scannedDateTime: DateTime.now(), userName: userModel!.userName);
     //checkDocuement(enrollModel, monthData, datetime);
     testCheckDocument(enrollModel, monthData, datetime);
     // try {
@@ -245,7 +257,9 @@ class ScanController extends ChangeNotifier {
           .doc('usersData')
           .set({'${userModel!.uid}': attendanceModel.toMap()});
     } else {
-      print("id is already exist");
+      if (kDebugMode) {
+        print("id is already exist");
+      }
       await FirebaseFirestore.instance
           .collection(enrollModel.gymPartnerGYMName!)
           .doc(monthdata)

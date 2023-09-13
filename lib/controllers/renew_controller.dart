@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:hive/hive.dart';
@@ -16,11 +16,15 @@ class RenewMemberShipController extends ChangeNotifier {
         (value) {
           UserModel x = UserModel.toModel(value);
           expiredUsersData.add(x);
-          print(expiredUsersData);
+          if (kDebugMode) {
+            print(expiredUsersData);
+          }
         },
       );
     }
-    print(expiredUsersData);
+    if (kDebugMode) {
+      print(expiredUsersData);
+    }
     //await updateExpiredUsersDataInGymPartnersCollection();
     isLoading = false;
     notifyListeners();

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:hive/hive.dart';
 
@@ -59,11 +60,15 @@ class EnrollController extends ChangeNotifier {
       'enrolledGymDate': DateTime.now(),
     }).then(
       (value) {
-        print('user data update successful');
+        if (kDebugMode) {
+          print('user data update successful');
+        }
       },
     ).onError(
       (error, stackTrace) {
-        print('user data update un-successful $error');
+        if (kDebugMode) {
+          print('user data update un-successful $error');
+        }
       },
     ); // user
     final adminUID = gymPartnersData[selectedIndexOfGymPartnersData].UID!;
@@ -73,15 +78,19 @@ class EnrollController extends ChangeNotifier {
       'pendingApprovals': pendingApprovalsOfAdminData,
     }).then(
       (value) {
-        print('admin data update successful');
+        if (kDebugMode) {
+          print('admin data update successful');
+        }
       },
     ).onError(
       (error, stackTrace) {
-        print('admin data update un-successful  $error');
+        if (kDebugMode) {
+          print('admin data update un-successful  $error');
+        }
       },
     ); // admin
     CustomSnackBar.buildSnackbar(
-        color: Color(0xff4CB944),
+        color: const Color(0xff4CB944),
         context: context,
         iserror: false,
         message:
@@ -94,7 +103,6 @@ class EnrollController extends ChangeNotifier {
 
   Future getPendingApprovalsOfAdminData(String uid) async {
     DocumentSnapshot adminDataSnapshot = await usersCollection.doc(uid).get();
-    List<String> pendingApprovals;
     final userModelData = UserModel.toModel(adminDataSnapshot);
     if (userModelData.pendingApprovals == null) {
       userModelData.pendingApprovals = [];

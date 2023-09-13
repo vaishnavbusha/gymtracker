@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_cast
+// ignore_for_file: unnecessary_cast, non_constant_identifier_names, prefer_final_fields, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,7 +69,7 @@ class ApprovalController extends ChangeNotifier {
       (value) {
         print('admin data updated');
         CustomSnackBar.buildSnackbar(
-            color: Color(0xff4CB944),
+            color: const Color(0xff4CB944),
             context: context,
             iserror: false,
             message:

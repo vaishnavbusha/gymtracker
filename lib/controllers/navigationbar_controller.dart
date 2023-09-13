@@ -1,11 +1,9 @@
-// ignore_for_file: await_only_futures
+// ignore_for_file: await_only_futures, non_constant_identifier_names
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:hive/hive.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-
-import '../models/user_model.dart';
 
 class NavigationBarController extends ChangeNotifier {
   bool _disposed = false;
@@ -20,7 +18,9 @@ class NavigationBarController extends ChangeNotifier {
   checkUserStatus() async {
     isDataAvailable = false;
     final userBox = await Hive.box(userDetailsHIVE).get('usermodeldata');
-    print('userbox = $userBox');
+    if (kDebugMode) {
+      print('userbox = $userBox');
+    }
     isUser = userBox.isUser;
     isDataAvailable = true;
     initialiseController();

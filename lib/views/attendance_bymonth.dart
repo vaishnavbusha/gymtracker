@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
-import 'package:gymtracker/widgets/loader.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
@@ -14,7 +13,7 @@ import '../controllers/network_controller.dart';
 import '../widgets/nointernet_widget.dart';
 
 class AttendanceByMonth extends ConsumerStatefulWidget {
-  AttendanceByMonth({
+  const AttendanceByMonth({
     Key? key,
   }) : super(key: key);
 
@@ -41,7 +40,6 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
   @override
   Widget build(BuildContext context) {
     var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
-    final attendanceByMonthState = ref.watch(attendanceByMonthProvider);
     //attendanceByMonthState.getGymDetails(widget.enrolledUsers, widget.gymName);
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? Scaffold(

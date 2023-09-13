@@ -1,8 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/views/navigation.dart';
-import 'package:gymtracker/views/profile.dart';
 import 'package:gymtracker/widgets/animated_route.dart';
 import 'package:gymtracker/widgets/customsnackbar.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -36,7 +38,7 @@ class LoginController extends ChangeNotifier {
           color: const Color(0xff4CB944),
           context: ctx,
           message: 'Login Success. Redirecting...',
-          textcolor: Color(0xffFDFFFC),
+          textcolor: const Color(0xffFDFFFC),
           iserror: false,
         );
         Navigator.pushReplacement(
@@ -47,13 +49,15 @@ class LoginController extends ChangeNotifier {
         notifyListeners();
       }
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      if (kDebugMode) {
+        print(e.code);
+      }
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         CustomSnackBar.buildSnackbar(
           color: Colors.red[500]!,
           context: ctx,
           message: 'wrong username/password, try again !',
-          textcolor: Color(0xffFDFFFC),
+          textcolor: const Color(0xffFDFFFC),
           iserror: true,
         );
       } else {
@@ -61,21 +65,25 @@ class LoginController extends ChangeNotifier {
           color: Colors.red[500]!,
           context: ctx,
           message: e.message!,
-          textcolor: Color(0xffFDFFFC),
+          textcolor: const Color(0xffFDFFFC),
           iserror: true,
         );
       }
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       is_login_details_uploading = false;
     } catch (e) {
       CustomSnackBar.buildSnackbar(
         color: Colors.red[500]!,
         context: ctx,
         message: e.toString(),
-        textcolor: Color(0xffFDFFFC),
+        textcolor: const Color(0xffFDFFFC),
         iserror: true,
       );
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       is_login_details_uploading = false;
     }
     notifyListeners();
@@ -84,7 +92,9 @@ class LoginController extends ChangeNotifier {
   Future storeUserDetailsToHive(String uid) async {
     final userdataJSON =
         await fireBaseFireStore.collection('users').doc(uid).get();
-    print('jsondata = $userdataJSON');
+    if (kDebugMode) {
+      print('jsondata = $userdataJSON');
+    }
     UserModel userModelData = UserModel.toModel(userdataJSON);
     UserModel.saveUserDataToHIVE(userModelData);
 

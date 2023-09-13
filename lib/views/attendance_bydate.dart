@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable, avoid_print
 
 import 'dart:ui';
 
@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 
 import '../constants.dart';
 import '../controllers/network_controller.dart';
-import '../models/attendance_display_model.dart';
 
 class AttendanceByDate extends ConsumerStatefulWidget {
   const AttendanceByDate({Key? key}) : super(key: key);
@@ -132,9 +131,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                     color: color_gt_headersTextColorWhite,
                                     fontFamily: 'gilroy_regular',
                                   ),
-
                                   value: attendanceByDateState.dropdownvalue,
-
                                   hint: Text(
                                     'Select dates to show data',
                                     style: TextStyle(
@@ -148,7 +145,6 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                     attendanceByDateState
                                         .changeselectedDate(value!);
                                   },
-                                  // ignore: prefer_const_literals_to_create_immutables
                                   items: attendanceByDateState
                                       .availabledatesList
                                       .map((item) {

@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymtracker/controllers/attendance_bydate_controller.dart';
+import 'package:gymtracker/controllers/expired_users_controller.dart';
+import 'package:gymtracker/controllers/search_users_controller.dart';
 import 'package:gymtracker/controllers/view_users_controller.dart';
 import 'package:gymtracker/controllers/profile_controller.dart';
 import 'package:gymtracker/controllers/renew_controller.dart';
@@ -10,8 +11,6 @@ import 'package:gymtracker/controllers/sign_up_controller.dart';
 import 'package:gymtracker/controllers/todays_attendance_controller.dart';
 import 'package:gymtracker/notifiers/approval_notifier.dart';
 
-import 'package:gymtracker/notifiers/login_notifier.dart';
-import 'package:gymtracker/notifiers/register_notifier.dart';
 import 'package:gymtracker/notifiers/renew_notifier.dart';
 
 import '../controllers/approval_controller.dart';
@@ -93,7 +92,16 @@ final attendanceByMonthProvider = ChangeNotifierProvider.autoDispose(
     return AttendanceByMonthController();
   },
 );
-
+final searchUsersProvider = ChangeNotifierProvider.autoDispose(
+  (ref) {
+    return SearchUsersController();
+  },
+);
+final expiredUsersProvider = ChangeNotifierProvider.autoDispose(
+  (ref) {
+    return ExpiredUsersController();
+  },
+);
 // final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>(
 //   (ref) => LoginNotifier(),
 // );

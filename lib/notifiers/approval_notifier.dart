@@ -1,9 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, unused_local_variable
+// ignore_for_file: public_member_api_docs, sort_constructors_first, unused_local_variable, avoid_print
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:hive/hive.dart';
@@ -142,7 +141,7 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
       (value) {
         print('admin data updated');
         CustomSnackBar.buildSnackbar(
-            color: Color(0xff4CB944),
+            color: const Color(0xff4CB944),
             context: context,
             iserror: false,
             message: 'request from $userName has been approved.',

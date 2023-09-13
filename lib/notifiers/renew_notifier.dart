@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, avoid_print
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -99,7 +98,7 @@ class RenewNotifer extends StateNotifier<RenewState> {
       (value) {
         print('admin pending renewals updated');
         CustomSnackBar.buildSnackbar(
-            color: Color(0xff4CB944),
+            color: const Color(0xff4CB944),
             context: context,
             iserror: false,
             message:

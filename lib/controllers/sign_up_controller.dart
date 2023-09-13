@@ -1,8 +1,9 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymtracker/constants.dart';
@@ -42,7 +43,9 @@ class SignUpController extends ChangeNotifier {
   changegender(String value) async {
     selectedgender = value;
     pickedImage = await convertImageToFile();
-    print(pickedImage);
+    if (kDebugMode) {
+      print(pickedImage);
+    }
     notifyListeners();
   }
 
@@ -95,7 +98,9 @@ class SignUpController extends ChangeNotifier {
       UserCredential cred = await fireBaseAuth.createUserWithEmailAndPassword(
           email: userModel.email, password: password);
       String downloadurl = await _uploadtoStorage(pickedImage);
-      print(downloadurl);
+      if (kDebugMode) {
+        print(downloadurl);
+      }
       userModel = userModel.copyWith(
         uid: cred.user?.uid,
         profilephoto: downloadurl,
@@ -133,7 +138,9 @@ class SignUpController extends ChangeNotifier {
       //   is_register_details_uploading = false;
       // }
     } on FirebaseAuthException catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       CustomSnackBar.buildSnackbar(
         context: ctx,
         color: Colors.red[500]!,
@@ -144,7 +151,9 @@ class SignUpController extends ChangeNotifier {
       is_register_details_uploading = false;
       notifyListeners();
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       CustomSnackBar.buildSnackbar(
         context: ctx,
         color: Colors.red[500]!,
@@ -172,7 +181,7 @@ class SignUpController extends ChangeNotifier {
   }
 
   Future<File> convertImageToFile() async {
-    var bytes = await rootBundle.load('assets\/images\/$selectedgender.png');
+    var bytes = await rootBundle.load('assets/images/$selectedgender.png');
     String tempPath = (await getTemporaryDirectory()).path;
     File file = File('$tempPath/$selectedgender.png');
     await file.writeAsBytes(

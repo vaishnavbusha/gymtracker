@@ -1,10 +1,9 @@
-// ignore_for_file: unused_local_variable, non_constant_identifier_names
+// ignore_for_file: unused_local_variable, non_constant_identifier_names, avoid_print
 
 import 'package:flutter/cupertino.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/enroll_model.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 
 import '../models/attendance_display_model.dart';
 
