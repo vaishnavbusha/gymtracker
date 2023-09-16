@@ -89,6 +89,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
                         ? Center(
                             child: Text(
                               'No expired user(s) found. Check again later.',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.green,
                                   fontSize: 17.sp,

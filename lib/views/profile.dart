@@ -171,413 +171,399 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   colors: [Color(0xff122B32), Colors.black],
                 ),
               ),
-              child: Center(
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: SafeArea(
-                    child: Consumer(builder: (context, ref, child) {
-                      //final profileState = ref.watch(profileControllerProvider);
-                      //profileState.userDataChanges_FirebaseListener();
-                      return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            !(userModelData.isUser)
-                                ? (userModelData.pendingApprovals!.isNotEmpty)
-                                    ? Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xff2D77D0),
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(2),
-                                            bottomRight: Radius.circular(2),
-                                          ),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: SafeArea(
+                  child: Consumer(builder: (context, ref, child) {
+                    //final profileState = ref.watch(profileControllerProvider);
+                    //profileState.userDataChanges_FirebaseListener();
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          !(userModelData.isUser)
+                              ? (userModelData.pendingApprovals!.isNotEmpty)
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xff2D77D0),
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(2),
+                                          bottomRight: Radius.circular(2),
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w, vertical: 5.h),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    'Pending Approvals :  ',
-                                                    style: TextStyle(
-                                                        color:
-                                                            color_gt_headersTextColorWhite,
-                                                        fontFamily:
-                                                            'gilroy_regularitalic',
-                                                        fontSize: 12.sp),
-                                                  ),
-                                                  Text(
-                                                    userModelData
-                                                        .pendingApprovals!
-                                                        .length
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        color:
-                                                            color_gt_headersTextColorWhite,
-                                                        fontFamily:
-                                                            'gilroy_bolditalic',
-                                                        fontSize: 15.sp),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: 5.h,
-                                                  bottom: 5.h,
-                                                ),
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    elevation: 0,
-                                                    onPrimary: Colors
-                                                        .black, //to change text color
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 7.h),
-                                                    primary:
-                                                        color_gt_headersTextColorWhite, // button color
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius
-                                                          .circular(20
-                                                              .r), // <-- Radius
-                                                    ),
-                                                    textStyle: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15.sp,
-                                                        fontFamily:
-                                                            'gilroy_bold'),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ApprovalsPage(
-                                                                  pendingApprovals:
-                                                                      userModelData
-                                                                          .pendingApprovals!),
-                                                        ));
-                                                  },
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 10.w,
-                                                        right: 10.w),
-                                                    child: Text(
-                                                      'View requests',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : Container()
-                                : Container(),
-                            (userModelData.isAwaitingEnrollment! &&
-                                    userModelData.userType == 'user' &&
-                                    userModelData.enrolledGym != null)
-                                ? Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xff2D77D0),
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(2),
-                                        bottomRight: Radius.circular(2),
                                       ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w, vertical: 5.h),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Pending Approvals :  ',
+                                                  style: TextStyle(
+                                                      color:
+                                                          color_gt_headersTextColorWhite,
+                                                      fontFamily:
+                                                          'gilroy_regularitalic',
+                                                      fontSize: 12.sp),
+                                                ),
+                                                Text(
+                                                  userModelData
+                                                      .pendingApprovals!.length
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color:
+                                                          color_gt_headersTextColorWhite,
+                                                      fontFamily:
+                                                          'gilroy_bolditalic',
+                                                      fontSize: 15.sp),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                top: 5.h,
+                                                bottom: 5.h,
+                                              ),
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  elevation: 0,
+                                                  onPrimary: Colors
+                                                      .black, //to change text color
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 7.h),
+                                                  primary:
+                                                      color_gt_headersTextColorWhite, // button color
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.r), // <-- Radius
+                                                  ),
+                                                  textStyle: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 15.sp,
+                                                      fontFamily:
+                                                          'gilroy_bold'),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ApprovalsPage(
+                                                                pendingApprovals:
+                                                                    userModelData
+                                                                        .pendingApprovals!),
+                                                      ));
+                                                },
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 10.w, right: 10.w),
+                                                  child: Text(
+                                                    'View requests',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : Container()
+                              : Container(),
+                          (userModelData.isAwaitingEnrollment! &&
+                                  userModelData.userType == 'user' &&
+                                  userModelData.enrolledGym != null)
+                              ? Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff2D77D0),
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(2),
+                                      bottomRight: Radius.circular(2),
                                     ),
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 20.h,
-                                          bottom: 20.h,
-                                          left: 10.w,
-                                          right: 10.w),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Flexible(
-                                            child: Text(
-                                              'Awaiting approval !  Your request has been sent to ${userModelData.enrolledGym}. Your request will be approved soon...',
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 20.h,
+                                        bottom: 20.h,
+                                        left: 10.w,
+                                        right: 10.w),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            'Awaiting approval !  Your request has been sent to ${userModelData.enrolledGym}. Your request will be approved soon...',
+                                            style: TextStyle(
+                                                color:
+                                                    color_gt_headersTextColorWhite,
+                                                fontSize: 12.sp,
+                                                fontFamily:
+                                                    'gilroy_regularitalic'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          (userModelData.isUser)
+                              ? enrollmentNotification(
+                                  userModelData.enrolledGym == null ||
+                                      userModelData.enrolledGym!.isEmpty,
+                                  context)
+                              : Container(),
+                          // Padding(
+                          //   padding: EdgeInsets.symmetric(vertical: 13.h),
+                          //   child:
+                          //       displayProfilePic(userModelData.profilephoto!),
+                          // ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
+                            child: Divider(
+                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              height: 1.h,
+                              thickness: 1,
+                              // endIndent: 10.w,
+                              // indent: 20.w,
+                            ),
+                          ),
+                          profileDataBlock(
+                              'UserName', userModelData.userName, false),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
+                            child: Divider(
+                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              height: 1.h,
+                              thickness: 1,
+                              // endIndent: 10.w,
+                              // indent: 20.w,
+                            ),
+                          ),
+                          // Text(
+                          //   '${userModelData.userName} (${userModelData.userType})',
+                          //   style: TextStyle(
+                          //       color: color_gt_green,
+                          //       fontFamily: 'gilroy_bolditalic',
+                          //       fontSize: 20.sp),
+                          // ),
+
+                          // Padding(
+                          //   padding: EdgeInsets.only(top: 12.h, bottom: 2.h),
+                          //   child: Divider(
+                          //     color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                          //     height: 1.h,
+                          //     thickness: 1,
+                          //     // endIndent: 10.w,
+                          //     // indent: 20.w,
+                          //   ),
+                          // ),
+                          profileDataBlock('Email', userModelData.email, true),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
+                            child: Divider(
+                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              height: 1.h,
+                              thickness: 1,
+                              // endIndent: 10.w,
+                              // indent: 20.w,
+                            ),
+                          ),
+                          profileDataBlock('DOB', userModelData.DOB, false),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
+                            child: Divider(
+                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              height: 1.h,
+                              thickness: 1,
+                              // endIndent: 10.w,
+                              // indent: 20.w,
+                            ),
+                          ),
+                          profileDataBlock(
+                              'Phone', userModelData.phoneNumber!, true),
+                          (userModelData.enrolledGym != null &&
+                                  !userModelData.isAwaitingEnrollment!)
+                              ? Column(children: [
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.h),
+                                    child: Divider(
+                                      color: color_gt_greenHalfOpacity
+                                          .withOpacity(0.3),
+                                      height: 1.h,
+                                      thickness: 1,
+                                      // endIndent: 10.w,
+                                      // indent: 20.w,
+                                    ),
+                                  ),
+                                  profileDataBlock(
+                                      (userModelData.isUser)
+                                          ? 'Enrolled Gym'
+                                          : 'Admin of',
+                                      userModelData.enrolledGym!,
+                                      false),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.h),
+                                    child: Divider(
+                                      color: color_gt_greenHalfOpacity
+                                          .withOpacity(0.3),
+                                      height: 1.h,
+                                      thickness: 1,
+                                      // endIndent: 10.w,
+                                      // indent: 20.w,
+                                    ),
+                                  ),
+                                  profileDataBlock(
+                                      (userModelData.isUser)
+                                          ? 'Joined Gym on'
+                                          : 'GymPartner since',
+                                      userModelData.enrolledGymDate,
+                                      false),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.h),
+                                    child: Divider(
+                                      color: color_gt_greenHalfOpacity
+                                          .withOpacity(0.3),
+                                      height: 1.h,
+                                      thickness: 1,
+                                      // endIndent: 10.w,
+                                      // indent: 20.w,
+                                    ),
+                                  ),
+                                  (userModelData.recentRenewedOn != null)
+                                      ? profileDataBlock(
+                                          'Membership renewed on',
+                                          userModelData.recentRenewedOn,
+                                          false)
+                                      : Container(),
+                                  (userModelData.recentRenewedOn != null)
+                                      ? Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.h),
+                                          child: Divider(
+                                            color: color_gt_greenHalfOpacity
+                                                .withOpacity(0.3),
+                                            height: 1.h,
+                                            thickness: 1,
+                                            // endIndent: 10.w,
+                                            // indent: 20.w,
+                                          ),
+                                        )
+                                      : Container(),
+                                  membershipExpiryBlock(
+                                      (userModelData.isUser)
+                                          ? 'MemberShip expiry'
+                                          : 'Partnership expiry',
+                                      userModelData,
+                                      false),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.h),
+                                    child: Divider(
+                                      color: color_gt_greenHalfOpacity
+                                          .withOpacity(0.3),
+                                      height: 1.h,
+                                      thickness: 1,
+                                      // endIndent: 10.w,
+                                      // indent: 20.w,
+                                    ),
+                                  ),
+                                  profileDataBlock(
+                                      (userModelData.isUser)
+                                          ? 'Fees Paid(₹)'
+                                          : 'Partnership fees',
+                                      userModelData.memberShipFeesPaid
+                                          .toString(),
+                                      false),
+                                ])
+                              : Container(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
+                            child: Divider(
+                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              height: 1.h,
+                              thickness: 1,
+                              // endIndent: 10.w,
+                              // indent: 20.w,
+                            ),
+                          ),
+                          (userModelData.isUser)
+                              ? Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 20.h, bottom: 10.h),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text:
+                                                  'To partner up with GymTracker App, kindly e-mail us at  ',
                                               style: TextStyle(
                                                   color:
                                                       color_gt_headersTextColorWhite,
-                                                  fontSize: 12.sp,
-                                                  fontFamily:
-                                                      'gilroy_regularitalic'),
+                                                  fontSize: 8.sp,
+                                                  fontFamily: 'gilroy_bold'),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text:
+                                                        'gymtracker@gmail.com',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'gilroy_regular',
+                                                        color: color_gt_green,
+                                                        fontSize: 10.sp)),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                            (userModelData.isUser)
-                                ? enrollmentNotification(
-                                    userModelData.enrolledGym == null ||
-                                        userModelData.enrolledGym!.isEmpty,
-                                    context)
-                                : Container(),
-                            // Padding(
-                            //   padding: EdgeInsets.symmetric(vertical: 13.h),
-                            //   child:
-                            //       displayProfilePic(userModelData.profilephoto!),
-                            // ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: Divider(
-                                color:
-                                    color_gt_greenHalfOpacity.withOpacity(0.3),
-                                height: 1.h,
-                                thickness: 1,
-                                // endIndent: 10.w,
-                                // indent: 20.w,
-                              ),
-                            ),
-                            profileDataBlock(
-                                'UserName', userModelData.userName, false),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: Divider(
-                                color:
-                                    color_gt_greenHalfOpacity.withOpacity(0.3),
-                                height: 1.h,
-                                thickness: 1,
-                                // endIndent: 10.w,
-                                // indent: 20.w,
-                              ),
-                            ),
-                            // Text(
-                            //   '${userModelData.userName} (${userModelData.userType})',
-                            //   style: TextStyle(
-                            //       color: color_gt_green,
-                            //       fontFamily: 'gilroy_bolditalic',
-                            //       fontSize: 20.sp),
-                            // ),
+                                        ),
+                                      ]),
+                                )
+                              : Container(),
 
-                            // Padding(
-                            //   padding: EdgeInsets.only(top: 12.h, bottom: 2.h),
-                            //   child: Divider(
-                            //     color: color_gt_greenHalfOpacity.withOpacity(0.3),
-                            //     height: 1.h,
-                            //     thickness: 1,
-                            //     // endIndent: 10.w,
-                            //     // indent: 20.w,
-                            //   ),
-                            // ),
-                            profileDataBlock(
-                                'Email', userModelData.email, true),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: Divider(
-                                color:
-                                    color_gt_greenHalfOpacity.withOpacity(0.3),
-                                height: 1.h,
-                                thickness: 1,
-                                // endIndent: 10.w,
-                                // indent: 20.w,
+                          /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 84.h, vertical: 20.h),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                //onPrimary: Colors.black,  //to change text color
+                                padding: EdgeInsets.symmetric(vertical: 7.h),
+                                primary: color_gt_green, // button color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10.r), // <-- Radius
+                                ),
+                                textStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15.sp,
+                                    fontFamily: 'gilroy_bold'),
                               ),
-                            ),
-                            profileDataBlock('DOB', userModelData.DOB, false),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: Divider(
-                                color:
-                                    color_gt_greenHalfOpacity.withOpacity(0.3),
-                                height: 1.h,
-                                thickness: 1,
-                                // endIndent: 10.w,
-                                // indent: 20.w,
-                              ),
-                            ),
-                            profileDataBlock(
-                                'Phone', userModelData.phoneNumber!, true),
-                            (userModelData.enrolledGym != null &&
-                                    !userModelData.isAwaitingEnrollment!)
-                                ? Column(children: [
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: Divider(
-                                        color: color_gt_greenHalfOpacity
-                                            .withOpacity(0.3),
-                                        height: 1.h,
-                                        thickness: 1,
-                                        // endIndent: 10.w,
-                                        // indent: 20.w,
-                                      ),
-                                    ),
-                                    profileDataBlock(
-                                        (userModelData.isUser)
-                                            ? 'Enrolled Gym'
-                                            : 'Admin of',
-                                        userModelData.enrolledGym!,
-                                        false),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: Divider(
-                                        color: color_gt_greenHalfOpacity
-                                            .withOpacity(0.3),
-                                        height: 1.h,
-                                        thickness: 1,
-                                        // endIndent: 10.w,
-                                        // indent: 20.w,
-                                      ),
-                                    ),
-                                    profileDataBlock(
-                                        (userModelData.isUser)
-                                            ? 'Joined Gym on'
-                                            : 'GymPartner since',
-                                        userModelData.enrolledGymDate,
-                                        false),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: Divider(
-                                        color: color_gt_greenHalfOpacity
-                                            .withOpacity(0.3),
-                                        height: 1.h,
-                                        thickness: 1,
-                                        // endIndent: 10.w,
-                                        // indent: 20.w,
-                                      ),
-                                    ),
-                                    (userModelData.recentRenewedOn != null)
-                                        ? profileDataBlock(
-                                            'Membership renewed on',
-                                            userModelData.recentRenewedOn,
-                                            false)
-                                        : Container(),
-                                    (userModelData.recentRenewedOn != null)
-                                        ? Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 2.h),
-                                            child: Divider(
-                                              color: color_gt_greenHalfOpacity
-                                                  .withOpacity(0.3),
-                                              height: 1.h,
-                                              thickness: 1,
-                                              // endIndent: 10.w,
-                                              // indent: 20.w,
-                                            ),
-                                          )
-                                        : Container(),
-                                    membershipExpiryBlock(
-                                        (userModelData.isUser)
-                                            ? 'MemberShip expiry'
-                                            : 'Partnership expiry',
-                                        userModelData,
-                                        false),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: Divider(
-                                        color: color_gt_greenHalfOpacity
-                                            .withOpacity(0.3),
-                                        height: 1.h,
-                                        thickness: 1,
-                                        // endIndent: 10.w,
-                                        // indent: 20.w,
-                                      ),
-                                    ),
-                                    profileDataBlock(
-                                        (userModelData.isUser)
-                                            ? 'Fees Paid(₹)'
-                                            : 'Partnership fees',
-                                        userModelData.memberShipFeesPaid
-                                            .toString(),
-                                        false),
-                                  ])
-                                : Container(),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: Divider(
-                                color:
-                                    color_gt_greenHalfOpacity.withOpacity(0.3),
-                                height: 1.h,
-                                thickness: 1,
-                                // endIndent: 10.w,
-                                // indent: 20.w,
-                              ),
-                            ),
-                            (userModelData.isUser)
-                                ? Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 20.h, bottom: 10.h),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: RichText(
-                                              text: TextSpan(
-                                                text:
-                                                    'To partner up with GymTracker App, kindly e-mail us at  ',
-                                                style: TextStyle(
-                                                    color:
-                                                        color_gt_headersTextColorWhite,
-                                                    fontSize: 8.sp,
-                                                    fontFamily: 'gilroy_bold'),
-                                                children: <TextSpan>[
-                                                  TextSpan(
-                                                      text:
-                                                          'gymtracker@gmail.com',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'gilroy_regular',
-                                                          color: color_gt_green,
-                                                          fontSize: 10.sp)),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ]),
-                                  )
-                                : Container(),
-
-                            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 84.h, vertical: 20.h),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  //onPrimary: Colors.black,  //to change text color
-                                  padding: EdgeInsets.symmetric(vertical: 7.h),
-                                  primary: color_gt_green, // button color
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        10.r), // <-- Radius
+                              onPressed: () async {
+                                await signOut();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.logout_rounded),
+                                  Text(
+                                    'Logout',
                                   ),
-                                  textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15.sp,
-                                      fontFamily: 'gilroy_bold'),
-                                ),
-                                onPressed: () async {
-                                  await signOut();
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.logout_rounded),
-                                    Text(
-                                      'Logout',
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
-                          ]);
-                    }),
-                  ),
+                          ),
+                        ]);
+                  }),
                 ),
               ),
             ),

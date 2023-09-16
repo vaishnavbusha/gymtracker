@@ -6,11 +6,13 @@ class AttendanceDisplayModel {
   String? uid;
   String? userName;
   DateTime? scannedDateTime;
+  DateTime? exitScannedDateTime;
   AttendanceDisplayModel({
     this.index,
     this.uid,
     this.userName,
     this.scannedDateTime,
+    this.exitScannedDateTime,
   });
 
   AttendanceDisplayModel copyWith({
@@ -18,12 +20,14 @@ class AttendanceDisplayModel {
     String? uid,
     String? userName,
     DateTime? scannedDateTime,
+    DateTime? exitScannedDateTime,
   }) {
     return AttendanceDisplayModel(
       index: index ?? this.index,
       uid: uid ?? this.uid,
       userName: userName ?? this.userName,
       scannedDateTime: scannedDateTime ?? this.scannedDateTime,
+      exitScannedDateTime: exitScannedDateTime ?? this.exitScannedDateTime,
     );
   }
 
@@ -33,6 +37,7 @@ class AttendanceDisplayModel {
       'uid': uid,
       'userName': userName,
       'scannedDateTime': scannedDateTime?.millisecondsSinceEpoch,
+      'exitScannedDateTime': exitScannedDateTime?.millisecondsSinceEpoch,
     };
   }
 
@@ -43,6 +48,9 @@ class AttendanceDisplayModel {
       userName: map['userName'] != null ? map['userName'] as String : null,
       scannedDateTime: map['scannedDateTime'] != null
           ? map['scannedDateTime'].toDate()
+          : null,
+      exitScannedDateTime: map['exitScannedDateTime'] != null
+          ? map['exitScannedDateTime'].toDate()
           : null,
     );
   }
@@ -55,7 +63,7 @@ class AttendanceDisplayModel {
 
   @override
   String toString() {
-    return 'AttendanceDisplayModel(index: $index, uid: $uid, userName: $userName, scannedDateTime: $scannedDateTime)';
+    return 'AttendanceDisplayModel(index: $index, uid: $uid, userName: $userName, scannedDateTime: $scannedDateTime, exitScannedDateTime: $exitScannedDateTime)';
   }
 
   @override
@@ -65,7 +73,8 @@ class AttendanceDisplayModel {
     return other.index == index &&
         other.uid == uid &&
         other.userName == userName &&
-        other.scannedDateTime == scannedDateTime;
+        other.scannedDateTime == scannedDateTime &&
+        other.exitScannedDateTime == exitScannedDateTime;
   }
 
   @override
@@ -73,6 +82,7 @@ class AttendanceDisplayModel {
     return index.hashCode ^
         uid.hashCode ^
         userName.hashCode ^
-        scannedDateTime.hashCode;
+        scannedDateTime.hashCode ^
+        exitScannedDateTime.hashCode;
   }
 }

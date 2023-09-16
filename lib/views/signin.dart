@@ -52,6 +52,8 @@ class _SignInPageState extends State<SignInPage> {
       child: Scaffold(
         //backgroundColor: Colors.black,
         body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -67,227 +69,233 @@ class _SignInPageState extends State<SignInPage> {
               ),
               child: Form(
                 key: _formKey,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
+                child: Center(
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            'GymTracker',
-                            style: TextStyle(
-                              //foreground: Paint()..shader = linearGradient,
-                              color: Colors.white,
-                              fontFamily: "teko-med",
-                              fontSize: 60.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 15.h),
-                      // Padding(
-                      //   padding: EdgeInsets.only(top: 20.h),
-                      //   child: Row(children: [
-                      //     Text(
-                      //       'Login',
-                      //       style: TextStyle(
-                      //         foreground: Paint()..shader = linearGradient,
-                      //         //color: Colors.white,
-                      //         fontFamily: "teko-med",
-                      //         fontSize: 30.sp,
-                      //       ),
-                      //     ),
-                      //   ]),
-                      // ),
-                      CustomTextFieldSignIn(
-                        controller: _emailController,
-                        icon: Icons.email,
-                        isObscure: false,
-                        labeltext: 'Email',
-                        tia: TextInputAction.newline,
-                      ),
-                      CustomTextFieldSignIn(
-                        controller: _passwordController,
-                        icon: Icons.security_outlined,
-                        isObscure: true,
-                        labeltext: 'Password',
-                        tia: TextInputAction.newline,
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 17.w,
-                        ),
-                        child: Consumer(builder: (context, ref, _) {
-                          final login = ref.watch(loginProvider);
-
-                          return (login.is_login_details_uploading == false)
-                              ? GestureDetector(
-                                  onTap: () {
-                                    //validateAndSave();
-                                    final FormState form =
-                                        _formKey.currentState!;
-                                    if (form.validate()) {
-                                      login.loginuser(
-                                        ctx: context,
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                      );
-                                    } else {
-                                      print('Form is invalid');
-                                    }
-                                    // login.loginuser(
-                                    //   ctx: context,
-                                    //   email: _emailController.text,
-                                    //   password: _passwordController.text,
-                                    // );
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 40.h,
-                                    decoration: BoxDecoration(
-                                      color: color_gt_green,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(5.r),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Login',
-                                        style: TextStyle(
-                                            fontFamily: 'gilroy_bold',
-                                            fontSize: 20.sp,
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Loader(
-                                  loadercolor: color_gt_green,
-                                );
-                        }),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 7.w,
-                        ),
-                        child: Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Flexible(
-                                  child: Divider(
-                                color: color_gt_greenHalfOpacity,
-                                height: 1.h,
-                                thickness: 1,
-                                endIndent: 10.w,
-                                indent: 20.w,
-                              )),
                               Text(
-                                'or',
+                                'GymTracker',
                                 style: TextStyle(
-                                    fontFamily: 'gilroy_regular',
-                                    fontSize: 15.sp,
-                                    color: color_gt_green),
-                              ),
-                              Flexible(
-                                  child: Divider(
-                                color: color_gt_greenHalfOpacity,
-                                height: 1.h,
-                                thickness: 1,
-                                endIndent: 20.w,
-                                indent: 10.w,
-                              )),
-                            ]),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 7.w,
-                        ),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 40.h,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: color_gt_green,
-                              style: BorderStyle.solid,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.r),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/icons8-google.svg',
-                                semanticsLabel: 'My SVG Image',
-                                height: 20,
-                                width: 20,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Log-in with Google',
-                                style: TextStyle(
-                                    fontFamily: 'gilroy_bold',
-                                    fontSize: 15.sp,
-                                    color: color_gt_headersTextColorWhite),
+                                  //foreground: Paint()..shader = linearGradient,
+                                  color: Colors.white,
+                                  fontFamily: "teko-med",
+                                  fontSize: 60.sp,
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 27.h),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Don\'t have an account? ',
-                              style: TextStyle(
-                                color: color_gt_headersTextColorWhite,
-                                fontSize: 14.sp,
-                                fontFamily: 'gilroy_regular',
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    ScaleRoute(
-                                      page: SignUpPage(),
-                                    ));
-                                // Navigator.pushReplacement(
-                                //     context,
+                          SizedBox(height: 15.h),
+                          // Padding(
+                          //   padding: EdgeInsets.only(top: 20.h),
+                          //   child: Row(children: [
+                          //     Text(
+                          //       'Login',
+                          //       style: TextStyle(
+                          //         foreground: Paint()..shader = linearGradient,
+                          //         //color: Colors.white,
+                          //         fontFamily: "teko-med",
+                          //         fontSize: 30.sp,
+                          //       ),
+                          //     ),
+                          //   ]),
+                          // ),
+                          CustomTextFieldSignIn(
+                            controller: _emailController,
+                            icon: Icons.email,
+                            isObscure: false,
+                            labeltext: 'Email',
+                            tia: TextInputAction.newline,
+                          ),
+                          CustomTextFieldSignIn(
+                            controller: _passwordController,
+                            icon: Icons.security_outlined,
+                            isObscure: true,
+                            labeltext: 'Password',
+                            tia: TextInputAction.newline,
+                          ),
 
-                                //     MaterialPageRoute(
-                                //       builder: (context) => SignUpPage(),
-                                //     ));
-                                // Navigator.pushReplacement(
-                                //     context,
-                                //     ScaleRoute(
-                                //       page: ChangeNotifierProvider(
-                                //         create: (context) => RegisterController(),
-                                //         child: RegisterScreen(),
-                                //       ),
-                                //     ));
-                              },
-                              child: Text(
-                                'Sign-up here !',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: color_gt_green,
-                                  fontFamily: 'gilroy_bolditalic',
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 17.w,
+                            ),
+                            child: Consumer(builder: (context, ref, _) {
+                              final login = ref.watch(loginProvider);
+
+                              return (login.is_login_details_uploading == false)
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        //validateAndSave();
+                                        final FormState form =
+                                            _formKey.currentState!;
+                                        if (form.validate()) {
+                                          login.loginuser(
+                                            ctx: context,
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                          );
+                                        } else {
+                                          print('Form is invalid');
+                                        }
+                                        // login.loginuser(
+                                        //   ctx: context,
+                                        //   email: _emailController.text,
+                                        //   password: _passwordController.text,
+                                        // );
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 50.h,
+                                        decoration: BoxDecoration(
+                                          color: color_gt_green,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(5.r),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Login',
+                                            style: TextStyle(
+                                                fontFamily: 'gilroy_bold',
+                                                fontSize: 20.sp,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Loader(
+                                      loadercolor: color_gt_green,
+                                    );
+                            }),
+                          ),
+                          // Padding(
+                          //   padding: EdgeInsets.only(
+                          //     top: 7.w,
+                          //   ),
+                          //   child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: [
+                          //         Flexible(
+                          //             child: Divider(
+                          //           color: color_gt_greenHalfOpacity,
+                          //           height: 1.h,
+                          //           thickness: 1,
+                          //           endIndent: 10.w,
+                          //           indent: 20.w,
+                          //         )),
+                          //         Text(
+                          //           'or',
+                          //           style: TextStyle(
+                          //               fontFamily: 'gilroy_regular',
+                          //               fontSize: 15.sp,
+                          //               color: color_gt_green),
+                          //         ),
+                          //         Flexible(
+                          //             child: Divider(
+                          //           color: color_gt_greenHalfOpacity,
+                          //           height: 1.h,
+                          //           thickness: 1,
+                          //           endIndent: 20.w,
+                          //           indent: 10.w,
+                          //         )),
+                          //       ]),
+                          // ),
+                          // Padding(
+                          //   padding: EdgeInsets.only(
+                          //     top: 7.w,
+                          //   ),
+                          //   child: Container(
+                          //     width: MediaQuery.of(context).size.width,
+                          //     height: 40.h,
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //         width: 1,
+                          //         color: color_gt_green,
+                          //         style: BorderStyle.solid,
+                          //       ),
+                          //       borderRadius: BorderRadius.all(
+                          //         Radius.circular(5.r),
+                          //       ),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: [
+                          //         SvgPicture.asset(
+                          //           'assets/images/icons8-google.svg',
+                          //           semanticsLabel: 'My SVG Image',
+                          //           height: 20,
+                          //           width: 20,
+                          //         ),
+                          //         SizedBox(
+                          //           width: 10,
+                          //         ),
+                          //         Text(
+                          //           'Log-in with Google',
+                          //           style: TextStyle(
+                          //               fontFamily: 'gilroy_bold',
+                          //               fontSize: 15.sp,
+                          //               color: color_gt_headersTextColorWhite),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 27.h),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Don\'t have an account? ',
+                                  style: TextStyle(
+                                    color: color_gt_headersTextColorWhite,
+                                    fontSize: 14.sp,
+                                    fontFamily: 'gilroy_regular',
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ]),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        ScaleRoute(
+                                          page: SignUpPage(),
+                                        ));
+                                    // Navigator.pushReplacement(
+                                    //     context,
+
+                                    //     MaterialPageRoute(
+                                    //       builder: (context) => SignUpPage(),
+                                    //     ));
+                                    // Navigator.pushReplacement(
+                                    //     context,
+                                    //     ScaleRoute(
+                                    //       page: ChangeNotifierProvider(
+                                    //         create: (context) => RegisterController(),
+                                    //         child: RegisterScreen(),
+                                    //       ),
+                                    //     ));
+                                  },
+                                  child: Text(
+                                    'Sign-up here !',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: color_gt_green,
+                                      fontFamily: 'gilroy_bolditalic',
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ]),
+                  ),
+                ),
               ),
             ),
           ),

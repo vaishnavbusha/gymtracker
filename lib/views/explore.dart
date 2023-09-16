@@ -92,10 +92,10 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                     child: GridView.count(
                       shrinkWrap: true,
                       crossAxisCount: 2,
-                      childAspectRatio: 1,
-                      padding: const EdgeInsets.all(4.0),
-                      mainAxisSpacing: 10.0,
-                      crossAxisSpacing: 10.0,
+                      childAspectRatio: 1.2,
+                      padding: EdgeInsets.all(4.w),
+                      mainAxisSpacing: 15.0,
+                      crossAxisSpacing: 15.0,
                       children: <Widget>[
                         viewButton(' My Users', () {
                           Navigator.of(context, rootNavigator: true).push(
@@ -118,21 +118,21 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                             ),
                           );
                         }),
-                        viewButton(' today\'s attendance', () {
+                        viewButton(' Today\'s attendance', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => TodaysAttendance(),
                             ),
                           );
                         }),
-                        viewButton(' attendance by date in current month', () {
+                        viewButton(' Attendance by date in current month', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => AttendanceByDate(),
                             ),
                           );
                         }),
-                        viewButton(' attendance monthly basis', () {
+                        viewButton(' Attendance monthly basis', () {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (_) => AttendanceByMonth(),
@@ -166,11 +166,11 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
 
   viewButton(String text, Function func) {
     return Material(
-      borderRadius: BorderRadius.circular(10.r),
+      borderRadius: BorderRadius.circular(15.r),
       child: Ink(
         decoration: BoxDecoration(
           color: color_gt_green,
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(15.r),
           //border: Border.all(width: 1, color: Colors.white12),
         ),
         child: InkWell(
@@ -182,7 +182,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                 text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 13.sp,
+                  fontSize: 20.sp,
                   color: color_gt_headersTextColorWhite,
                   fontFamily: 'gilroy_bolditalic',
                 ),

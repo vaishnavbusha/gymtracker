@@ -46,7 +46,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
               title: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'My BodyBuilders',
+                  'My GymMembers',
                   style: TextStyle(
                       fontFamily: 'gilroy_bold',
                       color: color_gt_green,

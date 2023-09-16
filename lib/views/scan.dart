@@ -11,6 +11,7 @@ import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanPage extends ConsumerStatefulWidget {
@@ -41,6 +42,12 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   // }
   @override
   void initState() {
+    final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+    if (datetime != Hive.box(miscellaneousDataHIVE).get('scannedDate')) {
+      Hive.box(miscellaneousDataHIVE).put('scannedDate', null);
+      Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', false);
+    }
     // TODO: implement initState
     super.initState();
   }
@@ -107,8 +114,6 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                         return (days < 0)
                             ? Container(
                                 width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.07,
                                 color: Color(0xff2D77D0),
                                 alignment: Alignment.topCenter,
                                 child: Padding(
@@ -128,6 +133,43 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                 ),
                               )
                             : Container();
+                      })
+                  : Container(),
+              (Hive.box(miscellaneousDataHIVE).get("isEnterScanScanned") !=
+                      null)
+                  ? ValueListenableBuilder<Box<dynamic>>(
+                      valueListenable:
+                          Hive.box(miscellaneousDataHIVE).listenable(),
+                      builder: (context, box, __) {
+                        final bool = box.get('isEnterScanScanned');
+                        // var expiresOn =
+                        //     DateTime(date.year, date.month, date.day);
+                        // int days =
+                        //     (expiresOn.difference(DateTime.now()).inHours / 24)
+                        //         .round();
+
+                        // return (days < 0)
+                        //     ?
+                        return (bool)
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                color: Colors.orange.withOpacity(0.5),
+                                alignment: Alignment.topCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.all(15.sp),
+                                  child: Center(
+                                    child: Text(
+                                      'Today\'s entry time has already been marked, kindly re-scan the QR for marking exit-time before leaving the gym.',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13.sp,
+                                          fontFamily: 'gilroy_regularitalic'),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container();
+                        //: Container();
                       })
                   : Container(),
               Consumer(builder: (context, ref, __) {
@@ -165,7 +207,13 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                                     'isAwaitingEnrollment') ||
                                                 (days < 0))
                                             ? Colors.grey
-                                            : color_gt_green, // button color
+                                            : (Hive.box(miscellaneousDataHIVE).get(
+                                                        "isEnterScanScanned") ||
+                                                    scanState
+                                                        .isEnterScanScanned!)
+                                                ? Colors.orange
+                                                    .withOpacity(0.85)
+                                                : color_gt_green, // button color
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
                                               10.r), // <-- Radius
@@ -253,7 +301,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                     ],
                                   ),
                                 ),
-                        )
+                        ),
                       ]),
                 );
               }),

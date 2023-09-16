@@ -163,11 +163,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               top: 10.w,
                             ),
                             child: SizedBox(
-                              height: 44.h,
+                              //height: 44.h,
                               child: Consumer(builder: (context, ref, child) {
                                 final register =
                                     ref.watch(signUpControllerProvider);
                                 return DropdownButtonFormField<String>(
+                                  isExpanded: true,
                                   dropdownColor: color_gt_textColorBlueGrey,
                                   decoration: InputDecoration(
                                     filled: true,
@@ -295,7 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                       child: Container(
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        height: 40.h,
+                                        height: 50.h,
                                         decoration: BoxDecoration(
                                           color: color_gt_green,
                                           borderRadius: BorderRadius.all(
@@ -550,7 +551,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 if (value!.isEmpty) {
                   return '"Email" field can\'t be empty !';
                 } else if (!RegExp(
-                        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                     .hasMatch(value)) {
                   return '"Email" is badly formatted !';
                 } else {
@@ -559,13 +560,11 @@ class _SignUpPageState extends State<SignUpPage> {
               } else if (labeltext == 'Password') {
                 if (value!.isEmpty) {
                   return '"password" field can\'t be empty';
-                }
-                //  else if (!RegExp(
-                //         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                //     .hasMatch(value)) {
-                //   return 'minimum 8 characters, atleast one letter and one number !';
-                // }
-                else {
+                } else if (!RegExp(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                    .hasMatch(value)) {
+                  return 'minimum 8 characters, atleast one letter and one number !';
+                } else {
                   return null;
                 }
               } else if (labeltext == 'Confirm Password') {

@@ -18,6 +18,7 @@ class AttendanceByMonthController extends ChangeNotifier {
   //List<Map<String, List>> attendanceData = [];
   List<Map<String, List>> attendanceDataUIDsOnly = [];
   List<Map<String, List>> attendanceDataDateTimeOnly = [];
+  List<Map<String, List>> attendanceDataExitDateTimeOnly = [];
   List<Map<String, String>> usersDataUIDs_names = [];
   List attendanceByRow = [];
   //final String monthData = DateFormat('MMM').format(DateTime.now());
@@ -55,10 +56,11 @@ class AttendanceByMonthController extends ChangeNotifier {
 
     dropdownvalue = monthValue;
     //attendanceData.clear();
-    attendanceByRow.clear();
     attendanceDataDateTimeOnly.clear();
     usersDataUIDs_names.clear();
+    attendanceDataExitDateTimeOnly.clear();
     attendanceDataUIDsOnly.clear();
+    attendanceByRow.clear();
     getDatesListFromGymPartner();
     notifyListeners();
   }
@@ -72,7 +74,6 @@ class AttendanceByMonthController extends ChangeNotifier {
         for (var x in value.docs) {
           availableMonths.add(x.id);
         }
-        print(availableMonths);
       },
     );
     notifyListeners();
@@ -89,7 +90,6 @@ class AttendanceByMonthController extends ChangeNotifier {
             (value.data() as Map<String, dynamic>)['datesList'];
       },
     );
-    print(availabledatesList);
 
     for (var element in availabledatesList) {
       columnData.add(element);
@@ -112,6 +112,7 @@ class AttendanceByMonthController extends ChangeNotifier {
           List tempData = [];
           List tempUIDData = [];
           List tempPerUIDScannedDateTime = [];
+          List tempPerUIDTime_out = [];
           List tempNamesData = [];
           for (var doc in value.docs) {
             AttendanceDisplayModel attendanceDisplayModel =
@@ -126,16 +127,17 @@ class AttendanceByMonthController extends ChangeNotifier {
             tempUIDData.add(attendanceDisplayModel.uid);
             tempPerUIDScannedDateTime
                 .add(attendanceDisplayModel.scannedDateTime);
+            tempPerUIDTime_out.add(attendanceDisplayModel.exitScannedDateTime);
             tempNamesData.add(attendanceDisplayModel.userName);
           }
           //attendanceData.add({x: tempData});
-
           attendanceDataUIDsOnly.add({x: tempUIDData});
           attendanceDataDateTimeOnly.add({x: tempPerUIDScannedDateTime});
+          attendanceDataExitDateTimeOnly.add({x: tempPerUIDTime_out});
         },
       );
     }
-    print(attendanceDataUIDsOnly);
+
     await attendanceByRowFunction();
     notifyListeners();
   }
@@ -157,21 +159,38 @@ class AttendanceByMonthController extends ChangeNotifier {
 
         List attendanceDateTimeListPerDate =
             attendanceDateTimeMapAtIndex[date]!;
-        print(attendanceDateTimeListPerDate);
 
+        Map<String, List> attendanceDateTimeExitMapAtIndex =
+            attendanceDataExitDateTimeOnly[availabledatesList.indexOf(date)];
+
+        List attendanceDateTimeExitListPerDate =
+            attendanceDateTimeExitMapAtIndex[date]!;
+
+        List scanInOutData = ['', ''];
         if (attendanceUIDsListPerDate.contains(userID)) {
           int index =
               attendanceUIDsListPerDate.indexWhere((item) => item == userID);
-
-          tempdata.add(attendanceDateTimeListPerDate[index]);
+          scanInOutData[0] = attendanceDateTimeListPerDate[index];
+          //tempdata.add(attendanceDateTimeListPerDate[index]);
         } else {
-          tempdata.add(null);
+          scanInOutData[0] = null;
+          //tempdata.add(null);
         }
+        if (attendanceUIDsListPerDate.contains(userID)) {
+          int index =
+              attendanceUIDsListPerDate.indexWhere((item) => item == userID);
+          scanInOutData[1] = attendanceDateTimeExitListPerDate[index];
+          print(scanInOutData[1]);
+        } else {
+          scanInOutData[1] = null;
+        }
+
+        tempdata.add(scanInOutData.toList());
       }
       attendanceByRow.add([userName, ...tempdata]);
       bufferindex++;
     }
-    print(attendanceByRow);
+    //print(attendanceByRow);
     notifyListeners();
   }
 }

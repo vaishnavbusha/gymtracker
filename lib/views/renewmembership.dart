@@ -548,8 +548,9 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
             ),
           ),
           Container(
-            height: 43.h,
-            width: MediaQuery.of(context).size.width * 0.59,
+            width: (tagName == 'Previously Paid(₹)')
+                ? MediaQuery.of(context).size.width * 0.52
+                : MediaQuery.of(context).size.width * 0.59,
             decoration: BoxDecoration(
               color: Colors.white10,
               borderRadius: BorderRadius.circular(10.r),

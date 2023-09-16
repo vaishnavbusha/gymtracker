@@ -90,12 +90,13 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SizedBox(
-                        height: 35.h,
+                        //height: 35.h,
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Consumer(builder: (context, ref, child) {
                           final attendanceByMonthState =
                               ref.watch(attendanceByMonthProvider);
                           return DropdownButtonFormField<String>(
+                            isExpanded: true,
                             itemHeight: 50,
                             dropdownColor: color_gt_textColorBlueGrey,
                             decoration: InputDecoration(
@@ -197,6 +198,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                     padding: EdgeInsets.only(top: 20),
                     child: (attendanceByMonthState.attendanceByRow.isNotEmpty)
                         ? SingleChildScrollView(
+                            physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             child: SingleChildScrollView(
                                 physics: BouncingScrollPhysics(),
@@ -277,10 +279,17 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
       var x;
       if (e.runtimeType == String) {
         x = e;
-      } else if (e.runtimeType == DateTime) {
-        x = DateFormat.jm().format(e).toString();
-      } else {
-        x = '-';
+      } else if (e.runtimeType == List) {
+        //print(e);
+        List temp = [];
+        for (var i in e) {
+          if (i.runtimeType == DateTime) {
+            temp.add(DateFormat.jm().format(i).toString());
+          } else {
+            temp.add('-');
+          }
+        }
+        x = temp.join('   |   ');
       }
       cellsData.add(DataCellWidget(x));
     }

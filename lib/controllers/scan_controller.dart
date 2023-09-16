@@ -28,6 +28,7 @@ class ScanController extends ChangeNotifier {
   ScannedQRModel? scannedQRModel;
   String? uploadStatus;
   bool? isDataUploading = false;
+  bool? isEnterScanScanned = false;
   ScanController() {
     gymPartnersCollection = fireBaseFireStore.collection('gympartners');
   }
@@ -57,7 +58,7 @@ class ScanController extends ChangeNotifier {
         if (kDebugMode) {
           print('cancelled');
         }
-        throw 'Successfully exited the QR Scanner';
+        //throw 'Successfully exited the QR Scanner';
       } else {
         var jsonDecodedData = jsonDecode(this.scannedData);
 
@@ -172,7 +173,7 @@ class ScanController extends ChangeNotifier {
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
     final monthData = DateFormat('MMM').format(DateTime.now());
     //checkDocuement(enrollModel, monthData, datetime);
-    testCheckDocument(enrollModel, monthData, datetime);
+    checkDocument(enrollModel, monthData, datetime);
     // try {
     //   await fireBaseFireStore
     //       .collection(enrollModel.gymPartnerGYMName!)
@@ -190,11 +191,11 @@ class ScanController extends ChangeNotifier {
     // }
   }
 
-  testCheckDocument(
+  checkDocument(
       EnrollModel enrollModel, String monthdata, String datetime) async {
     AttendanceModel attendanceModel = AttendanceModel(
         scannedDateTime: DateTime.now(), userName: userModel!.userName);
-    final snapShot = await FirebaseFirestore.instance
+    final snapShot = FirebaseFirestore.instance
         .collection(enrollModel.gymPartnerGYMName!)
         .doc(monthdata);
     // final snapShot = await FirebaseFirestore.instance
@@ -219,10 +220,28 @@ class ScanController extends ChangeNotifier {
         await snapShot.set({'datesList': getListOfDates});
       }
     }
-    await snapShot
+    var attendanceDoc = await snapShot
         .collection(datetime)
         .doc(Hive.box(miscellaneousDataHIVE).get("uid"))
-        .set(attendanceModel.toMap());
+        .get();
+    if (attendanceDoc == null || !attendanceDoc.exists) {
+      await snapShot
+          .collection(datetime)
+          .doc(Hive.box(miscellaneousDataHIVE).get("uid"))
+          .set(attendanceModel.toMap());
+      isEnterScanScanned = true;
+      Hive.box(miscellaneousDataHIVE).put('scannedDate', datetime);
+      Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', true);
+    } else {
+      await snapShot
+          .collection(datetime)
+          .doc(Hive.box(miscellaneousDataHIVE).get("uid"))
+          .update({'exitScannedDateTime': DateTime.now()});
+      isEnterScanScanned = false;
+      Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', false);
+      notifyListeners();
+    }
+
     // if (snapShot == null || snapShot.docs.isEmpty) {
     //   // docuement is not exist
 
@@ -237,37 +256,37 @@ class ScanController extends ChangeNotifier {
     // }
   }
 
-  checkDocuement(
-      EnrollModel enrollModel, String monthdata, String datetime) async {
-    AttendanceModel attendanceModel = AttendanceModel(
-        scannedDateTime: DateTime.now(), userName: userModel!.userName);
-    final snapShot = await FirebaseFirestore.instance
-        .collection(enrollModel.gymPartnerGYMName!)
-        .doc(monthdata)
-        .collection(datetime)
-        .doc('usersData')
-        .get();
+  // checkDocuement(
+  //     EnrollModel enrollModel, String monthdata, String datetime) async {
+  //   AttendanceModel attendanceModel = AttendanceModel(
+  //       scannedDateTime: DateTime.now(), userName: userModel!.userName);
+  //   final snapShot = await FirebaseFirestore.instance
+  //       .collection(enrollModel.gymPartnerGYMName!)
+  //       .doc(monthdata)
+  //       .collection(datetime)
+  //       .doc('usersData')
+  //       .get();
 
-    if (snapShot == null || !snapShot.exists) {
-      // docuement is not exist
-      await FirebaseFirestore.instance
-          .collection(enrollModel.gymPartnerGYMName!)
-          .doc(monthdata)
-          .collection(datetime)
-          .doc('usersData')
-          .set({'${userModel!.uid}': attendanceModel.toMap()});
-    } else {
-      if (kDebugMode) {
-        print("id is already exist");
-      }
-      await FirebaseFirestore.instance
-          .collection(enrollModel.gymPartnerGYMName!)
-          .doc(monthdata)
-          .collection(datetime)
-          .doc('usersData')
-          .update({'${userModel!.uid}': attendanceModel.toMap()});
-    }
-  }
+  //   if (snapShot == null || !snapShot.exists) {
+  //     // docuement is not exist
+  //     await FirebaseFirestore.instance
+  //         .collection(enrollModel.gymPartnerGYMName!)
+  //         .doc(monthdata)
+  //         .collection(datetime)
+  //         .doc('usersData')
+  //         .set({'${userModel!.uid}': attendanceModel.toMap()});
+  //   } else {
+  //     if (kDebugMode) {
+  //       print("id is already exist");
+  //     }
+  //     await FirebaseFirestore.instance
+  //         .collection(enrollModel.gymPartnerGYMName!)
+  //         .doc(monthdata)
+  //         .collection(datetime)
+  //         .doc('usersData')
+  //         .update({'${userModel!.uid}': attendanceModel.toMap()});
+  //   }
+  // }
   // void onQRViewCreated(QRViewController controller) {
   //   this.controller = controller;
 

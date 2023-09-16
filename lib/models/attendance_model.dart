@@ -4,18 +4,22 @@ import 'dart:convert';
 class AttendanceModel {
   String? userName;
   DateTime? scannedDateTime;
+  DateTime? exitScannedDateTime;
   AttendanceModel({
     this.userName,
     this.scannedDateTime,
+    this.exitScannedDateTime,
   });
 
   AttendanceModel copyWith({
     String? userName,
     DateTime? scannedDateTime,
+    DateTime? exitScannedDateTime,
   }) {
     return AttendanceModel(
       userName: userName ?? this.userName,
       scannedDateTime: scannedDateTime ?? this.scannedDateTime,
+      exitScannedDateTime: exitScannedDateTime ?? this.exitScannedDateTime,
     );
   }
 
@@ -23,6 +27,7 @@ class AttendanceModel {
     return <String, dynamic>{
       'userName': userName,
       'scannedDateTime': scannedDateTime,
+      'exitScannedDateTime': exitScannedDateTime,
     };
   }
 
@@ -31,6 +36,9 @@ class AttendanceModel {
       userName: map['userName'] != null ? map['userName'] as String : null,
       scannedDateTime: map['scannedDateTime'] != null
           ? map['scannedDateTime'].toDate()
+          : null,
+      exitScannedDateTime: map['exitScannedDateTime'] != null
+          ? map['exitScannedDateTime'].toDate()
           : null,
     );
   }
@@ -42,18 +50,22 @@ class AttendanceModel {
 
   @override
   String toString() =>
-      'AttendanceModel(userName: $userName, scannedDateTime: $scannedDateTime)';
+      'AttendanceModel(userName: $userName, scannedDateTime: $scannedDateTime, exitScannedDateTime: $exitScannedDateTime)';
 
   @override
   bool operator ==(covariant AttendanceModel other) {
     if (identical(this, other)) return true;
 
     return other.userName == userName &&
-        other.scannedDateTime == scannedDateTime;
+        other.scannedDateTime == scannedDateTime &&
+        other.exitScannedDateTime == exitScannedDateTime;
   }
 
   @override
-  int get hashCode => userName.hashCode ^ scannedDateTime.hashCode;
+  int get hashCode =>
+      userName.hashCode ^
+      scannedDateTime.hashCode ^
+      exitScannedDateTime.hashCode;
 
   String toJson() => json.encode(toMap());
 }

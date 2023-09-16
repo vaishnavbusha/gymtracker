@@ -107,7 +107,7 @@ class _EnrollPageState extends ConsumerState<EnrollPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 44.h,
+                        //height: 44.h,
                         width: MediaQuery.of(context).size.width * 0.65,
                         child: DropdownButtonFormField<String>(
                           dropdownColor: color_gt_textColorBlueGrey,

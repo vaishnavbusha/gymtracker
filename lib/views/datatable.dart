@@ -84,7 +84,7 @@ class _DataTableWidgetState extends State<DataTableWidget> {
           ),
           DataColumn(
             label: const Text(
-              'marked at',
+              'Time-in',
               style: TextStyle(fontStyle: FontStyle.italic),
             ),
             onSort: (columnIndex, ascending) {
@@ -103,6 +103,27 @@ class _DataTableWidgetState extends State<DataTableWidget> {
               });
             },
           ),
+          DataColumn(
+            label: const Text(
+              'Time-out',
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+            onSort: (columnIndex, ascending) {
+              print("columnIndex:$columnIndex");
+              print("ascending:$ascending");
+              setState(() {
+                sortColumnIndex = columnIndex;
+                isAscending = ascending;
+                if (isAscending) {
+                  widget.attendanceData.sort((a, b) =>
+                      a.exitScannedDateTime.compareTo(b.scannedDateTime));
+                } else {
+                  widget.attendanceData.sort((a, b) =>
+                      b.exitScannedDateTime.compareTo(a.scannedDateTime));
+                }
+              });
+            },
+          ),
         ],
         rows: rowDatavar,
       ),
@@ -117,9 +138,17 @@ class _DataTableWidgetState extends State<DataTableWidget> {
     List<DataRow> dataRowvar = [];
 
     for (AttendanceDisplayModel attendanceDisplayModel in rowData) {
-      final time = DateFormat.jm()
+      final time_in = DateFormat.jm()
           .format(attendanceDisplayModel.scannedDateTime!)
           .toString();
+      final timeoutdata = attendanceDisplayModel.exitScannedDateTime ?? '-';
+      String time_out;
+      if (timeoutdata != '-') {
+        time_out = DateFormat.jm().format(timeoutdata as DateTime).toString();
+      } else {
+        time_out = '-';
+      }
+
       final y = DataRow(
         cells: [
           DataCell(
@@ -144,7 +173,17 @@ class _DataTableWidgetState extends State<DataTableWidget> {
           ),
           DataCell(
             Text(
-              time,
+              time_in,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: color_gt_headersTextColorWhite,
+                fontFamily: 'gilroy_regularitalic',
+              ),
+            ),
+          ),
+          DataCell(
+            Text(
+              time_out,
               style: TextStyle(
                 fontSize: 13.sp,
                 color: color_gt_headersTextColorWhite,

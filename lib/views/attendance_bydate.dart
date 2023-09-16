@@ -98,12 +98,13 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                               ),
                             ),
                             SizedBox(
-                              height: 44.h,
-                              width: MediaQuery.of(context).size.width * 0.68,
+                              //height: 44.h,
+                              width: 240.w,
                               child: Consumer(builder: (context, ref, child) {
                                 final attendanceByDateState =
                                     ref.watch(attendanceByDateProvider);
                                 return DropdownButtonFormField<String>(
+                                  isExpanded: true,
                                   dropdownColor: color_gt_textColorBlueGrey,
                                   decoration: InputDecoration(
                                     filled: true,
@@ -206,11 +207,15 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                   .attendanceData.isNotEmpty)
                               ? SingleChildScrollView(
                                   physics: BouncingScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  child: DataTableWidget(
-                                    attendanceData:
-                                        attendanceByDateState.attendanceData,
-                                  ))
+                                  scrollDirection: Axis.horizontal,
+                                  child: SingleChildScrollView(
+                                      physics: BouncingScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      child: DataTableWidget(
+                                        attendanceData: attendanceByDateState
+                                            .attendanceData,
+                                      )),
+                                )
                               : Container(),
                           //
                         );
