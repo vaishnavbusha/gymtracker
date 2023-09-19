@@ -3,22 +3,22 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/models/user_model.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+
 import 'package:gymtracker/views/attendance_bydate.dart';
 import 'package:gymtracker/views/attendance_bymonth.dart';
 import 'package:gymtracker/views/expiredusers.dart';
 import 'package:gymtracker/views/renewmembership.dart';
-import 'package:gymtracker/views/datatable.dart';
+
 import 'package:gymtracker/views/searchusers.dart';
 import 'package:gymtracker/views/today_attendance.dart';
 import 'package:gymtracker/views/viewmyusers.dart';
-import 'package:gymtracker/widgets/loader.dart';
+import 'package:gymtracker/widgets/animated_route.dart';
+
 import 'package:hive_flutter/adapters.dart';
-import 'package:intl/intl.dart';
 
 import '../constants.dart';
 
@@ -55,8 +55,8 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                   (isUser == false) ? 'DashBoard' : 'Exercises',
                   style: TextStyle(
                       fontFamily: 'gilroy_bold',
-                      color: color_gt_green,
-                      fontSize: 20.sp,
+                      color: Color(0xff30d5c8),
+                      fontSize: 22.sp,
                       fontStyle: FontStyle.normal),
                   textAlign: TextAlign.center,
                 ),
@@ -86,10 +86,11 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
         child: SafeArea(
           child: (isUser == false)
               ? Padding(
-                  padding:
-                      EdgeInsets.only(right: 10, top: 20, bottom: 20, left: 10),
+                  padding: EdgeInsets.only(
+                      right: 10.w, top: 20.h, bottom: 20.h, left: 10.w),
                   child: Center(
                     child: GridView.count(
+                      physics: BouncingScrollPhysics(),
                       shrinkWrap: true,
                       crossAxisCount: 2,
                       childAspectRatio: 1.2,
@@ -99,44 +100,32 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                       children: <Widget>[
                         viewButton(' My Users', () {
                           Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (_) => MyUsers(),
-                            ),
+                            ScaleRoute(page: MyUsers()),
                           );
                         }),
                         viewButton('Search User(s)', () {
                           Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (_) => SearchUsers(),
-                            ),
+                            ScaleRoute(page: SearchUsers()),
                           );
                         }),
                         viewButton('Expired User(s)', () {
                           Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (_) => ExpiredUsers(),
-                            ),
+                            ScaleRoute(page: ExpiredUsers()),
                           );
                         }),
                         viewButton(' Today\'s attendance', () {
                           Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (_) => TodaysAttendance(),
-                            ),
+                            ScaleRoute(page: TodaysAttendance()),
                           );
                         }),
-                        viewButton(' Attendance by date in current month', () {
+                        viewButton('Attendance by date in current month', () {
                           Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (_) => AttendanceByDate(),
-                            ),
+                            ScaleRoute(page: AttendanceByDate()),
                           );
                         }),
-                        viewButton(' Attendance monthly basis', () {
+                        viewButton('Attendance monthly basis', () {
                           Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (_) => AttendanceByMonth(),
-                            ),
+                            ScaleRoute(page: AttendanceByMonth()),
                           );
                         }),
                         // viewButton('Expired User(s)', () {
@@ -147,13 +136,25 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                         //   );
                         // }),
                         // viewButton('Download Monthly report', () {}),
-                        viewButton('Renewal Request(s) ', () {
-                          Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (_) => RenewMembershipsPage(),
-                            ),
-                          );
-                        }),
+                        (Hive.box(miscellaneousDataHIVE)
+                                    .get("pendingRenewalsLength") !=
+                                null)
+                            ? ValueListenableBuilder<Box<dynamic>>(
+                                valueListenable: Hive.box(miscellaneousDataHIVE)
+                                    .listenable(),
+                                builder: (context, box, __) {
+                                  return (box.get('pendingRenewalsLength') > 0)
+                                      ? viewButton('Renewal Request(s)', () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .push(
+                                            ScaleRoute(
+                                                page: RenewMembershipsPage()),
+                                          );
+                                        })
+                                      : Container();
+                                })
+                            : Container(),
                       ],
                     ),
                   ),
@@ -169,7 +170,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
       borderRadius: BorderRadius.circular(15.r),
       child: Ink(
         decoration: BoxDecoration(
-          color: color_gt_green,
+          color: Color(0xff2D77D0),
           borderRadius: BorderRadius.circular(15.r),
           //border: Border.all(width: 1, color: Colors.white12),
         ),
@@ -177,16 +178,46 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
           onTap: () => func(),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: color_gt_headersTextColorWhite,
-                  fontFamily: 'gilroy_bolditalic',
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    color: color_gt_headersTextColorWhite,
+                    fontFamily: 'gilroy_regularitalic',
+                  ),
                 ),
-              ),
+                (text == 'Renewal Request(s)')
+                    ? SizedBox(height: 10.h)
+                    : Container(),
+                (text == 'Renewal Request(s)')
+                    ? (Hive.box(miscellaneousDataHIVE)
+                                .get("pendingRenewalsLength") !=
+                            null)
+                        ? ValueListenableBuilder<Box<dynamic>>(
+                            valueListenable:
+                                Hive.box(miscellaneousDataHIVE).listenable(),
+                            builder: (context, box, __) {
+                              return (box.get('pendingRenewalsLength') > 0)
+                                  ? Text(
+                                      box
+                                          .get('pendingRenewalsLength')
+                                          .toString(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18.sp,
+                                        color: Color(0xff9fe2bf),
+                                        fontFamily: 'gilroy_bolditalic',
+                                      ),
+                                    )
+                                  : Container();
+                            })
+                        : Container()
+                    : Container(),
+              ],
             ),
           ),
         ),

@@ -28,7 +28,10 @@ class NavigationBarController extends ChangeNotifier {
   }
 
   initialiseController() {
-    controller = PersistentTabController(initialIndex: isUser! ? 1 : 0);
+    controller = PersistentTabController(
+      //initialIndex: isUser! ? 1 : 0,
+      initialIndex: 0,
+    );
     notifyListeners();
   }
 

@@ -42,12 +42,17 @@ class ApprovalController extends ChangeNotifier {
     final membershipExpiry = DateTime.now();
 
     var newDate = DateTime(
-        membershipExpiry.year,
-        membershipExpiry.month + int.parse(validityController.text),
-        membershipExpiry.day);
+      membershipExpiry.year,
+      membershipExpiry.month + int.parse(validityController.text),
+      membershipExpiry.day,
+      membershipExpiry.minute,
+      membershipExpiry.second,
+      membershipExpiry.millisecond,
+    );
     await usersCollection.doc(approveeUID).update({
       'membershipExpiry': newDate,
       'enrolledGymDate': DateTime.now(),
+      'recentRenewedOn': DateTime.now(),
       'memberShipFeesPaid': int.parse(moneyPaidController.text),
       'isAwaitingEnrollment': false,
     }).then(

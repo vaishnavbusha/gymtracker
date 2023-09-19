@@ -10,9 +10,11 @@ import 'package:gymtracker/models/attendance_display_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/datatable.dart';
 import 'package:gymtracker/widgets/loader.dart';
+import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
+import '../controllers/network_controller.dart';
 
 class TodaysAttendance extends ConsumerStatefulWidget {
   const TodaysAttendance({Key? key}) : super(key: key);
@@ -41,76 +43,82 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
   Widget build(BuildContext context) {
     final todaysAttendanceState = ref.watch(todaysAttendanceProvider);
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
-    return Scaffold(
-        appBar: PreferredSize(
-          child: ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-              child: AppBar(
-                centerTitle: true,
-                title: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'Today\'s Attendance ($datetime)',
-                    style: TextStyle(
-                        fontFamily: 'gilroy_bold',
-                        color: color_gt_green,
-                        fontSize: 18.sp,
-                        fontStyle: FontStyle.normal),
-                    textAlign: TextAlign.center,
+    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+
+    return (connectivityStatusProvider == ConnectivityStatus.isConnected)
+        ? Scaffold(
+            appBar: PreferredSize(
+              child: ClipRRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                  child: AppBar(
+                    centerTitle: true,
+                    title: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'Today\'s Attendance ($datetime)',
+                        style: TextStyle(
+                            fontFamily: 'gilroy_bold',
+                            color: color_gt_green,
+                            fontSize: 18.sp,
+                            fontStyle: FontStyle.normal),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    elevation: 0.0,
+                    backgroundColor: Colors.black.withOpacity(0.5),
                   ),
                 ),
-                elevation: 0.0,
-                backgroundColor: Colors.black.withOpacity(0.5),
+              ),
+              preferredSize: Size(
+                double.infinity,
+                50.0,
               ),
             ),
-          ),
-          preferredSize: Size(
-            double.infinity,
-            50.0,
-          ),
-        ),
-        backgroundColor: Colors.black,
-        body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xff122B32), Colors.black],
+            backgroundColor: Colors.black,
+            body: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xff122B32), Colors.black],
+                ),
               ),
-            ),
-            child: (!todaysAttendanceState.isLoading!)
-                ? Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: (todaysAttendanceState.isDataAvailable)
-                        ? SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                child: DataTableWidget(
-                                  attendanceData:
-                                      todaysAttendanceState.attendanceData,
-                                )),
-                          )
-                        : Center(
-                            child: Text(
-                              'No data yet, kindly check again later.',
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                color: color_gt_headersTextColorWhite,
-                                fontFamily: 'gilroy_bold',
+              child: (!todaysAttendanceState.isLoading!)
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: (todaysAttendanceState.isDataAvailable)
+                          ? SingleChildScrollView(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              child: SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  child: DataTableWidget(
+                                    attendanceData:
+                                        todaysAttendanceState.attendanceData,
+                                  )),
+                            )
+                          : Center(
+                              child: Text(
+                                'No data yet, kindly check again later.',
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  color: color_gt_headersTextColorWhite,
+                                  fontFamily: 'gilroy_bold',
+                                ),
                               ),
-                            ),
-                          )
-                    //
-                    )
-                : Loader(
-                    loadercolor: Colors.green,
-                  )));
+                            )
+                      //
+                      )
+                  : Loader(
+                      loadercolor: Color(0xff2D77D0),
+                    ),
+            ),
+          )
+        : NoInternetWidget();
   }
 
   // getDataTableWidget(List rowData) {

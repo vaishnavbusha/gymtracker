@@ -10,7 +10,7 @@ import '../widgets/customsnackbar.dart';
 class SearchUsersController extends ChangeNotifier {
   bool isLoading = true;
   //List usersUIDsList = [];
-  bool isSearchLoading = true;
+  bool isSearchLoading = false;
   EnrollModel? enrollModel;
   bool isInitital = true;
   UserModel adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
@@ -40,8 +40,35 @@ class SearchUsersController extends ChangeNotifier {
   }
 
   calculateNoOfDays(var expiresOn) {
-    expiresOn = DateTime(expiresOn.year, expiresOn.month, expiresOn.day);
+    expiresOn = DateTime(
+      expiresOn.year,
+      expiresOn.month,
+      expiresOn.day,
+      expiresOn.hour,
+      expiresOn.minute,
+      expiresOn.second,
+      expiresOn.millisecond,
+    );
     return (expiresOn.difference(DateTime.now()).inHours / 24).round();
+  }
+
+  isExpired(var expiresOn) {
+    expiresOn = DateTime(
+      expiresOn.year,
+      expiresOn.month,
+      expiresOn.day,
+      expiresOn.hour,
+      expiresOn.minute,
+      expiresOn.second,
+      expiresOn.millisecond,
+    );
+    return expiresOn.isBefore(DateTime.now());
+  }
+
+  bool isRequestedForApproval(String uid) {
+    return (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel)
+        .pendingRenewals!
+        .contains(uid);
   }
 
   Future searchForAUser(String userName, BuildContext context) async {
@@ -49,7 +76,7 @@ class SearchUsersController extends ChangeNotifier {
     searchedUsersDataList.clear();
     await fireBaseFireStore
         .collection('users')
-        .where('userName', isGreaterThanOrEqualTo: userName)
+        .where('userName', isGreaterThanOrEqualTo: userName.toLowerCase())
         .where('enrolledGym', isEqualTo: adminData.enrolledGym)
         .orderBy('userName')
         .get()

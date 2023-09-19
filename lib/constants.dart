@@ -8,7 +8,11 @@ import 'package:gymtracker/views/explore.dart';
 import 'package:gymtracker/views/profile.dart';
 import 'package:gymtracker/views/scan.dart';
 
-Map<int, String> userLevels = {0: 'user', 1: 'admin', 2: 'creator'};
+Map<int, String> userLevels = {
+  0: 'user',
+  1: 'admin',
+  2: 'creator',
+};
 List<String> genders = ['Male', 'Female'];
 Color color_gt_green = const Color(0xff20B05E);
 Color color_gt_greenHalfOpacity = const Color(0xff20B05E).withOpacity(0.5);
@@ -17,7 +21,14 @@ Color color_gt_textColorBlueGrey = Colors.blueGrey;
 final fireBaseAuth = FirebaseAuth.instance;
 final fireBaseStorage = FirebaseStorage.instance;
 final fireBaseFireStore = FirebaseFirestore.instance;
-final pagesList = [const ExplorePage(), const ScanPage(), const ProfilePage()];
-final adminPagesList = [const ExplorePage(), const ProfilePage()];
+final pagesList = [
+  //const ExplorePage(),
+  const ScanPage(),
+  const ProfilePage(),
+];
+final adminPagesList = [
+  const ExplorePage(),
+  const ProfilePage(),
+];
 final userDetailsHIVE = 'userINFO';
 final miscellaneousDataHIVE = 'appDATA';

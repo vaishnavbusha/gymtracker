@@ -224,7 +224,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                                                   ? Text('APPROVED')
                                                   : Text('APPROVE'),
                                             )
-                                          : Loader(loadercolor: Colors.red);
+                                          : Loader(loadercolor: Colors.green);
                                     },
                                   ),
                                 ),

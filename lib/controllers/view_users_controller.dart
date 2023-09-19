@@ -13,7 +13,7 @@ class EnrolledUsersNotifier extends ChangeNotifier {
   int usersUIDsListLength = 0;
 
   int lastIndex = 0;
-  int limit = 6;
+  int limit = 8;
   bool paginationLoading = false;
   bool initialPaginationLoading = true;
   bool hasMoreData = true;
@@ -36,17 +36,44 @@ class EnrolledUsersNotifier extends ChangeNotifier {
     // for (String uid in usersUIDsList) {
     //   getUsersFromUIDs(uid);
     // }
-
+    print(usersUIDsListLength);
     isLoading = false;
     notifyListeners();
   }
 
   calculateNoOfDays(var expiresOn) {
-    expiresOn = DateTime(expiresOn.year, expiresOn.month, expiresOn.day);
+    expiresOn = DateTime(
+      expiresOn.year,
+      expiresOn.month,
+      expiresOn.day,
+      expiresOn.hour,
+      expiresOn.minute,
+      expiresOn.second,
+      expiresOn.millisecond,
+    );
     return (expiresOn.difference(DateTime.now()).inHours / 24).round();
   }
 
-  getUsersFromUIDs(String uid) async {
+  isExpired(var expiresOn) {
+    expiresOn = DateTime(
+      expiresOn.year,
+      expiresOn.month,
+      expiresOn.day,
+      expiresOn.hour,
+      expiresOn.minute,
+      expiresOn.second,
+      expiresOn.millisecond,
+    );
+    return expiresOn.isBefore(DateTime.now());
+  }
+
+  bool isRequestedForApproval(String uid) {
+    return (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel)
+        .pendingRenewals!
+        .contains(uid);
+  }
+
+  Future getUsersFromUIDs(String uid) async {
     await fireBaseFireStore.collection('users').doc(uid).get().then(
       (value) {
         UserModel userModel = UserModel.toModel(value);
@@ -76,10 +103,11 @@ class EnrolledUsersNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  paginatedUsersData() async {
+  Future paginatedUsersData() async {
+    notifyListeners();
     paginationLoading = true;
 
-    if (limit > usersUIDsListLength) {
+    if (limit >= usersUIDsListLength) {
       //get the whole remaining data from uid's list
       for (int i = lastIndex; i < usersUIDsList.length; i++) {
         await getUsersFromUIDs(usersUIDsList[i]);

@@ -49,7 +49,7 @@ class CustomSnackBar {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.r))),
-        // duration: const Duration(milliseconds: 1000),
+        duration: const Duration(milliseconds: 3000),
         // margin: EdgeInsets.only(
         //     bottom: MediaQuery.of(context).size.height - 100,
         //     right: 20,

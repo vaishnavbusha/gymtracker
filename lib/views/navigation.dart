@@ -58,10 +58,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
                 stateManagement: true, // Default is true.
                 hideNavigationBarWhenKeyboardShows:
                     true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-                decoration: NavBarDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  colorBehindNavBar: Colors.white,
-                ),
+
                 popAllScreensOnTapOfSelectedTab: true,
                 popActionScreens: PopActionScreensType.all,
                 itemAnimationProperties: ItemAnimationProperties(
@@ -78,20 +75,35 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
                 navBarStyle: NavBarStyle
                     .style12, // Choose the nav bar style with this property.
               )
-            : Loader(
-                loadercolor: Colors.green,
+            : Scaffold(
+                body: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xff122B32), Colors.black],
+                    ),
+                  ),
+                  child: Center(
+                    child: Loader(
+                      loadercolor: Color(0xff2D77D0),
+                    ),
+                  ),
+                ),
               )
         : NoInternetWidget();
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.explore),
-        title: ("explore"),
-        activeColorPrimary: CupertinoColors.activeBlue,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: Icon(Icons.explore),
+      //   title: ("explore"),
+      //   activeColorPrimary: CupertinoColors.activeBlue,
+      //   inactiveColorPrimary: CupertinoColors.systemGrey,
+      // ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.qr_code_scanner_rounded),
         title: ("scan"),

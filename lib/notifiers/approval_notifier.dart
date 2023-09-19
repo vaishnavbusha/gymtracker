@@ -101,9 +101,14 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
     final membershipExpiry = DateTime.now();
     UserModel adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
     var newDate = DateTime(
-        membershipExpiry.year,
-        membershipExpiry.month + int.parse(validityController.text),
-        membershipExpiry.day);
+      membershipExpiry.year,
+      membershipExpiry.month + int.parse(validityController.text),
+      membershipExpiry.day,
+      membershipExpiry.hour,
+      membershipExpiry.minute,
+      membershipExpiry.second,
+      membershipExpiry.millisecond,
+    );
     updateDetails();
     await usersCollection.doc(approveeUID).update({
       'membershipExpiry': newDate,
@@ -144,7 +149,7 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
             color: const Color(0xff4CB944),
             context: context,
             iserror: false,
-            message: 'request from $userName has been approved.',
+            message: 'Request from $userName has been approved.',
             textcolor: color_gt_headersTextColorWhite);
       },
     ).onError(

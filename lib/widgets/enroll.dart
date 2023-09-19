@@ -256,11 +256,11 @@ class _EnrollPageState extends ConsumerState<EnrollPage> {
                               ],
                             ),
                           )
-                        : Loader(loadercolor: Colors.blue),
+                        : Loader(loadercolor: Colors.green),
                   );
                 }),
               ])
-            : Loader(loadercolor: Colors.red),
+            : Loader(loadercolor: Color(0xff2D77D0)),
       ),
     );
   }

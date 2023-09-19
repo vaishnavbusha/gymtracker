@@ -15,6 +15,8 @@ class LoginController extends ChangeNotifier {
   bool pass_isobscure = true;
 
   bool is_login_details_uploading = false;
+
+  bool isResetPasswordLoading = false;
   //String auth;
   changeObscurity() {
     pass_isobscure = !pass_isobscure;
@@ -22,7 +24,7 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
   }
 
-  loginuser(
+  Future loginuser(
       {required String email,
       required String password,
       required BuildContext ctx}) async {
@@ -104,5 +106,51 @@ class LoginController extends ChangeNotifier {
         .put('membershipExpiry', userModelData.membershipExpiry);
     Hive.box(miscellaneousDataHIVE)
         .put('awaitingRenewal', userModelData.awaitingRenewal);
+  }
+
+  Future resetPassword(String _emailID, BuildContext context) async {
+    isResetPasswordLoading = true;
+    try {
+      bool isUserExists = await fireBaseFireStore
+          .collection('users')
+          .where('email', isEqualTo: _emailID)
+          .get()
+          .then(
+        (value) {
+          return value.docs.isNotEmpty ? true : false;
+        },
+      );
+      if (!isUserExists) {
+        throw 'Check your entered email-ID. No user found.';
+      }
+      await fireBaseAuth.sendPasswordResetEmail(email: _emailID).then(
+        (value) {
+          Navigator.pop(context);
+          CustomSnackBar.buildSnackbar(
+            color: Colors.green,
+            context: context,
+            message:
+                'An email has been sent to $_emailID for resetting the password.',
+            textcolor: const Color(0xffFDFFFC),
+            iserror: false,
+          );
+        },
+      ).onError(
+        (error, stackTrace) {
+          throw 'Something went wrong, try again later !';
+        },
+      );
+    } catch (e) {
+      Navigator.pop(context);
+      CustomSnackBar.buildSnackbar(
+        color: Colors.red[500]!,
+        context: context,
+        message: e.toString(),
+        textcolor: const Color(0xffFDFFFC),
+        iserror: false,
+      );
+    }
+    isResetPasswordLoading = true;
+    notifyListeners();
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -13,8 +12,35 @@ class ExpiredUsersController extends ChangeNotifier {
   List<UserModel> expiredUsersDataList = List<UserModel>.empty(growable: true);
 
   calculateNoOfDays(var expiresOn) {
-    expiresOn = DateTime(expiresOn.year, expiresOn.month, expiresOn.day);
+    expiresOn = DateTime(
+      expiresOn.year,
+      expiresOn.month,
+      expiresOn.day,
+      expiresOn.hour,
+      expiresOn.minute,
+      expiresOn.second,
+      expiresOn.millisecond,
+    );
     return (expiresOn.difference(DateTime.now()).inHours / 24).round();
+  }
+
+  isExpired(var expiresOn) {
+    expiresOn = DateTime(
+      expiresOn.year,
+      expiresOn.month,
+      expiresOn.day,
+      expiresOn.hour,
+      expiresOn.minute,
+      expiresOn.second,
+      expiresOn.millisecond,
+    );
+    return expiresOn.isBefore(DateTime.now());
+  }
+
+  bool isRequestedForApproval(String uid) {
+    return (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel)
+        .pendingRenewals!
+        .contains(uid);
   }
 
   Future searchForExpiredUsers(BuildContext context) async {

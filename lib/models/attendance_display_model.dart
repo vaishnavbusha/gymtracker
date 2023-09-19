@@ -36,8 +36,8 @@ class AttendanceDisplayModel {
       'index': index,
       'uid': uid,
       'userName': userName,
-      'scannedDateTime': scannedDateTime?.millisecondsSinceEpoch,
-      'exitScannedDateTime': exitScannedDateTime?.millisecondsSinceEpoch,
+      'scannedDateTime': scannedDateTime,
+      'exitScannedDateTime': exitScannedDateTime,
     };
   }
 

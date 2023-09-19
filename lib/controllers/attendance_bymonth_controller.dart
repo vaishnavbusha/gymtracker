@@ -21,6 +21,9 @@ class AttendanceByMonthController extends ChangeNotifier {
   List<Map<String, List>> attendanceDataExitDateTimeOnly = [];
   List<Map<String, String>> usersDataUIDs_names = [];
   List attendanceByRow = [];
+  bool isMonthSelected = false;
+
+  bool isDataLoading = false;
   //final String monthData = DateFormat('MMM').format(DateTime.now());
 
   getGymPartnerDetails() async {
@@ -53,14 +56,21 @@ class AttendanceByMonthController extends ChangeNotifier {
 
   changeselectedMonth(String monthValue) {
     //selectedIndexOfGymPartnersData = gymNames.indexOf(newValue);
-
     dropdownvalue = monthValue;
-    //attendanceData.clear();
-    attendanceDataDateTimeOnly.clear();
-    usersDataUIDs_names.clear();
-    attendanceDataExitDateTimeOnly.clear();
+    if (dropdownvalue!.isNotEmpty) {
+      isMonthSelected = true;
+    }
+
+    availabledatesList.clear();
+
+    columnData = ['S.No', 'UserName'];
+    //List<Map<String, List>> attendanceData = [];
     attendanceDataUIDsOnly.clear();
+    attendanceDataDateTimeOnly.clear();
+    attendanceDataExitDateTimeOnly.clear();
+    usersDataUIDs_names.clear();
     attendanceByRow.clear();
+
     getDatesListFromGymPartner();
     notifyListeners();
   }
@@ -99,6 +109,8 @@ class AttendanceByMonthController extends ChangeNotifier {
   }
 
   Future getWholeAttendanceByMonthData() async {
+    notifyListeners();
+    isDataLoading = true;
     // int index = 1;
     for (String x in availabledatesList) {
       await fireBaseFireStore
@@ -139,6 +151,7 @@ class AttendanceByMonthController extends ChangeNotifier {
     }
 
     await attendanceByRowFunction();
+
     notifyListeners();
   }
 
@@ -190,6 +203,8 @@ class AttendanceByMonthController extends ChangeNotifier {
       attendanceByRow.add([userName, ...tempdata]);
       bufferindex++;
     }
+    isMonthSelected = false;
+    isDataLoading = false;
     //print(attendanceByRow);
     notifyListeners();
   }

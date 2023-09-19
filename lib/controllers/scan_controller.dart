@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gymtracker/constants.dart';
+import 'package:gymtracker/controllers/encrypt_controller.dart';
 import 'package:gymtracker/models/attendance_model.dart';
 import 'package:gymtracker/models/scannedqr_model.dart';
 import 'package:gymtracker/models/user_model.dart';
@@ -60,7 +61,8 @@ class ScanController extends ChangeNotifier {
         }
         //throw 'Successfully exited the QR Scanner';
       } else {
-        var jsonDecodedData = jsonDecode(this.scannedData);
+        String decryptedData = EncryptController.decryptData(this.scannedData);
+        var jsonDecodedData = jsonDecode(decryptedData);
 
         scannedQRModel = ScannedQRModel.fromMap(jsonDecodedData);
 
@@ -123,17 +125,10 @@ class ScanController extends ChangeNotifier {
                   (enrollModel.users!.contains(userModel!.uid)) ? true : false;
 
               if (isUserExist) {
-                createNewAttendanceData(enrollModel);
+                createNewAttendanceData(enrollModel, context);
                 if (kDebugMode) {
                   print('attendance marked');
                 }
-                CustomSnackBar.buildSnackbar(
-                    iserror: false,
-                    color: Colors.green[500]!,
-                    context: context,
-                    message:
-                        'Today\'s (${DateFormat('dd-MM-yyyy').format(DateTime.now())}) attendance has been marked !',
-                    textcolor: Colors.white);
               } else {
                 CustomSnackBar.buildSnackbar(
                     iserror: true,
@@ -169,11 +164,12 @@ class ScanController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createNewAttendanceData(EnrollModel enrollModel) async {
+  void createNewAttendanceData(
+      EnrollModel enrollModel, BuildContext context) async {
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
     final monthData = DateFormat('MMM').format(DateTime.now());
     //checkDocuement(enrollModel, monthData, datetime);
-    checkDocument(enrollModel, monthData, datetime);
+    checkDocument(enrollModel, monthData, datetime, context);
     // try {
     //   await fireBaseFireStore
     //       .collection(enrollModel.gymPartnerGYMName!)
@@ -191,8 +187,8 @@ class ScanController extends ChangeNotifier {
     // }
   }
 
-  checkDocument(
-      EnrollModel enrollModel, String monthdata, String datetime) async {
+  checkDocument(EnrollModel enrollModel, String monthdata, String datetime,
+      BuildContext context) async {
     AttendanceModel attendanceModel = AttendanceModel(
         scannedDateTime: DateTime.now(), userName: userModel!.userName);
     final snapShot = FirebaseFirestore.instance
@@ -230,6 +226,13 @@ class ScanController extends ChangeNotifier {
           .doc(Hive.box(miscellaneousDataHIVE).get("uid"))
           .set(attendanceModel.toMap());
       isEnterScanScanned = true;
+      CustomSnackBar.buildSnackbar(
+          iserror: false,
+          color: Colors.green[500]!,
+          context: context,
+          message:
+              'Today\'s (${DateFormat('dd-MM-yyyy').format(DateTime.now())}) entry (time-in) has been marked !',
+          textcolor: Colors.white);
       Hive.box(miscellaneousDataHIVE).put('scannedDate', datetime);
       Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', true);
     } else {
@@ -239,8 +242,15 @@ class ScanController extends ChangeNotifier {
           .update({'exitScannedDateTime': DateTime.now()});
       isEnterScanScanned = false;
       Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', false);
-      notifyListeners();
+      CustomSnackBar.buildSnackbar(
+          iserror: false,
+          color: Colors.green[500]!,
+          context: context,
+          message:
+              'Today\'s (${DateFormat('dd-MM-yyyy').format(DateTime.now())}) exit (out-time) has been marked !',
+          textcolor: Colors.white);
     }
+    notifyListeners();
 
     // if (snapShot == null || snapShot.docs.isEmpty) {
     //   // docuement is not exist

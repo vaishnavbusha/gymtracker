@@ -8,19 +8,21 @@ import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/signin.dart';
 import 'package:gymtracker/widgets/loader.dart';
+import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
+import '../controllers/network_controller.dart';
 import '../widgets/animated_route.dart';
 
-class SignUpPage extends StatefulWidget {
+class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  ConsumerState<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpPageState extends ConsumerState<SignUpPage> {
   late TextEditingController _dateController;
   late TextEditingController _userNameController;
   late TextEditingController _emailController;
@@ -55,347 +57,371 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xff122B32), Colors.black],
-            ),
-          ),
-          child: SafeArea(
-            child: Container(
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: 16.w,
-                      right: 16.w,
-                    ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Register',
-                                style: TextStyle(
-                                  //foreground: Paint()..shader = linearGradient,
-                                  color: Colors.white,
-                                  fontFamily: "teko-med",
-                                  fontSize: 60.sp,
-                                ),
-                              ),
-                            ],
+    final connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    return (connectivityStatusProvider == ConnectivityStatus.isConnected)
+        ? GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Scaffold(
+              body: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xff122B32), Colors.black],
+                  ),
+                ),
+                child: SafeArea(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 16.w,
+                            right: 16.w,
                           ),
-                          Center(
-                            child: Consumer(builder: (context, ref, child) {
-                              final register =
-                                  ref.watch(signUpControllerProvider);
-                              return Stack(
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: [
-                                  CircleAvatar(
-                                    radius: 70.w,
-                                    backgroundImage: (register
-                                                .no_of_times_profilechanged !=
-                                            0)
-                                        ? Image.file(register.pickedImage).image
-                                        : AssetImage(
-                                            'assets/images/${register.selectedgender}.png'),
-                                  ),
-                                  Positioned(
-                                    bottom: -10.w,
-                                    left: 85.w,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        register.pickimage(context);
-                                      },
-                                      icon: Icon(
-                                        Icons.add_a_photo,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  (register.no_of_times_profilechanged != 0)
-                                      ? Positioned(
-                                          top: -5.w,
-                                          left: 100.w,
-                                          child: IconButton(
-                                            onPressed: () {
-                                              register
-                                                  .changeToDefaultProfilePhoto(
-                                                      context);
-                                            },
-                                            icon: Icon(
-                                              Icons.cancel_rounded,
-                                              color: Colors.red,
-                                              size: 25.w,
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                ],
-                              );
-                            }),
-                          ),
-
-                          customTextFieldSignUp(
-                            controller: _userNameController,
-                            icon: Icons.contact_page_outlined,
-                            isObscure: false,
-                            labeltext: 'UserName',
-                            tia: TextInputAction.newline,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: 5.w,
-                              top: 10.w,
-                            ),
-                            child: SizedBox(
-                              //height: 44.h,
-                              child: Consumer(builder: (context, ref, child) {
-                                final register =
-                                    ref.watch(signUpControllerProvider);
-                                return DropdownButtonFormField<String>(
-                                  isExpanded: true,
-                                  dropdownColor: color_gt_textColorBlueGrey,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.white10,
-                                    floatingLabelStyle: TextStyle(
-                                      fontFamily: "gilroy_bolditalic",
-                                      fontSize: 16.sp,
-                                      color: color_gt_headersTextColorWhite
-                                          .withOpacity(0.9),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      borderSide: const BorderSide(
-                                          color: Colors.white12),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      borderSide: BorderSide(
-                                          color: color_gt_textColorBlueGrey
-                                              .withOpacity(0.3)),
-                                    ),
-                                    prefixIcon: Icon(
-                                      (register.selectedgender == 'Male')
-                                          ? Icons.male_rounded
-                                          : Icons.female_rounded,
-                                      color: color_gt_greenHalfOpacity
-                                          .withOpacity(0.7),
-                                    ),
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: color_gt_headersTextColorWhite,
-                                    fontFamily: 'gilroy_regular',
-                                  ),
-
-                                  value: register.selectedgender,
-
-                                  hint: Text(
-                                    'Select Gender',
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: color_gt_headersTextColorWhite
-                                          .withOpacity(0.7),
-                                      fontFamily: 'gilroy_regular',
-                                    ),
-                                  ),
-                                  onChanged: (value) {
-                                    register.changegender(value!);
-                                  },
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  items: genders.map((item) {
-                                    return DropdownMenuItem<String>(
-                                      child: Text(item),
-                                      value: item,
-                                    );
-                                  }).toList(),
-                                );
-                              }),
-                            ),
-                          ),
-                          BirthYearSelectionWidget(),
-                          customTextFieldSignUp(
-                            controller: _emailController,
-                            icon: Icons.email,
-                            isObscure: false,
-                            labeltext: 'Email',
-                            tia: TextInputAction.newline,
-                          ),
-
-                          customTextFieldSignUp(
-                            controller: _phoneNumberController,
-                            icon: Icons.phone,
-                            isObscure: false,
-                            labeltext: 'Phone',
-                            tia: TextInputAction.newline,
-                          ),
-                          customTextFieldSignUp(
-                            controller: _passwordController,
-                            icon: Icons.security_outlined,
-                            isObscure: true,
-                            labeltext: 'Password',
-                            tia: TextInputAction.newline,
-                          ),
-                          customTextFieldSignUp(
-                            controller: _confirmPasswordController,
-                            icon: Icons.security_outlined,
-                            isObscure: true,
-                            labeltext: 'Confirm Password',
-                            tia: TextInputAction.done,
-                          ),
-                          Consumer(builder: (context, ref, child) {
-                            final registerprovider =
-                                ref.watch(signUpControllerProvider);
-                            return InkWell(
-                              onTap: () {
-                                final FormState form = _formKey.currentState!;
-                                if (form.validate()) {
-                                  UserModel userData = UserModel(
-                                    pendingApprovals: null,
-                                    isAwaitingEnrollment: false,
-                                    phoneNumber: _phoneNumberController.text,
-                                    DOB: _dateController.text,
-                                    email: _emailController.text,
-                                    isUser: true,
-                                    registeredDate: DateTime.now(),
-                                    userName: _userNameController.text,
-                                    userType: userLevels[0]!,
-                                    gender: registerprovider.selectedgender,
-                                  );
-                                  registerprovider.registerUser(
-                                    userModel: userData,
-                                    password: _passwordController.text,
-                                    ctx: context,
-                                  );
-                                } else {
-                                  print('Form is invalid');
-                                }
-                              },
-                              child: (!registerprovider
-                                      .is_register_details_uploading)
-                                  ? Padding(
-                                      padding: EdgeInsets.only(
-                                        top: 17.w,
-                                      ),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 50.h,
-                                        decoration: BoxDecoration(
-                                          color: color_gt_green,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(5.r),
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'Register',
-                                            style: TextStyle(
-                                                fontFamily: 'gilroy_bold',
-                                                fontSize: 20.sp,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Loader(loadercolor: color_gt_green),
-                            );
-                          }),
-                          // Padding(
-                          //   padding: EdgeInsets.only(
-                          //     top: 7.w,
-                          //   ),
-                          //   child: Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       children: [
-                          //         Flexible(
-                          //             child: Divider(
-                          //           color: color_gt_greenHalfOpacity,
-                          //           height: 1.h,
-                          //           thickness: 1,
-                          //           endIndent: 10.w,
-                          //           indent: 20.w,
-                          //         )),
-                          //         Text(
-                          //           'or',
-                          //           style: TextStyle(
-                          //               fontFamily: 'gilroy_regular',
-                          //               fontSize: 15.sp,
-                          //               color: color_gt_green),
-                          //         ),
-                          //         Flexible(
-                          //             child: Divider(
-                          //           color: color_gt_greenHalfOpacity,
-                          //           height: 1.h,
-                          //           thickness: 1,
-                          //           endIndent: 20.w,
-                          //           indent: 10.w,
-                          //         )),
-                          //       ]),
-                          // ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 15.h, bottom: 15.h),
-                            child: Row(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  'Already have an account? ',
-                                  style: TextStyle(
-                                    color: color_gt_headersTextColorWhite,
-                                    fontSize: 14.sp,
-                                    fontFamily: 'gilroy_regular',
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Register',
+                                      style: TextStyle(
+                                        //foreground: Paint()..shader = linearGradient,
+                                        color: Colors.white,
+                                        fontFamily: "teko-med",
+                                        fontSize: 60.sp,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Center(
+                                //   child: Consumer(builder: (context, ref, child) {
+                                //     final register =
+                                //         ref.watch(signUpControllerProvider);
+                                //     return Stack(
+                                //       // ignore: prefer_const_literals_to_create_immutables
+                                //       children: [
+                                //         CircleAvatar(
+                                //           radius: 70.w,
+                                //           backgroundImage: (register
+                                //                       .no_of_times_profilechanged !=
+                                //                   0)
+                                //               ? Image.file(register.pickedImage).image
+                                //               : AssetImage(
+                                //                   'assets/images/${register.selectedgender}.png'),
+                                //         ),
+                                //         Positioned(
+                                //           bottom: -10.w,
+                                //           left: 85.w,
+                                //           child: IconButton(
+                                //             onPressed: () {
+                                //               register.pickimage(context);
+                                //             },
+                                //             icon: Icon(
+                                //               Icons.add_a_photo,
+                                //               color: Colors.white,
+                                //             ),
+                                //           ),
+                                //         ),
+                                //         (register.no_of_times_profilechanged != 0)
+                                //             ? Positioned(
+                                //                 top: -5.w,
+                                //                 left: 100.w,
+                                //                 child: IconButton(
+                                //                   onPressed: () {
+                                //                     register
+                                //                         .changeToDefaultProfilePhoto(
+                                //                             context);
+                                //                   },
+                                //                   icon: Icon(
+                                //                     Icons.cancel_rounded,
+                                //                     color: Colors.red,
+                                //                     size: 25.w,
+                                //                   ),
+                                //                 ),
+                                //               )
+                                //             : SizedBox(),
+                                //       ],
+                                //     );
+                                //   }),
+                                // ),
+
+                                customTextFieldSignUp(
+                                  controller: _userNameController,
+                                  icon: Icons.contact_page_outlined,
+                                  isObscure: false,
+                                  labeltext: 'UserName',
+                                  tia: TextInputAction.newline,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: 5.w,
+                                    top: 10.w,
+                                  ),
+                                  child: SizedBox(
+                                    //height: 44.h,
+                                    child: Consumer(
+                                        builder: (context, ref, child) {
+                                      final register =
+                                          ref.watch(signUpControllerProvider);
+                                      return DropdownButtonFormField<String>(
+                                        isExpanded: true,
+                                        dropdownColor:
+                                            color_gt_textColorBlueGrey,
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.white10,
+                                          floatingLabelStyle: TextStyle(
+                                            fontFamily: "gilroy_bolditalic",
+                                            fontSize: 16.sp,
+                                            color:
+                                                color_gt_headersTextColorWhite
+                                                    .withOpacity(0.9),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.r),
+                                            borderSide: const BorderSide(
+                                                color: Colors.white12),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.r),
+                                            borderSide: BorderSide(
+                                                color:
+                                                    color_gt_textColorBlueGrey
+                                                        .withOpacity(0.3)),
+                                          ),
+                                          prefixIcon: Icon(
+                                            (register.selectedgender == 'Male')
+                                                ? Icons.male_rounded
+                                                : Icons.female_rounded,
+                                            color: color_gt_greenHalfOpacity
+                                                .withOpacity(0.7),
+                                          ),
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: color_gt_headersTextColorWhite,
+                                          fontFamily: 'gilroy_regular',
+                                        ),
+
+                                        value: register.selectedgender,
+
+                                        hint: Text(
+                                          'Select Gender',
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color:
+                                                color_gt_headersTextColorWhite
+                                                    .withOpacity(0.7),
+                                            fontFamily: 'gilroy_regular',
+                                          ),
+                                        ),
+                                        onChanged: (value) {
+                                          register.changegender(value!);
+                                        },
+                                        // ignore: prefer_const_literals_to_create_immutables
+                                        items: genders.map((item) {
+                                          return DropdownMenuItem<String>(
+                                            child: Text(item),
+                                            value: item,
+                                          );
+                                        }).toList(),
+                                      );
+                                    }),
                                   ),
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        ScaleRoute(
-                                          page: SignInPage(),
-                                        ));
-                                    // Navigator.pushReplacement(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //       builder: (context) => SignInPage(),
-                                    //     ));
-                                  },
-                                  child: Text(
-                                    'Sign-in !',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: color_gt_green,
-                                      fontFamily: 'gilroy_bolditalic',
-                                    ),
+                                BirthYearSelectionWidget(),
+                                customTextFieldSignUp(
+                                  controller: _emailController,
+                                  icon: Icons.email,
+                                  isObscure: false,
+                                  labeltext: 'Email',
+                                  tia: TextInputAction.newline,
+                                ),
+
+                                customTextFieldSignUp(
+                                  controller: _phoneNumberController,
+                                  icon: Icons.phone,
+                                  isObscure: false,
+                                  labeltext: 'Phone',
+                                  tia: TextInputAction.newline,
+                                ),
+                                customTextFieldSignUp(
+                                  controller: _passwordController,
+                                  icon: Icons.security_outlined,
+                                  isObscure: true,
+                                  labeltext: 'Password',
+                                  tia: TextInputAction.newline,
+                                ),
+                                customTextFieldSignUp(
+                                  controller: _confirmPasswordController,
+                                  icon: Icons.security_outlined,
+                                  isObscure: true,
+                                  labeltext: 'Confirm Password',
+                                  tia: TextInputAction.done,
+                                ),
+                                Consumer(builder: (context, ref, child) {
+                                  final registerprovider =
+                                      ref.watch(signUpControllerProvider);
+                                  return InkWell(
+                                    onTap: () {
+                                      SystemChannels.textInput
+                                          .invokeMethod('TextInput.hide');
+                                      final FormState form =
+                                          _formKey.currentState!;
+                                      if (form.validate()) {
+                                        UserModel userData = UserModel(
+                                          pendingApprovals: null,
+                                          isAwaitingEnrollment: false,
+                                          phoneNumber:
+                                              _phoneNumberController.text,
+                                          DOB: _dateController.text,
+                                          email: _emailController.text,
+                                          isUser: true,
+                                          registeredDate: DateTime.now(),
+                                          userName: _userNameController.text
+                                              .toLowerCase(),
+                                          userType: userLevels[0]!,
+                                          gender:
+                                              registerprovider.selectedgender,
+                                        );
+                                        registerprovider.registerUser(
+                                          userModel: userData,
+                                          password: _passwordController.text,
+                                          ctx: context,
+                                        );
+                                      } else {
+                                        print('Form is invalid');
+                                      }
+                                    },
+                                    child: (!registerprovider
+                                            .is_register_details_uploading)
+                                        ? Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 17.w,
+                                            ),
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 50.h,
+                                              decoration: BoxDecoration(
+                                                color: color_gt_green,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(5.r),
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  'Register',
+                                                  style: TextStyle(
+                                                      fontFamily: 'gilroy_bold',
+                                                      fontSize: 20.sp,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 17.w,
+                                            ),
+                                            child: Loader(
+                                                loadercolor: color_gt_green),
+                                          ),
+                                  );
+                                }),
+                                // Padding(
+                                //   padding: EdgeInsets.only(
+                                //     top: 7.w,
+                                //   ),
+                                //   child: Row(
+                                //       mainAxisAlignment: MainAxisAlignment.center,
+                                //       children: [
+                                //         Flexible(
+                                //             child: Divider(
+                                //           color: color_gt_greenHalfOpacity,
+                                //           height: 1.h,
+                                //           thickness: 1,
+                                //           endIndent: 10.w,
+                                //           indent: 20.w,
+                                //         )),
+                                //         Text(
+                                //           'or',
+                                //           style: TextStyle(
+                                //               fontFamily: 'gilroy_regular',
+                                //               fontSize: 15.sp,
+                                //               color: color_gt_green),
+                                //         ),
+                                //         Flexible(
+                                //             child: Divider(
+                                //           color: color_gt_greenHalfOpacity,
+                                //           height: 1.h,
+                                //           thickness: 1,
+                                //           endIndent: 20.w,
+                                //           indent: 10.w,
+                                //         )),
+                                //       ]),
+                                // ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 15.h, bottom: 15.h),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Already have an account? ',
+                                        style: TextStyle(
+                                          color: color_gt_headersTextColorWhite,
+                                          fontSize: 14.sp,
+                                          fontFamily: 'gilroy_regular',
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              ScaleRoute(
+                                                page: SignInPage(),
+                                              ));
+                                          // Navigator.pushReplacement(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //       builder: (context) => SignInPage(),
+                                          //     ));
+                                        },
+                                        child: Text(
+                                          'Sign-in !',
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: color_gt_green,
+                                            fontFamily: 'gilroy_bolditalic',
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ]),
+                                ),
+                              ]),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : NoInternetWidget();
   }
 
   BirthYearSelectionWidget() {
@@ -561,18 +587,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 if (value!.isEmpty) {
                   return '"password" field can\'t be empty';
                 } else if (!RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                        r'^((?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9!@\-+()#$%&*]{6,20})$')
                     .hasMatch(value)) {
-                  return 'minimum 8 characters, atleast one letter and one number !';
+                  return 'minimum 6 characters, atleast one letter and one number is must!';
                 } else {
                   return null;
                 }
               } else if (labeltext == 'Confirm Password') {
                 if (value!.isEmpty) {
                   return '"confirm password" field can\'t be empty';
-                } else if (!RegExp(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$")
+                } else if (!RegExp(
+                        r'^((?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9!@\-+()#$%&*]{6,20})$')
                     .hasMatch(value)) {
-                  return 'minimum 8 characters, atleast one letter and one number !';
+                  return 'minimum 6 characters, atleast one letter and one number is must!';
                 } else if (_passwordController.text !=
                     _confirmPasswordController.text) {
                   _passwordController.text = '';
@@ -589,6 +616,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 } else {
                   return null;
                 }
+              } else {
+                return null;
               }
             },
             cursorHeight: 18.sp,

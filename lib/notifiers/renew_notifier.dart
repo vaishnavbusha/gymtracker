@@ -76,9 +76,15 @@ class RenewNotifer extends StateNotifier<RenewState> {
       required BuildContext context}) async {
     final membershipExpiry = DateTime.now();
     var newDate = DateTime(
-        membershipExpiry.year,
-        membershipExpiry.month + int.parse(validityController.text),
-        membershipExpiry.day);
+      membershipExpiry.year,
+      membershipExpiry.month + int.parse(validityController.text),
+      membershipExpiry.day,
+      membershipExpiry.day,
+      membershipExpiry.hour,
+      membershipExpiry.minute,
+      membershipExpiry.second,
+      membershipExpiry.millisecond,
+    );
     updateDetails();
     await fireBaseFireStore.collection('users').doc(userModelData.uid).update({
       'membershipExpiry': newDate,

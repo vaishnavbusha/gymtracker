@@ -20,6 +20,8 @@ class AttendanceByDateController extends ChangeNotifier {
   final String monthData = DateFormat('MMM').format(DateTime.now());
 
   bool? isLoading;
+
+  bool isDataLoading = false;
   AttendanceByDateController() {
     //getDatesListFromGymPartner();
     //initialiseGymPartnerCollection();
@@ -75,6 +77,7 @@ class AttendanceByDateController extends ChangeNotifier {
   }
 
   Future getAttendanceListByDate() async {
+    isDataLoading = true;
     int index = 1;
     await fireBaseFireStore
         .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
@@ -97,6 +100,8 @@ class AttendanceByDateController extends ChangeNotifier {
       },
     );
     print(attendanceData);
+    isDateSelected = false;
+    isDataLoading = false;
     notifyListeners();
   }
 

@@ -18,7 +18,6 @@ class DataTableWidget extends StatefulWidget {
 class _DataTableWidgetState extends State<DataTableWidget> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -103,26 +102,26 @@ class _DataTableWidgetState extends State<DataTableWidget> {
               });
             },
           ),
-          DataColumn(
-            label: const Text(
+          const DataColumn(
+            label: Text(
               'Time-out',
               style: TextStyle(fontStyle: FontStyle.italic),
             ),
-            onSort: (columnIndex, ascending) {
-              print("columnIndex:$columnIndex");
-              print("ascending:$ascending");
-              setState(() {
-                sortColumnIndex = columnIndex;
-                isAscending = ascending;
-                if (isAscending) {
-                  widget.attendanceData.sort((a, b) =>
-                      a.exitScannedDateTime.compareTo(b.scannedDateTime));
-                } else {
-                  widget.attendanceData.sort((a, b) =>
-                      b.exitScannedDateTime.compareTo(a.scannedDateTime));
-                }
-              });
-            },
+            // onSort: (columnIndex, ascending) {
+            //   print("columnIndex:$columnIndex");
+            //   print("ascending:$ascending");
+            //   setState(() {
+            //     sortColumnIndex = columnIndex;
+            //     isAscending = ascending;
+            //     if (isAscending) {
+            //       widget.attendanceData.sort((a, b) =>
+            //           a.exitScannedDateTime.compareTo(b.exitScannedDateTime));
+            //     } else {
+            //       widget.attendanceData.sort((a, b) =>
+            //           b.exitScannedDateTime.compareTo(a.exitScannedDateTime));
+            //     }
+            //   });
+            // },
           ),
         ],
         rows: rowDatavar,
@@ -138,56 +137,68 @@ class _DataTableWidgetState extends State<DataTableWidget> {
     List<DataRow> dataRowvar = [];
 
     for (AttendanceDisplayModel attendanceDisplayModel in rowData) {
-      final time_in = DateFormat.jm()
+      final timeIn = DateFormat.jm()
           .format(attendanceDisplayModel.scannedDateTime!)
           .toString();
-      final timeoutdata = attendanceDisplayModel.exitScannedDateTime ?? '-';
-      String time_out;
-      if (timeoutdata != '-') {
-        time_out = DateFormat.jm().format(timeoutdata as DateTime).toString();
+      final timeoutdata = attendanceDisplayModel.exitScannedDateTime ?? 'NA';
+      String timeOut;
+      if (timeoutdata != 'NA') {
+        timeOut = DateFormat.jm().format(timeoutdata as DateTime).toString();
       } else {
-        time_out = '-';
+        timeOut = 'NA';
       }
 
       final y = DataRow(
         cells: [
           DataCell(
-            Text(
-              attendanceDisplayModel.index.toString(),
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: color_gt_headersTextColorWhite,
-                fontFamily: 'gilroy_bold',
+            Center(
+              child: Text(
+                attendanceDisplayModel.index.toString(),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: color_gt_headersTextColorWhite,
+                  fontFamily: 'gilroy_bold',
+                ),
               ),
             ),
           ),
           DataCell(
-            Text(
-              attendanceDisplayModel.userName!,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: color_gt_headersTextColorWhite,
-                fontFamily: 'gilroy_regularitalic',
+            Center(
+              child: Text(
+                attendanceDisplayModel.userName!,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: color_gt_headersTextColorWhite,
+                  fontFamily: 'gilroy_regularitalic',
+                ),
               ),
             ),
           ),
           DataCell(
-            Text(
-              time_in,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: color_gt_headersTextColorWhite,
-                fontFamily: 'gilroy_regularitalic',
+            Center(
+              child: Text(
+                timeIn,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: color_gt_headersTextColorWhite,
+                  fontFamily: 'gilroy_regularitalic',
+                ),
               ),
             ),
           ),
           DataCell(
-            Text(
-              time_out,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: color_gt_headersTextColorWhite,
-                fontFamily: 'gilroy_regularitalic',
+            Center(
+              child: Text(
+                timeOut,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: (timeOut == 'NA')
+                      ? Colors.red
+                      : color_gt_headersTextColorWhite,
+                  fontFamily: (timeOut == 'NA')
+                      ? 'gilroy_bolditalic'
+                      : 'gilroy_regularitalic',
+                ),
               ),
             ),
           ),

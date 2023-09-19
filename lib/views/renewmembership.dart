@@ -1,12 +1,16 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
+import '../controllers/network_controller.dart';
 import '../widgets/loader.dart';
 
 class RenewMembershipsPage extends ConsumerStatefulWidget {
@@ -32,350 +36,366 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        appBar: PreferredSize(
-          child: ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-              child: AppBar(
-                centerTitle: true,
-                title: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'Renewal Request(s)',
-                    style: TextStyle(
-                        fontFamily: 'gilroy_bold',
-                        color: color_gt_green,
-                        fontSize: 20.sp,
-                        fontStyle: FontStyle.normal),
-                    textAlign: TextAlign.center,
+    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+
+    return (connectivityStatusProvider == ConnectivityStatus.isConnected)
+        ? GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Scaffold(
+              appBar: PreferredSize(
+                child: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                    child: AppBar(
+                      centerTitle: true,
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Renewal Request(s)',
+                          style: TextStyle(
+                              fontFamily: 'gilroy_bold',
+                              color: color_gt_green,
+                              fontSize: 20.sp,
+                              fontStyle: FontStyle.normal),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      elevation: 0.0,
+                      backgroundColor: Colors.black.withOpacity(0.5),
+                    ),
                   ),
                 ),
-                elevation: 0.0,
-                backgroundColor: Colors.black.withOpacity(0.5),
+                preferredSize: const Size(
+                  double.infinity,
+                  50.0,
+                ),
               ),
-            ),
-          ),
-          preferredSize: const Size(
-            double.infinity,
-            50.0,
-          ),
-        ),
-        extendBody: true,
-        backgroundColor: Colors.black,
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xff122B32), Colors.black],
-            ),
-          ),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final renewMemberShipState = ref.watch(renewMemberShipProvider);
+              extendBody: true,
+              backgroundColor: Colors.black,
+              body: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xff122B32), Colors.black],
+                  ),
+                ),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final renewMemberShipState =
+                        ref.watch(renewMemberShipProvider);
 
-              return (renewMemberShipState.isLoading == false)
-                  ? (renewMemberShipState.expiredUsersData.isNotEmpty)
-                      ? ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount:
-                              renewMemberShipState.expiredUsersData.length,
-                          itemBuilder: (context, index) {
-                            final renewFamilyState =
-                                ref.watch(renewMemberShipFamilyProvider(index));
-                            final renewFamilyNotifierState = ref.watch(
-                                renewMemberShipFamilyProvider(index).notifier);
-                            return Form(
-                              key: renewFamilyNotifierState.formKey,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 5.h, horizontal: 10.w),
+                    return (renewMemberShipState.isLoading == false)
+                        ? (renewMemberShipState.expiredUsersData.isNotEmpty)
+                            ? ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: renewMemberShipState
+                                    .expiredUsersData.length,
+                                itemBuilder: (context, index) {
+                                  final renewFamilyState = ref.watch(
+                                      renewMemberShipFamilyProvider(index));
+                                  final renewFamilyNotifierState = ref.watch(
+                                      renewMemberShipFamilyProvider(index)
+                                          .notifier);
+                                  return Form(
+                                    key: renewFamilyNotifierState.formKey,
                                     child: Column(
                                       children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: color_gt_textColorBlueGrey
-                                                .withOpacity(0.2),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Column(children: [
-                                            dataBlock(
-                                                tagData: renewMemberShipState
-                                                    .expiredUsersData[index]
-                                                    .userName,
-                                                tagName: 'UserName'),
-                                            dataBlock(
-                                                tagData: renewMemberShipState
-                                                    .expiredUsersData[index]
-                                                    .phoneNumber
-                                                    .toString(),
-                                                tagName: 'Phone'),
-                                            dataBlock(
-                                                tagData: renewMemberShipState
-                                                    .expiredUsersData[index]
-                                                    .membershipExpiry,
-                                                tagName: 'Expired On'),
-                                            dataBlock(
-                                                tagData: DateTime.now(),
-                                                tagName: 'Approving On'),
-                                            dataBlock(
-                                                tagData: renewMemberShipState
-                                                    .expiredUsersData[index]
-                                                    .memberShipFeesPaid,
-                                                tagName: 'Previously Paid(₹)'),
-                                            customTextField(
-                                              controller:
-                                                  renewFamilyNotifierState
-                                                      .validityController,
-                                              isObscure: false,
-                                              labeltext: 'validity (in months)',
-                                              tia: TextInputAction.next,
-                                            ),
-                                            customTextField(
-                                              controller:
-                                                  renewFamilyNotifierState
-                                                      .moneyPaidController,
-                                              isObscure: false,
-                                              labeltext: 'Renewal Fee (₹)',
-                                              tia: TextInputAction.next,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(10.w),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Consumer(
-                                                    builder:
-                                                        (context, ref, child) {
-                                                      return (renewFamilyState
-                                                                  .isDetailsUpdating ==
-                                                              false)
-                                                          ? ElevatedButton(
-                                                              style:
-                                                                  ElevatedButton
-                                                                      .styleFrom(
-                                                                //onPrimary: Colors.black,  //to change text color
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        vertical:
-                                                                            7.h,
-                                                                        horizontal:
-                                                                            20.w),
-                                                                primary: (renewFamilyState
-                                                                            .isApproved ==
-                                                                        true)
-                                                                    ? Colors
-                                                                        .grey
-                                                                    : color_gt_green, // button color
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.r), // <-- Radius
-                                                                ),
-                                                                textStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        15.sp,
-                                                                    fontFamily:
-                                                                        'gilroy_bold'),
-                                                              ),
-                                                              onPressed: () {
-                                                                if (renewFamilyState
-                                                                        .isApproved ==
-                                                                    true) {
-                                                                  null;
-                                                                } else {
-                                                                  final FormState
-                                                                      form =
-                                                                      renewFamilyNotifierState
-                                                                          .formKey
-                                                                          .currentState!;
-                                                                  if (form
-                                                                      .validate()) {
-                                                                    renewFamilyNotifierState
-                                                                        .renewUser(
-                                                                      userModelData:
-                                                                          renewMemberShipState
-                                                                              .expiredUsersData[index],
-                                                                      index:
-                                                                          index,
-                                                                      context:
-                                                                          context,
-                                                                    );
-
-                                                                    print(
-                                                                        'form is valid');
-                                                                  } else {
-                                                                    print(
-                                                                        'Form is invalid');
-                                                                  }
-                                                                  //ref.watch(enrollControllerProvider).updateEnrollmentInfo();
-                                                                }
-                                                              },
-                                                              child: (renewFamilyState
-                                                                          .isApproved ==
-                                                                      true)
-                                                                  ? const Text(
-                                                                      'RENEWED')
-                                                                  : const Text(
-                                                                      'RENEW'),
-                                                            )
-                                                          : const Loader(
-                                                              loadercolor:
-                                                                  Colors.red);
-                                                    },
-                                                  ),
-                                                  // Consumer(
-                                                  //   builder: (context, ref, child) {
-                                                  //     return (renewFamilyState
-                                                  //                 .isDetailsUpdating ==
-                                                  //             false)
-                                                  //         ? ElevatedButton(
-                                                  //             style: ElevatedButton
-                                                  //                 .styleFrom(
-                                                  //               //onPrimary: Colors.black,  //to change text color
-                                                  //               padding: EdgeInsets
-                                                  //                   .symmetric(
-                                                  //                       vertical:
-                                                  //                           7.h,
-                                                  //                       horizontal:
-                                                  //                           20.w),
-                                                  //               primary: (renewFamilyState
-                                                  //                           .isApproved ==
-                                                  //                       true)
-                                                  //                   ? Colors.grey
-                                                  //                   : color_gt_green, // button color
-                                                  //               shape:
-                                                  //                   RoundedRectangleBorder(
-                                                  //                 borderRadius:
-                                                  //                     BorderRadius
-                                                  //                         .circular(
-                                                  //                             10.r), // <-- Radius
-                                                  //               ),
-                                                  //               textStyle: TextStyle(
-                                                  //                   color: Colors
-                                                  //                       .black,
-                                                  //                   fontSize: 15.sp,
-                                                  //                   fontFamily:
-                                                  //                       'gilroy_bold'),
-                                                  //             ),
-                                                  //             onPressed: () {
-                                                  //               if (renewFamilyState
-                                                  //                       .isApproved ==
-                                                  //                   true) {
-                                                  //                 null;
-                                                  //               } else {
-                                                  //                 final FormState
-                                                  //                     form =
-                                                  //                     renewFamilyNotifierState
-                                                  //                         .formKey
-                                                  //                         .currentState!;
-                                                  //                 if (form
-                                                  //                     .validate()) {
-                                                  //                   renewFamilyNotifierState
-                                                  //                       .removeUser(
-                                                  //                     userModelData:
-                                                  //                         renewMemberShipState
-                                                  //                                 .expiredUsersData[
-                                                  //                             index],
-                                                  //                     index: index,
-                                                  //                     context:
-                                                  //                         context,
-                                                  //                   );
-
-                                                  //                   print(
-                                                  //                       'form is valid');
-                                                  //                 } else {
-                                                  //                   print(
-                                                  //                       'Form is invalid');
-                                                  //                 }
-                                                  //                 //ref.watch(enrollControllerProvider).updateEnrollmentInfo();
-                                                  //               }
-                                                  //             },
-                                                  //             child: (renewFamilyState
-                                                  //                         .isApproved ==
-                                                  //                     true)
-                                                  //                 ? const Text(
-                                                  //                     'REMOVED !')
-                                                  //                 : const Text(
-                                                  //                     'REMOVE USER'),
-                                                  //           )
-                                                  //         : const Loader(
-                                                  //             loadercolor:
-                                                  //                 Colors.red);
-                                                  //   },
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ]),
-                                        ),
                                         Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 12.h, bottom: 6.h),
-                                          child: Divider(
-                                            color: color_gt_greenHalfOpacity
-                                                .withOpacity(0.3),
-                                            height: 1.h,
-                                            thickness: 1,
-                                            // endIndent: 10.w,
-                                            // indent: 20.w,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 5.h, horizontal: 10.w),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      color_gt_textColorBlueGrey
+                                                          .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Column(children: [
+                                                  dataBlock(
+                                                      tagData:
+                                                          renewMemberShipState
+                                                              .expiredUsersData[
+                                                                  index]
+                                                              .userName,
+                                                      tagName: 'UserName'),
+                                                  dataBlock(
+                                                      tagData:
+                                                          renewMemberShipState
+                                                              .expiredUsersData[
+                                                                  index]
+                                                              .phoneNumber
+                                                              .toString(),
+                                                      tagName: 'Phone'),
+                                                  dataBlock(
+                                                      tagData:
+                                                          renewMemberShipState
+                                                              .expiredUsersData[
+                                                                  index]
+                                                              .membershipExpiry,
+                                                      tagName: 'Expired On'),
+                                                  dataBlock(
+                                                      tagData: DateTime.now(),
+                                                      tagName: 'Approving On'),
+                                                  dataBlock(
+                                                      tagData:
+                                                          renewMemberShipState
+                                                              .expiredUsersData[
+                                                                  index]
+                                                              .memberShipFeesPaid,
+                                                      tagName:
+                                                          'Previously Paid(₹)'),
+                                                  customTextField(
+                                                    controller:
+                                                        renewFamilyNotifierState
+                                                            .validityController,
+                                                    isObscure: false,
+                                                    labeltext:
+                                                        'validity (in months)',
+                                                    tia: TextInputAction.next,
+                                                  ),
+                                                  customTextField(
+                                                    controller:
+                                                        renewFamilyNotifierState
+                                                            .moneyPaidController,
+                                                    isObscure: false,
+                                                    labeltext:
+                                                        'Renewal Fee (₹)',
+                                                    tia: TextInputAction.next,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.all(10.w),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Consumer(
+                                                          builder: (context,
+                                                              ref, child) {
+                                                            return (renewFamilyState
+                                                                        .isDetailsUpdating ==
+                                                                    false)
+                                                                ? ElevatedButton(
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      //onPrimary: Colors.black,  //to change text color
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          vertical: 7
+                                                                              .h,
+                                                                          horizontal:
+                                                                              20.w),
+                                                                      primary: (renewFamilyState.isApproved ==
+                                                                              true)
+                                                                          ? Colors
+                                                                              .grey
+                                                                          : color_gt_green, // button color
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10.r), // <-- Radius
+                                                                      ),
+                                                                      textStyle: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize: 15
+                                                                              .sp,
+                                                                          fontFamily:
+                                                                              'gilroy_bold'),
+                                                                    ),
+                                                                    onPressed:
+                                                                        () {
+                                                                      if (renewFamilyState
+                                                                              .isApproved ==
+                                                                          true) {
+                                                                        null;
+                                                                      } else {
+                                                                        final FormState
+                                                                            form =
+                                                                            renewFamilyNotifierState.formKey.currentState!;
+                                                                        if (form
+                                                                            .validate()) {
+                                                                          renewFamilyNotifierState
+                                                                              .renewUser(
+                                                                            userModelData:
+                                                                                renewMemberShipState.expiredUsersData[index],
+                                                                            index:
+                                                                                index,
+                                                                            context:
+                                                                                context,
+                                                                          );
+
+                                                                          print(
+                                                                              'form is valid');
+                                                                        } else {
+                                                                          print(
+                                                                              'Form is invalid');
+                                                                        }
+                                                                        //ref.watch(enrollControllerProvider).updateEnrollmentInfo();
+                                                                      }
+                                                                    },
+                                                                    child: (renewFamilyState.isApproved ==
+                                                                            true)
+                                                                        ? const Text(
+                                                                            'RENEWED')
+                                                                        : const Text(
+                                                                            'RENEW'),
+                                                                  )
+                                                                : const Loader(
+                                                                    loadercolor:
+                                                                        Colors
+                                                                            .green);
+                                                          },
+                                                        ),
+                                                        // Consumer(
+                                                        //   builder: (context, ref, child) {
+                                                        //     return (renewFamilyState
+                                                        //                 .isDetailsUpdating ==
+                                                        //             false)
+                                                        //         ? ElevatedButton(
+                                                        //             style: ElevatedButton
+                                                        //                 .styleFrom(
+                                                        //               //onPrimary: Colors.black,  //to change text color
+                                                        //               padding: EdgeInsets
+                                                        //                   .symmetric(
+                                                        //                       vertical:
+                                                        //                           7.h,
+                                                        //                       horizontal:
+                                                        //                           20.w),
+                                                        //               primary: (renewFamilyState
+                                                        //                           .isApproved ==
+                                                        //                       true)
+                                                        //                   ? Colors.grey
+                                                        //                   : color_gt_green, // button color
+                                                        //               shape:
+                                                        //                   RoundedRectangleBorder(
+                                                        //                 borderRadius:
+                                                        //                     BorderRadius
+                                                        //                         .circular(
+                                                        //                             10.r), // <-- Radius
+                                                        //               ),
+                                                        //               textStyle: TextStyle(
+                                                        //                   color: Colors
+                                                        //                       .black,
+                                                        //                   fontSize: 15.sp,
+                                                        //                   fontFamily:
+                                                        //                       'gilroy_bold'),
+                                                        //             ),
+                                                        //             onPressed: () {
+                                                        //               if (renewFamilyState
+                                                        //                       .isApproved ==
+                                                        //                   true) {
+                                                        //                 null;
+                                                        //               } else {
+                                                        //                 final FormState
+                                                        //                     form =
+                                                        //                     renewFamilyNotifierState
+                                                        //                         .formKey
+                                                        //                         .currentState!;
+                                                        //                 if (form
+                                                        //                     .validate()) {
+                                                        //                   renewFamilyNotifierState
+                                                        //                       .removeUser(
+                                                        //                     userModelData:
+                                                        //                         renewMemberShipState
+                                                        //                                 .expiredUsersData[
+                                                        //                             index],
+                                                        //                     index: index,
+                                                        //                     context:
+                                                        //                         context,
+                                                        //                   );
+
+                                                        //                   print(
+                                                        //                       'form is valid');
+                                                        //                 } else {
+                                                        //                   print(
+                                                        //                       'Form is invalid');
+                                                        //                 }
+                                                        //                 //ref.watch(enrollControllerProvider).updateEnrollmentInfo();
+                                                        //               }
+                                                        //             },
+                                                        //             child: (renewFamilyState
+                                                        //                         .isApproved ==
+                                                        //                     true)
+                                                        //                 ? const Text(
+                                                        //                     'REMOVED !')
+                                                        //                 : const Text(
+                                                        //                     'REMOVE USER'),
+                                                        //           )
+                                                        //         : const Loader(
+                                                        //             loadercolor:
+                                                        //                 Colors.red);
+                                                        //   },
+                                                        // ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 12.h, bottom: 6.h),
+                                                child: Divider(
+                                                  color:
+                                                      color_gt_greenHalfOpacity
+                                                          .withOpacity(0.3),
+                                                  height: 1.h,
+                                                  thickness: 1,
+                                                  // endIndent: 10.w,
+                                                  // indent: 20.w,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
+                                  );
+                                  // return dataWidget(
+                                  //   Gender: renewMemberShipState
+                                  //       .expiredUsersData[index].gender,
+                                  //   Name: renewMemberShipState
+                                  //       .expiredUsersData[index].userName,
+                                  //   Phone: renewMemberShipState
+                                  //       .expiredUsersData[index].phoneNumber
+                                  //       .toString(),
+                                  //   joinedOn: renewMemberShipState
+                                  //       .expiredUsersData[index].enrolledGymDate,
+                                  //   expiresOn: renewMemberShipState
+                                  //       .expiredUsersData[index].membershipExpiry,
+                                  // );
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                  'No Renewal request(s) yet. Kindly check again later !',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 17.sp,
+                                    color: color_gt_green,
+                                    fontFamily: 'gilroy_bold',
                                   ),
-                                ],
-                              ),
-                            );
-                            // return dataWidget(
-                            //   Gender: renewMemberShipState
-                            //       .expiredUsersData[index].gender,
-                            //   Name: renewMemberShipState
-                            //       .expiredUsersData[index].userName,
-                            //   Phone: renewMemberShipState
-                            //       .expiredUsersData[index].phoneNumber
-                            //       .toString(),
-                            //   joinedOn: renewMemberShipState
-                            //       .expiredUsersData[index].enrolledGymDate,
-                            //   expiresOn: renewMemberShipState
-                            //       .expiredUsersData[index].membershipExpiry,
-                            // );
-                          },
-                        )
-                      : Center(
-                          child: Text(
-                            'No Renewal request(s) yet. Kindly check again later !',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 17.sp,
-                              color: color_gt_green,
-                              fontFamily: 'gilroy_bold',
+                                ),
+                              )
+                        : Center(
+                            child: Loader(
+                              loadercolor: Color(0xff2D77D0),
                             ),
-                          ),
-                        )
-                  : const Loader(
-                      loadercolor: Colors.green,
-                    );
-            },
-          ),
-        ),
-      ),
-    );
+                          );
+                  },
+                ),
+              ),
+            ),
+          )
+        : const NoInternetWidget();
   }
 
   dataWidget(

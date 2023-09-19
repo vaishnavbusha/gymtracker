@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/widgets/loader.dart';
+import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants.dart';
+import '../controllers/network_controller.dart';
 import '../providers/authentication_providers.dart';
 
 class MyUsers extends ConsumerStatefulWidget {
@@ -36,201 +38,235 @@ class _MyUsersState extends ConsumerState<MyUsers> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        child: ClipRRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-            child: AppBar(
-              centerTitle: true,
-              title: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  'My GymMembers',
-                  style: TextStyle(
-                      fontFamily: 'gilroy_bold',
-                      color: color_gt_green,
-                      fontSize: 20.sp,
-                      fontStyle: FontStyle.normal),
-                  textAlign: TextAlign.center,
+    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+
+    return (connectivityStatusProvider == ConnectivityStatus.isConnected)
+        ? Scaffold(
+            appBar: PreferredSize(
+              child: ClipRRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                  child: AppBar(
+                    centerTitle: true,
+                    title: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'My GymMembers',
+                        style: TextStyle(
+                            fontFamily: 'gilroy_bold',
+                            color: color_gt_green,
+                            fontSize: 20.sp,
+                            fontStyle: FontStyle.normal),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    elevation: 0.0,
+                    backgroundColor: Colors.black.withOpacity(0.5),
+                  ),
                 ),
               ),
-              elevation: 0.0,
-              backgroundColor: Colors.black.withOpacity(0.5),
+              preferredSize: const Size(
+                double.infinity,
+                50.0,
+              ),
             ),
-          ),
-        ),
-        preferredSize: const Size(
-          double.infinity,
-          50.0,
-        ),
-      ),
-      backgroundColor: Colors.black,
-      extendBody: true,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xff122B32), Colors.black],
-          ),
-        ),
-        child: Center(
-          child: Consumer(builder: (context, ref, child) {
-            final enrolledUsersState = ref.watch(enrolledUsersProvider);
-            print(enrolledUsersState.isLoading);
-            return (enrolledUsersState.isLoading == false &&
-                    enrolledUsersState.initialPaginationLoading == false)
-                ? SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          primary: false,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount:
-                              enrolledUsersState.enrolledUsersData.length,
-                          itemBuilder: (context, index) {
-                            return dataWidget(
-                              Gender: enrolledUsersState
-                                  .enrolledUsersData[index].gender,
-                              Name: enrolledUsersState
-                                  .enrolledUsersData[index].userName,
-                              Phone: enrolledUsersState
-                                  .enrolledUsersData[index].phoneNumber
-                                  .toString(),
-                              joinedOn: enrolledUsersState
-                                  .enrolledUsersData[index].enrolledGymDate,
-                              expiresOn: enrolledUsersState
-                                  .enrolledUsersData[index].membershipExpiry,
-                            );
-                          },
-                        ),
-                        (!enrolledUsersState.paginationLoading)
-                            ? (enrolledUsersState.hasMoreData)
-                                ? GestureDetector(
-                                    onTap: () async {
-                                      (enrolledUsersState.hasMoreData)
-                                          ? await enrolledUsersState
-                                              .paginatedUsersData()
-                                          : null;
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(10.w),
-                                      child: Container(
-                                        padding: EdgeInsets.all(10.w),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.r)),
-                                          color: Colors.green,
-                                        ),
-                                        child: Text(
-                                          'load more',
-                                          style: TextStyle(
-                                              color:
-                                                  color_gt_headersTextColorWhite,
-                                              fontSize: 13.sp,
-                                              fontFamily: 'gilroy_bolditalic'),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Padding(
-                                    padding: EdgeInsets.all(10.h),
-                                    child: Text(
-                                      'All users have been fetched.',
-                                      style: TextStyle(
-                                          color: Colors.orange,
-                                          fontSize: 13.sp,
-                                          fontFamily: 'gilroy_bolditalic'),
-                                    ),
-                                  )
-                            : LoadingAnimationWidget.staggeredDotsWave(
-                                color: Colors.redAccent,
-                                size: 30,
+            backgroundColor: Colors.black,
+            extendBody: true,
+            body: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xff122B32), Colors.black],
+                ),
+              ),
+              child: Center(
+                child: Consumer(builder: (context, ref, child) {
+                  final enrolledUsersState = ref.watch(enrolledUsersProvider);
+
+                  return (enrolledUsersState.isLoading == false &&
+                          enrolledUsersState.initialPaginationLoading == false)
+                      ? SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    enrolledUsersState.enrolledUsersData.length,
+                                itemBuilder: (context, index) {
+                                  return dataWidget(
+                                    Gender: enrolledUsersState
+                                        .enrolledUsersData[index].gender,
+                                    Name: enrolledUsersState
+                                        .enrolledUsersData[index].userName,
+                                    Phone: enrolledUsersState
+                                        .enrolledUsersData[index].phoneNumber
+                                        .toString(),
+                                    joinedOn: enrolledUsersState
+                                            .enrolledUsersData[index]
+                                            .recentRenewedOn ??
+                                        '',
+                                    expiresOn: enrolledUsersState
+                                        .enrolledUsersData[index]
+                                        .membershipExpiry,
+                                    uid: enrolledUsersState
+                                        .enrolledUsersData[index].uid,
+                                  );
+                                },
                               ),
-                      ],
-                    ),
-                  )
-                : Loader(
-                    loadercolor: Colors.green,
-                  );
-          }),
-        ),
-      ),
-    );
+                              (enrolledUsersState.paginationLoading)
+                                  ? LoadingAnimationWidget.staggeredDotsWave(
+                                      color: Colors.redAccent,
+                                      size: 30,
+                                    )
+                                  : (enrolledUsersState.hasMoreData)
+                                      ? InkWell(
+                                          onTap: () async {
+                                            (enrolledUsersState.hasMoreData)
+                                                ? (enrolledUsersState
+                                                        .paginationLoading)
+                                                    ? null
+                                                    : await enrolledUsersState
+                                                        .paginatedUsersData()
+                                                : null;
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.all(10.w),
+                                            child: Container(
+                                              padding: EdgeInsets.all(10.w),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.r)),
+                                                color: enrolledUsersState
+                                                        .paginationLoading
+                                                    ? Colors.grey
+                                                    : Colors.green,
+                                              ),
+                                              child: Text(
+                                                'load more',
+                                                style: TextStyle(
+                                                    color:
+                                                        color_gt_headersTextColorWhite,
+                                                    fontSize: 13.sp,
+                                                    fontFamily:
+                                                        'gilroy_bolditalic'),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: EdgeInsets.all(10.h),
+                                          child: Text(
+                                            'All users have been fetched.',
+                                            style: TextStyle(
+                                                color: Colors.orange,
+                                                fontSize: 13.sp,
+                                                fontFamily:
+                                                    'gilroy_bolditalic'),
+                                          ),
+                                        ),
+                            ],
+                          ),
+                        )
+                      : Loader(
+                          loadercolor: Color(0xff2D77D0),
+                        );
+                }),
+              ),
+            ),
+          )
+        : NoInternetWidget();
   }
 
-  dataWidget(
-      {required String Name,
-      required String Phone,
-      required String Gender,
-      required var joinedOn,
-      required var expiresOn}) {
-    final noOfDays =
-        ref.read(enrolledUsersProvider).calculateNoOfDays(expiresOn);
-    return Padding(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
-      child: Column(children: [
-        Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          child: Container(
+  dataWidget({
+    required String Name,
+    required String Phone,
+    required String Gender,
+    required var joinedOn,
+    required var expiresOn,
+    required var uid,
+  }) {
+    return Consumer(builder: (context, ref, __) {
+      return Padding(
+        padding:
+            EdgeInsets.only(top: 10.h, bottom: 10.h, left: 10.w, right: 10.w),
+        child: Column(children: [
+          Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: noOfDays < 0 ? Colors.white30 : Colors.white10,
+              color: Colors.white10,
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(width: 1, color: Colors.white12),
             ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Column(
+            child: Padding(
+              padding: EdgeInsets.only(right: 10.w),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 7.w),
+                        child: Container(
+                          height: 85.h,
+                          decoration: BoxDecoration(
+                              color: (Gender == 'Male')
+                                  ? Colors.blue.withOpacity(0.07)
+                                  : Colors.pinkAccent.withOpacity(0.07),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Icon(
+                            (Gender == 'Male') ? Icons.male : Icons.female,
+                            color: (Gender == 'Male')
+                                ? Colors.blue
+                                : Colors.pinkAccent,
+                          ),
+                        ),
+                      ),
+                      Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             getTagNameTextWidget('Name'),
                             getTagNameTextWidget('Phone'),
-                            getTagNameTextWidget('Gender'),
+                            // getTagNameTextWidget('Gender'),
                             getTagNameTextWidget('Renewed On'),
                             getTagNameTextWidget('Expires On'),
                           ]),
-                    ),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          getColonSpacing(),
-                          getColonSpacing(),
-                          getColonSpacing(),
-                          getColonSpacing(),
-                          getColonSpacing(),
-                        ]),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          getTagDataTextWidget(Name),
-                          getTagDataTextWidget(Phone),
-                          getTagDataTextWidget(Gender),
-                          getTagDataTextWidget(joinedOn),
-                          getTagDataTextWidget(expiresOn),
-                        ]),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            getColonSpacing(),
+                            getColonSpacing(),
+                            //getColonSpacing(),
+                            getColonSpacing(),
+                            getColonSpacing(),
+                          ]),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            getTagDataTextWidget(Name),
+                            getTagDataTextWidget(Phone),
+                            //getTagDataTextWidget(Gender),
+                            getTagDataTextWidget(joinedOn),
+                            getTagDataTextWidget(expiresOn),
+                          ]),
+                    ]),
+                    expiryInDaysButton(expiresOn, uid),
                   ]),
-                  expiryInDaysButton(joinedOn, expiresOn),
-                ]),
+            ),
           ),
-        ),
-      ]),
-    );
+        ]),
+      );
+    });
   }
 
-  expiryInDaysButton(var renewedOn, var expiresOn) {
-    final noOfDays =
-        ref.read(enrolledUsersProvider).calculateNoOfDays(expiresOn);
-
+  expiryInDaysButton(var expiresOn, String uid) {
+    final enrolledUsersState = ref.read(enrolledUsersProvider);
+    final noOfDays = enrolledUsersState.calculateNoOfDays(expiresOn);
+    final isRequestedForApproval =
+        enrolledUsersState.isRequestedForApproval(uid);
     return Padding(
       padding: EdgeInsets.only(right: 20),
       child: Column(
@@ -241,14 +277,20 @@ class _MyUsersState extends ConsumerState<MyUsers> {
                   ? color_gt_green
                   : (noOfDays >= 8)
                       ? Colors.orange
-                      : Colors.red,
+                      : (isRequestedForApproval)
+                          ? const Color(0xff2D77D0)
+                          : Colors.red,
               borderRadius: BorderRadius.circular(5.r),
               border: Border.all(width: 1, color: Colors.white12),
             ),
             child: Padding(
               padding: const EdgeInsets.all(6.0),
               child: Text(
-                (noOfDays < 0) ? 'Expired' : '$noOfDays day(s)',
+                (noOfDays < 0)
+                    ? (isRequestedForApproval)
+                        ? 'Awaiting Renewal'
+                        : 'Expired'
+                    : '$noOfDays day(s)',
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: color_gt_headersTextColorWhite,

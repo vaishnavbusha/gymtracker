@@ -11,6 +11,7 @@ import 'package:gymtracker/constants.dart';
 
 import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/widgets/animated_route.dart';
 
 import 'package:gymtracker/widgets/approvals.dart';
 import 'package:gymtracker/widgets/generate_qr.dart';
@@ -61,8 +62,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           'Profile',
                           style: TextStyle(
                               fontFamily: 'gilroy_bold',
-                              color: color_gt_green,
-                              fontSize: 20.sp,
+                              color: Color(0xff30d5c8),
+                              fontSize: 22.sp,
                               fontStyle: FontStyle.normal),
                           textAlign: TextAlign.center,
                         ),
@@ -89,7 +90,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
                 child: Center(
                   child: Loader(
-                    loadercolor: Colors.red,
+                    loadercolor: Color(0xff2D77D0),
                   ),
                 ),
               ),
@@ -104,7 +105,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               .put('membershipExpiry', userModelData.membershipExpiry);
           Hive.box(miscellaneousDataHIVE)
               .put('awaitingRenewal', userModelData.awaitingRenewal);
-
+          Hive.box(miscellaneousDataHIVE).put('pendingRenewalsLength',
+              userModelData.pendingRenewals?.length ?? 0);
           // final UserModel user = UserModel.toModel(
           //     data); // Gives you the data map
           // return Scaffold(
@@ -130,8 +132,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         'Profile',
                         style: TextStyle(
                             fontFamily: 'gilroy_bold',
-                            color: color_gt_green,
-                            fontSize: 20.sp,
+                            color: Color(0xff30d5c8),
+                            fontSize: 22.sp,
                             fontStyle: FontStyle.normal),
                         textAlign: TextAlign.center,
                       ),
@@ -149,14 +151,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             backgroundColor: Colors.black,
             floatingActionButton: !(userModelData.userType == 'user')
                 ? FloatingActionButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              QRGenerator(userModelData: userModelData),
-                        )),
+                    onPressed: () =>
+                        Navigator.of(context, rootNavigator: true).push(
+                      ScaleRoute(
+                          page: QRGenerator(userModelData: userModelData)),
+                    ),
                     child: Icon(Icons.qr_code_2_rounded),
-                    backgroundColor: Colors.green,
+                    backgroundColor: color_gt_green,
                   )
                 : Container(),
             extendBody: true,
@@ -249,14 +250,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 ),
                                                 onPressed: () {
                                                   Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ApprovalsPage(
-                                                                pendingApprovals:
-                                                                    userModelData
-                                                                        .pendingApprovals!),
-                                                      ));
+                                                    context,
+                                                    ScaleRoute(
+                                                        page: ApprovalsPage(
+                                                            pendingApprovals:
+                                                                userModelData
+                                                                    .pendingApprovals!)),
+                                                  );
                                                 },
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
@@ -325,7 +325,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             child: Divider(
-                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              color: Color(0xff30d5c8).withOpacity(0.3),
                               height: 1.h,
                               thickness: 1,
                               // endIndent: 10.w,
@@ -337,7 +337,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             child: Divider(
-                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              color: Color(0xff30d5c8).withOpacity(0.3),
                               height: 1.h,
                               thickness: 1,
                               // endIndent: 10.w,
@@ -362,11 +362,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           //     // indent: 20.w,
                           //   ),
                           // ),
-                          profileDataBlock('Email', userModelData.email, true),
+                          profileDataBlock('Email', userModelData.email, false),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             child: Divider(
-                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              color: Color(0xff30d5c8).withOpacity(0.3),
                               height: 1.h,
                               thickness: 1,
                               // endIndent: 10.w,
@@ -377,7 +377,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             child: Divider(
-                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              color: Color(0xff30d5c8).withOpacity(0.3),
                               height: 1.h,
                               thickness: 1,
                               // endIndent: 10.w,
@@ -385,7 +385,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             ),
                           ),
                           profileDataBlock(
-                              'Phone', userModelData.phoneNumber!, true),
+                              'Phone', userModelData.phoneNumber!, false),
                           (userModelData.enrolledGym != null &&
                                   !userModelData.isAwaitingEnrollment!)
                               ? Column(children: [
@@ -393,8 +393,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.h),
                                     child: Divider(
-                                      color: color_gt_greenHalfOpacity
-                                          .withOpacity(0.3),
+                                      color: Color(0xff30d5c8).withOpacity(0.3),
                                       height: 1.h,
                                       thickness: 1,
                                       // endIndent: 10.w,
@@ -411,8 +410,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.h),
                                     child: Divider(
-                                      color: color_gt_greenHalfOpacity
-                                          .withOpacity(0.3),
+                                      color: Color(0xff30d5c8).withOpacity(0.3),
                                       height: 1.h,
                                       thickness: 1,
                                       // endIndent: 10.w,
@@ -429,8 +427,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.h),
                                     child: Divider(
-                                      color: color_gt_greenHalfOpacity
-                                          .withOpacity(0.3),
+                                      color: Color(0xff30d5c8).withOpacity(0.3),
                                       height: 1.h,
                                       thickness: 1,
                                       // endIndent: 10.w,
@@ -448,7 +445,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           padding: EdgeInsets.symmetric(
                                               vertical: 2.h),
                                           child: Divider(
-                                            color: color_gt_greenHalfOpacity
+                                            color: Color(0xff30d5c8)
                                                 .withOpacity(0.3),
                                             height: 1.h,
                                             thickness: 1,
@@ -467,8 +464,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.h),
                                     child: Divider(
-                                      color: color_gt_greenHalfOpacity
-                                          .withOpacity(0.3),
+                                      color: Color(0xff30d5c8).withOpacity(0.3),
                                       height: 1.h,
                                       thickness: 1,
                                       // endIndent: 10.w,
@@ -487,7 +483,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             child: Divider(
-                              color: color_gt_greenHalfOpacity.withOpacity(0.3),
+                              color: Color(0xff30d5c8).withOpacity(0.3),
                               height: 1.h,
                               thickness: 1,
                               // endIndent: 10.w,
@@ -574,13 +570,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Future<void> signOut() async {
     await fireBaseAuth.signOut();
     await Hive.box(userDetailsHIVE).clear();
-    Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
+    await Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
 
-    Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', null);
-    Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
-    Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
+    await Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', null);
+    await Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
+    await Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
+    Hive.box(miscellaneousDataHIVE).put('pendingRenewalsLength', null);
     Navigator.of(context, rootNavigator: true)
-        .pushReplacement(MaterialPageRoute(builder: (context) => SignInPage()));
+        .pushReplacement(ScaleRoute(page: SignInPage()));
   }
 
   profileDataBlock(String tagName, var tagData, bool enableUpdateButton) {
@@ -643,9 +640,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   membershipExpiryBlock(
       String tagName, UserModel userdata, bool enableUpdateButton) {
-    var expiresOn = DateTime(userdata.membershipExpiry!.year,
-        userdata.membershipExpiry!.month, userdata.membershipExpiry!.day);
-    int days = (expiresOn.difference(DateTime.now()).inHours / 24).round();
+    var expiresOn = DateTime(
+      userdata.membershipExpiry!.year,
+      userdata.membershipExpiry!.month,
+      userdata.membershipExpiry!.day,
+      userdata.membershipExpiry!.hour,
+      userdata.membershipExpiry!.second,
+      userdata.membershipExpiry!.millisecond,
+    );
+    bool isExpired = expiresOn.isBefore(DateTime.now());
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -655,7 +658,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             alignment: Alignment.centerLeft,
             child: RichText(
               text: TextSpan(
-                text: (days < 0) ? 'MemberShip expired on :  ' : '$tagName :  ',
+                text:
+                    (isExpired) ? 'MemberShip expired on :  ' : '$tagName :  ',
                 style: TextStyle(
                     color: color_gt_green,
                     fontSize: 12.sp,
@@ -666,7 +670,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           .format(userdata.membershipExpiry!),
                       style: TextStyle(
                           fontFamily: 'gilroy_regular',
-                          color: (days < 0)
+                          color: (isExpired)
                               ? Colors.red[500]
                               : color_gt_headersTextColorWhite,
                           fontSize: 12.sp)),
@@ -675,12 +679,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
           ),
         ),
-        (days < 0)
+        (isExpired)
             ? Padding(
                 padding: EdgeInsets.only(right: 13.h),
                 child: Consumer(builder: (context, ref, __) {
                   final profileState = ref.watch(profileControllerProvider);
-                  print(profileState.isLoading);
+
                   return (profileState.isLoading)
                       ? Loader(
                           loadercolor: Colors.green,
@@ -798,11 +802,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           fontFamily: 'gilroy_bold'),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          ctx,
-                          MaterialPageRoute(
-                            builder: (context) => EnrollPage(),
-                          ));
+                      Navigator.push(ctx, ScaleRoute(page: EnrollPage()));
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/models/user_model.dart';
-import 'package:gymtracker/notifiers/approval_notifier.dart';
-import 'package:gymtracker/widgets/loader.dart';
+
 import 'package:intl/intl.dart';
 
 import '../constants.dart';

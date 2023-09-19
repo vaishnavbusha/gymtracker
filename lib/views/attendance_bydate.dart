@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/datatable.dart';
+import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -104,6 +105,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                 final attendanceByDateState =
                                     ref.watch(attendanceByDateProvider);
                                 return DropdownButtonFormField<String>(
+                                  menuMaxHeight: 250.h,
                                   isExpanded: true,
                                   dropdownColor: color_gt_textColorBlueGrey,
                                   decoration: InputDecoration(
@@ -153,6 +155,9 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                       child: Center(
                                         child: Text(
                                           item,
+                                          style: TextStyle(
+                                            fontFamily: 'gilroy_bolditalic',
+                                          ),
                                         ),
                                       ),
                                       value: item,
@@ -175,7 +180,9 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                               padding: EdgeInsets.symmetric(
                                   vertical: 7.h, horizontal: 10.w),
                               primary: (attendanceByDateState.isDateSelected)
-                                  ? color_gt_green
+                                  ? (attendanceByDateState.isDataLoading)
+                                      ? Colors.grey
+                                      : color_gt_green
                                   : Colors.grey, // button color
                               shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -188,13 +195,19 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                             ),
                             onPressed: () async {
                               (attendanceByDateState.isDateSelected)
-                                  ? await attendanceByDateState
-                                      .getAttendanceListByDate()
+                                  ? (attendanceByDateState.isDataLoading)
+                                      ? null
+                                      : attendanceByDateState
+                                          .getAttendanceListByDate()
                                   : null;
                             },
-                            child: Text(
-                              'Fetch',
-                            ),
+                            child: (attendanceByDateState.isDataLoading)
+                                ? Loader(
+                                    loadercolor: Color(0xff2D77D0),
+                                  )
+                                : Text(
+                                    'Fetch',
+                                  ),
                           ),
                         );
                       }),

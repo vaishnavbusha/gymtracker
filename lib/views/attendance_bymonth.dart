@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/widgets/loader.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
@@ -40,6 +41,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
   @override
   Widget build(BuildContext context) {
     var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+
     //attendanceByMonthState.getGymDetails(widget.enrolledUsers, widget.gymName);
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? Scaffold(
@@ -97,7 +99,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                               ref.watch(attendanceByMonthProvider);
                           return DropdownButtonFormField<String>(
                             isExpanded: true,
-                            itemHeight: 50,
+                            menuMaxHeight: 250.h,
                             dropdownColor: color_gt_textColorBlueGrey,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
@@ -149,6 +151,9 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                                 child: Center(
                                   child: Text(
                                     item,
+                                    style: TextStyle(
+                                      fontFamily: 'gilroy_bolditalic',
+                                    ),
                                   ),
                                 ),
                                 value: item,
@@ -160,57 +165,71 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                       Consumer(builder: (context, value, child) {
                         final attendanceByMonthState =
                             ref.watch(attendanceByMonthProvider);
-                        return Material(
-                          borderRadius: BorderRadius.circular(10.r),
-                          child: Ink(
-                            decoration: BoxDecoration(
+                        return (attendanceByMonthState.isDataLoading)
+                            ? Loader(
+                                loadercolor: Color(0xff2D77D0),
+                              )
+                            : Material(
                                 borderRadius: BorderRadius.circular(10.r),
-                                color: color_gt_green),
-                            height: 32.h,
-                            width: 65.w,
-                            child: InkWell(
-                              onTap: () =>
-                                  (attendanceByMonthState.dropdownvalue !=
-                                              null &&
-                                          attendanceByMonthState
-                                              .attendanceByRow.isEmpty)
-                                      ? attendanceByMonthState
-                                          .getWholeAttendanceByMonthData()
-                                      : null,
-                              child: Center(
-                                child: Icon(
-                                  Icons.arrow_forward_ios_sharp,
-                                  color: Colors.white,
-                                  size: 20.r,
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    color:
+                                        (attendanceByMonthState.isMonthSelected)
+                                            ? color_gt_green
+                                            : Colors.grey,
+                                  ),
+                                  height: 32.h,
+                                  width: 65.w,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      (attendanceByMonthState.dropdownvalue !=
+                                                  null &&
+                                              attendanceByMonthState
+                                                  .attendanceByRow.isEmpty)
+                                          ? (attendanceByMonthState
+                                                  .isDataLoading)
+                                              ? null
+                                              : await attendanceByMonthState
+                                                  .getWholeAttendanceByMonthData()
+                                          : null;
+                                    },
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_sharp,
+                                        color: Colors.white,
+                                        size: 20.r,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        );
+                              );
                       }),
                     ],
                   ),
                 ),
-                Consumer(builder: (context, val, __) {
-                  final attendanceByMonthState =
-                      ref.watch(attendanceByMonthProvider);
-                  return Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: (attendanceByMonthState.attendanceByRow.isNotEmpty)
-                        ? SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                child: getDataTableWidget(
-                                    attendanceByMonthState.attendanceByRow,
-                                    attendanceByMonthState.columnData)),
-                          )
-                        : Container(),
-                    //
-                  );
-                })
+                Center(
+                  child: Consumer(builder: (context, val, __) {
+                    final attendanceByMonthState =
+                        ref.watch(attendanceByMonthProvider);
+                    return Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: (attendanceByMonthState.attendanceByRow.isNotEmpty)
+                          ? SingleChildScrollView(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              child: SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  child: getDataTableWidget(
+                                      attendanceByMonthState.attendanceByRow,
+                                      attendanceByMonthState.columnData)),
+                            )
+                          : Container(),
+                      //
+                    );
+                  }),
+                )
               ]),
             ),
           )
@@ -298,12 +317,14 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
 
   DataCell DataCellWidget(String data) {
     return DataCell(
-      Text(
-        data.toString(),
-        style: TextStyle(
-          fontSize: 13.sp,
-          color: color_gt_headersTextColorWhite,
-          fontFamily: 'gilroy_bold',
+      Center(
+        child: Text(
+          data.toString(),
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: color_gt_headersTextColorWhite,
+            fontFamily: 'gilroy_bold',
+          ),
         ),
       ),
     );

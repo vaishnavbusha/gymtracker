@@ -5,7 +5,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
-import 'package:gymtracker/models/scannedqr_model.dart';
+import 'package:gymtracker/controllers/encrypt_controller.dart';
+
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../models/user_model.dart';
@@ -32,7 +33,7 @@ class QRGenerator extends StatelessWidget {
                   'QR Code',
                   style: TextStyle(
                       fontFamily: 'gilroy_bold',
-                      color: color_gt_green,
+                      color: Color(0xff2D77D0),
                       fontSize: 20.sp,
                       fontStyle: FontStyle.normal),
                   textAlign: TextAlign.center,
@@ -60,8 +61,8 @@ class QRGenerator extends StatelessWidget {
           ),
           child: Center(
             child: QrImage(
-              foregroundColor: color_gt_green,
-              data: QRData,
+              foregroundColor: Color(0xff2D77D0),
+              data: EncryptController.encryptData(QRData),
               version: QrVersions.auto,
               size: 300,
               gapless: true,

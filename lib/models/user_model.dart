@@ -16,8 +16,8 @@ class UserModel extends HiveObject {
   String userName;
   @HiveField(2)
   String? uid;
-  @HiveField(3)
-  String? profilephoto;
+  // @HiveField(3)
+  // String? profilephoto;
   @HiveField(4)
   String email;
   @HiveField(5)
@@ -58,7 +58,7 @@ class UserModel extends HiveObject {
     required this.userType,
     required this.userName,
     this.uid,
-    this.profilephoto,
+    //this.profilephoto,
     required this.email,
     required this.gender,
     required this.DOB,
@@ -80,7 +80,8 @@ class UserModel extends HiveObject {
 
   @override
   String toString() {
-    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, profilephoto: $profilephoto, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry, phoneNumber: $phoneNumber, isAwaitingEnrollment: $isAwaitingEnrollment, pendingApprovals: $pendingApprovals, memberShipFeesPaid: $memberShipFeesPaid, recentRenewedOn: $recentRenewedOn, pendingRenewals: $pendingRenewals, enrolledGymOwnerName: $enrolledGymOwnerName, enrolledGymOwnerUID: $enrolledGymOwnerUID, awaitingRenewal: $awaitingRenewal)';
+    //, profilephoto: $profilephoto
+    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry, phoneNumber: $phoneNumber, isAwaitingEnrollment: $isAwaitingEnrollment, pendingApprovals: $pendingApprovals, memberShipFeesPaid: $memberShipFeesPaid, recentRenewedOn: $recentRenewedOn, pendingRenewals: $pendingRenewals, enrolledGymOwnerName: $enrolledGymOwnerName, enrolledGymOwnerUID: $enrolledGymOwnerUID, awaitingRenewal: $awaitingRenewal,)';
   }
 
   @override
@@ -90,7 +91,7 @@ class UserModel extends HiveObject {
     return other.userType == userType &&
         other.userName == userName &&
         other.uid == uid &&
-        other.profilephoto == profilephoto &&
+        //other.profilephoto == profilephoto &&
         other.email == email &&
         other.gender == gender &&
         other.DOB == DOB &&
@@ -115,7 +116,7 @@ class UserModel extends HiveObject {
     return userType.hashCode ^
         userName.hashCode ^
         uid.hashCode ^
-        profilephoto.hashCode ^
+        // profilephoto.hashCode ^
         email.hashCode ^
         gender.hashCode ^
         DOB.hashCode ^
@@ -148,7 +149,7 @@ class UserModel extends HiveObject {
       'enrolledGym': enrolledGym,
       'enrolledGymDate': enrolledGymDate,
       'membershipExpiry': membershipExpiry,
-      'profilephoto': profilephoto,
+      // 'profilephoto': profilephoto,
       'phoneNumber': phoneNumber,
       'pendingApprovals': pendingApprovals,
       'isAwaitingEnrollment': isAwaitingEnrollment,
@@ -168,7 +169,7 @@ class UserModel extends HiveObject {
       pendingApprovals: mapData['pendingApprovals'],
       isAwaitingEnrollment: mapData['isAwaitingEnrollment'],
       phoneNumber: mapData['phoneNumber'],
-      profilephoto: mapData['profilephoto'],
+      //  profilephoto: mapData['profilephoto'],
       DOB: mapData['DOB'],
       email: mapData['email'],
       enrolledGymOwnerName: mapData['enrolledGymOwnerName'],
@@ -233,7 +234,7 @@ class UserModel extends HiveObject {
       userType: userType ?? this.userType,
       userName: userName ?? this.userName,
       uid: uid ?? this.uid,
-      profilephoto: profilephoto ?? this.profilephoto,
+      // profilephoto: profilephoto ?? this.profilephoto,
       email: email ?? this.email,
       gender: gender ?? this.gender,
       DOB: DOB ?? this.DOB,

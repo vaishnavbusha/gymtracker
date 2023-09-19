@@ -2,15 +2,12 @@
 
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/user_model.dart';
-
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../views/signin.dart';
 import '../widgets/animated_route.dart';
@@ -29,11 +26,11 @@ class SignUpController extends ChangeNotifier {
   File? testfile;
   SignUpController(DateTime value) {
     pickedDate = value;
-    convertImageToFile().then(
-      (value) {
-        pickedImage = value;
-      },
-    );
+    // convertImageToFile().then(
+    //   (value) {
+    //     pickedImage = value;
+    //   },
+    // );
   }
   changePassObscurity() {
     pass_isobscure = !pass_isobscure;
@@ -42,10 +39,10 @@ class SignUpController extends ChangeNotifier {
 
   changegender(String value) async {
     selectedgender = value;
-    pickedImage = await convertImageToFile();
-    if (kDebugMode) {
-      print(pickedImage);
-    }
+    // pickedImage = await convertImageToFile();
+    // if (kDebugMode) {
+    //   print(pickedImage);
+    // }
     notifyListeners();
   }
 
@@ -97,13 +94,13 @@ class SignUpController extends ChangeNotifier {
       is_register_details_uploading = true;
       UserCredential cred = await fireBaseAuth.createUserWithEmailAndPassword(
           email: userModel.email, password: password);
-      String downloadurl = await _uploadtoStorage(pickedImage);
-      if (kDebugMode) {
-        print(downloadurl);
-      }
+      // String downloadurl = await _uploadtoStorage(pickedImage);
+      // if (kDebugMode) {
+      //   print(downloadurl);
+      // }
       userModel = userModel.copyWith(
         uid: cred.user?.uid,
-        profilephoto: downloadurl,
+        //profilephoto: downloadurl,
       );
 
       await fireBaseFireStore
@@ -166,61 +163,61 @@ class SignUpController extends ChangeNotifier {
     notifyListeners();
   }
 
-  changeToDefaultProfilePhoto(BuildContext ctx) async {
-    no_of_times_profilechanged = 0;
-    CustomSnackBar.buildSnackbar(
-      context: ctx,
-      color: Colors.red[500]!,
-      message: 'You have de-selected your profile picture!',
-      textcolor: const Color(0xffFDFFFC),
-      iserror: true,
-    );
-    print(await convertImageToFile());
-    pickedImage = await convertImageToFile();
-    notifyListeners();
-  }
+  // changeToDefaultProfilePhoto(BuildContext ctx) async {
+  //   no_of_times_profilechanged = 0;
+  //   CustomSnackBar.buildSnackbar(
+  //     context: ctx,
+  //     color: Colors.red[500]!,
+  //     message: 'You have de-selected your profile picture!',
+  //     textcolor: const Color(0xffFDFFFC),
+  //     iserror: true,
+  //   );
+  //   print(await convertImageToFile());
+  //   pickedImage = await convertImageToFile();
+  //   notifyListeners();
+  // }
 
-  Future<File> convertImageToFile() async {
-    var bytes = await rootBundle.load('assets/images/$selectedgender.png');
-    String tempPath = (await getTemporaryDirectory()).path;
-    File file = File('$tempPath/$selectedgender.png');
-    await file.writeAsBytes(
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+  // Future<File> convertImageToFile() async {
+  //   var bytes = await rootBundle.load('assets/images/$selectedgender.png');
+  //   String tempPath = (await getTemporaryDirectory()).path;
+  //   File file = File('$tempPath/$selectedgender.png');
+  //   await file.writeAsBytes(
+  //       bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
 
-    notifyListeners();
-    return file;
-  }
+  //   notifyListeners();
+  //   return file;
+  // }
 
-  void pickimage(BuildContext ctx) async {
-    final pickedimage = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        maxHeight: 480,
-        maxWidth: 640,
-        imageQuality: 50);
-    if (pickedimage != null) {
-      no_of_times_profilechanged++;
-      CustomSnackBar.buildSnackbar(
-        context: ctx,
-        color: const Color(0xff4CB944),
-        message: 'You have successfuly selected your profile picture!',
-        textcolor: const Color(0xffFDFFFC),
-        iserror: true,
-      );
-      pickedImage = (File(pickedimage.path));
-    }
-    notifyListeners();
-    print(pickedImage);
-  }
+  // void pickimage(BuildContext ctx) async {
+  //   final pickedimage = await ImagePicker().pickImage(
+  //       source: ImageSource.gallery,
+  //       maxHeight: 480,
+  //       maxWidth: 640,
+  //       imageQuality: 50);
+  //   if (pickedimage != null) {
+  //     no_of_times_profilechanged++;
+  //     CustomSnackBar.buildSnackbar(
+  //       context: ctx,
+  //       color: const Color(0xff4CB944),
+  //       message: 'You have successfuly selected your profile picture!',
+  //       textcolor: const Color(0xffFDFFFC),
+  //       iserror: true,
+  //     );
+  //     pickedImage = (File(pickedimage.path));
+  //   }
+  //   notifyListeners();
+  //   print(pickedImage);
+  // }
 
-  Future<String> _uploadtoStorage(File image) async {
-    Reference ref = fireBaseStorage
-        .ref()
-        .child('profilepics')
-        .child(FirebaseAuth.instance.currentUser!.uid);
-    UploadTask uploadtask = ref.putFile(image);
-    TaskSnapshot snap = await uploadtask;
-    String downloadurl = await snap.ref.getDownloadURL();
-    notifyListeners();
-    return downloadurl;
-  }
+  // Future<String> _uploadtoStorage(File image) async {
+  //   Reference ref = fireBaseStorage
+  //       .ref()
+  //       .child('profilepics')
+  //       .child(FirebaseAuth.instance.currentUser!.uid);
+  //   UploadTask uploadtask = ref.putFile(image);
+  //   TaskSnapshot snap = await uploadtask;
+  //   String downloadurl = await snap.ref.getDownloadURL();
+  //   notifyListeners();
+  //   return downloadurl;
+  // }
 }

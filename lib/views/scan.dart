@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -9,10 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanPage extends ConsumerStatefulWidget {
   const ScanPage({Key? key}) : super(key: key);
@@ -55,7 +53,36 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       extendBody: true,
+      appBar: PreferredSize(
+        child: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+            child: AppBar(
+              centerTitle: true,
+              title: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Scanner',
+                  style: TextStyle(
+                      fontFamily: 'gilroy_bold',
+                      color: Color(0xff30d5c8),
+                      fontSize: 22.sp,
+                      fontStyle: FontStyle.normal),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              elevation: 0.0,
+              backgroundColor: Colors.black.withOpacity(0.5),
+            ),
+          ),
+        ),
+        preferredSize: Size(
+          double.infinity,
+          50.0,
+        ),
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -159,7 +186,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                   padding: EdgeInsets.all(15.sp),
                                   child: Center(
                                     child: Text(
-                                      'Today\'s entry time has already been marked, kindly re-scan the QR for marking exit-time before leaving the gym.',
+                                      'Today\'s entry time has been marked, kindly re-scan the QR for marking exit-time before leaving the gym.',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 13.sp,
@@ -188,16 +215,25 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                       Hive.box(miscellaneousDataHIVE)
                                           .listenable(),
                                   builder: (context, box, __) {
-                                    final date = box.get('membershipExpiry');
+                                    final date =
+                                        box.get('membershipExpiry') as DateTime;
 
                                     var expiresOn = DateTime(
-                                        date.year, date.month, date.day);
-                                    int days = (expiresOn
-                                                .difference(DateTime.now())
-                                                .inHours /
-                                            24)
-                                        .round();
-
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      date.hour,
+                                      date.minute,
+                                      date.second,
+                                      date.millisecond,
+                                    );
+                                    // int days = (expiresOn
+                                    //             .difference(DateTime.now())
+                                    //             .inHours /
+                                    //         24)
+                                    //     .round();
+                                    bool isExpired =
+                                        expiresOn.isBefore(DateTime.now());
                                     return ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         //onPrimary: Colors.black,  //to change text color
@@ -205,7 +241,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                             horizontal: 10, vertical: 7.h),
                                         primary: (box.get(
                                                     'isAwaitingEnrollment') ||
-                                                (days < 0))
+                                                (isExpired))
                                             ? Colors.grey
                                             : (Hive.box(miscellaneousDataHIVE).get(
                                                         "isEnterScanScanned") ||
@@ -225,7 +261,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                       ),
                                       onPressed: () async {
                                         if (box.get('isAwaitingEnrollment') ||
-                                            days < 0) {
+                                            isExpired) {
                                           null;
                                         } else {
                                           String barcodeScanRes =
@@ -259,48 +295,63 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                       ),
                                     );
                                   })
-                              : ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    //onPrimary: Colors.black,  //to change text color
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 7.h),
-                                    primary: color_gt_green, // button color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          10.r), // <-- Radius
-                                    ),
-                                    textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20.sp,
-                                        fontFamily: 'gilroy_bold'),
-                                  ),
-                                  onPressed: () async {
-                                    String barcodeScanRes =
-                                        await FlutterBarcodeScanner.scanBarcode(
-                                            "#ff6666",
-                                            'cancel',
-                                            false,
-                                            ScanMode.QR);
-                                    scanState.getScannedData(
-                                        barcodeScanRes, context);
-                                    // scanState.validateScannedResult(context);
-                                    // x.updateQRButtonClick();
-                                    // barCode = null;
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.qr_code_scanner_rounded,
-                                        size: 40.w,
+                              : ValueListenableBuilder<Box<dynamic>>(
+                                  valueListenable:
+                                      Hive.box(miscellaneousDataHIVE)
+                                          .listenable(),
+                                  builder: (context, box, __) {
+                                    return ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        //onPrimary: Colors.black,  //to change text color
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 7.h),
+                                        primary: (box
+                                                .get('isAwaitingEnrollment'))
+                                            ? Colors.grey
+                                            : color_gt_green, // button color
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              10.r), // <-- Radius
+                                        ),
+                                        textStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20.sp,
+                                            fontFamily: 'gilroy_bold'),
                                       ),
-                                      SizedBox(width: 10.w),
-                                      Text(
-                                        'Scan QR',
+                                      onPressed: () async {
+                                        if (box.get('isAwaitingEnrollment')) {
+                                          null;
+                                        } else {
+                                          String barcodeScanRes =
+                                              await FlutterBarcodeScanner
+                                                  .scanBarcode(
+                                                      "#ff6666",
+                                                      'cancel',
+                                                      false,
+                                                      ScanMode.QR);
+                                          scanState.getScannedData(
+                                              barcodeScanRes, context);
+                                          // scanState.validateScannedResult(context);
+                                          // x.updateQRButtonClick();
+                                          // barCode = null;
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.qr_code_scanner_rounded,
+                                            size: 40.w,
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          Text(
+                                            'Scan QR',
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
+                                    );
+                                  }),
                         ),
                       ]),
                 );
