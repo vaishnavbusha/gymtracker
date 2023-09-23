@@ -74,8 +74,8 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
       backgroundColor: Colors.black,
       extendBody: true,
       body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        // width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -83,18 +83,17 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
             colors: [Color(0xff122B32), Colors.black],
           ),
         ),
-        child: SafeArea(
-          child: (isUser == false)
-              ? Padding(
-                  padding: EdgeInsets.only(
-                      right: 10.w, top: 20.h, bottom: 20.h, left: 10.w),
-                  child: Center(
-                    child: GridView.count(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
+        child: (isUser == false)
+            ? Padding(
+                padding: EdgeInsets.only(right: 5.w, left: 5.w),
+                child: CustomScrollView(
+                  primary: false,
+                  physics: BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  slivers: [
+                    SliverGrid.count(
                       crossAxisCount: 2,
                       childAspectRatio: 1.2,
-                      padding: EdgeInsets.all(4.w),
                       mainAxisSpacing: 15.0,
                       crossAxisSpacing: 15.0,
                       children: <Widget>[
@@ -128,6 +127,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                             ScaleRoute(page: AttendanceByMonth()),
                           );
                         }),
+
                         // viewButton('Expired User(s)', () {
                         //   Navigator.of(context, rootNavigator: true).push(
                         //     MaterialPageRoute(
@@ -157,10 +157,10 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                             : Container(),
                       ],
                     ),
-                  ),
-                )
-              : Container(),
-        ),
+                  ],
+                ),
+              )
+            : Container(),
       ),
     );
   }

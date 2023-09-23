@@ -54,6 +54,8 @@ dependencies:
   qr_code_scanner: ^0.6.1
   flutter_barcode_scanner: ^2.0.0
   encrypt: ^5.0.1
+  new_version: ^0.3.1
+  url_launcher: ^6.1.8
 
 
   
@@ -85,20 +87,20 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/background_grey.jpg
-    - assets/images/coming_soon_wallpapers.jpg
-    - assets/images/icon_with_shadow.png 
-    - assets/images/Male0.png
-    - assets/images/Male1.png
-    - assets/images/Male.png
-    - assets/images/Female0.png
-    - assets/images/Female1.png
-    - assets/images/Female.png
-    - assets/images/bg1.jpg
-    - assets/images/bg2.jpg
-    - assets/images/bg3.jpg
-    - assets/images/bg6.jpg
-    - assets/images/icons8-google.svg
+    - assets/images/playstore.png
+  #   - assets/images/coming_soon_wallpapers.jpg
+  #   - assets/images/icon_with_shadow.png 
+  #   - assets/images/Male0.png
+  #   - assets/images/Male1.png
+  #   - assets/images/Male.png
+  #   - assets/images/Female0.png
+  #   - assets/images/Female1.png
+  #   - assets/images/Female.png
+  #   - assets/images/bg1.jpg
+  #   - assets/images/bg2.jpg
+  #   - assets/images/bg3.jpg
+  #   - assets/images/bg6.jpg
+  #   - assets/images/icons8-google.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

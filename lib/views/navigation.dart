@@ -10,10 +10,12 @@ import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:gymtracker/widgets/persistent_bottombar_scaffold.dart';
 import 'package:hive/hive.dart';
+import 'package:new_version/new_version.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../controllers/network_controller.dart';
 import '../models/user_model.dart';
+import '../widgets/updatedialog.dart';
 
 class NavigationPage extends ConsumerStatefulWidget {
   const NavigationPage({Key? key}) : super(key: key);
@@ -27,6 +29,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
   // bool? isUser;
   @override
   void initState() {
+    checkversion();
     ref.read(navigationBarProvider);
     //navigationState.checkUserStatus();
     // isUser =
@@ -35,6 +38,58 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
     //     PersistentTabController(initialIndex: navigationState.isUser! ? 1 : 0);
     // TODO: implement initState
     super.initState();
+  }
+
+  void checkversion() async {
+    final newversion = NewVersion(androidId: "com.aquelastudios.gymtracker");
+    final status = await newversion.getVersionStatus();
+    if (status != null) {
+      if (status.canUpdate) {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (ctx) => WillPopScope(
+            onWillPop: () async => false,
+            child: UpdateDialog(
+              applink:
+                  'https://play.google.com/store/apps/details?id=com.aquelastudios.gymtracker',
+              color: 0xff122B32,
+              description: '',
+              divider_color: 0xFFF05454,
+              evaluated_expression_color: 0xff2D77D0,
+              localVersion: status.localVersion,
+              storeVersion: status.storeVersion,
+            ),
+          ),
+        );
+      }
+    }
+    // if (status!.storeVersion != status.localVersion) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (ctx) => UpdateDialog(
+    //       applink:
+    //           'https://play.google.com/store/apps/details?id=com.aquelastudios.calculater',
+    //       color: themeController.bgcolor,
+    //       description: '',
+    //       divider_color: themeController.specialtextcolor,
+    //       evaluated_expression_color: themeController.textcolor,
+    //       localVersion: status.localVersion,
+    //       storeVersion: status.storeVersion,
+    //     ),
+    //   );
+    //   // newversion.showUpdateDialog(
+    //   //     context: context,
+    //   //     versionStatus: status,
+    //   //     dialogTitle: "Update Available!",
+    //   //     dismissButtonText: "Exit",
+    //   //     dismissAction: () => SystemNavigator.pop(),
+    //   //     updateButtonText: "Update",
+    //   //     dialogText: "Please update the app from " +
+    //   //         "${status.localVersion}" +
+    //   //         " to " +
+    //   //         "${status.storeVersion}");
+    // }
   }
 
   @override

@@ -94,10 +94,11 @@ class EnrollController extends ChangeNotifier {
         context: context,
         iserror: false,
         message:
-            'Enrollment request has been sent to $dropdownvalue. You can exit this page.',
+            'Enrollment request has been sent to $dropdownvalue. You can now exit the page',
         textcolor: color_gt_headersTextColorWhite);
     isLoading = false;
     isEnrolled = true;
+
     notifyListeners();
   }
 

@@ -3,8 +3,10 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
@@ -20,7 +22,6 @@ import 'package:gymtracker/views/signin.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-import '../widgets/customsnackbar.dart';
 import '../widgets/enroll.dart';
 import '../widgets/loader.dart';
 
@@ -182,7 +183,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           !(userModelData.isUser)
-                              ? (userModelData.pendingApprovals!.isNotEmpty)
+                              ? (userModelData.pendingApprovals != null &&
+                                      userModelData
+                                          .pendingApprovals!.isNotEmpty)
                                   ? Container(
                                       width: MediaQuery.of(context).size.width,
                                       decoration: BoxDecoration(
@@ -572,12 +575,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     await Hive.box(userDetailsHIVE).clear();
     await Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
 
-    await Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', null);
+    await Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', false);
     await Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
+    await Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', null);
     await Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
     Hive.box(miscellaneousDataHIVE).put('pendingRenewalsLength', null);
-    Navigator.of(context, rootNavigator: true)
-        .pushReplacement(ScaleRoute(page: SignInPage()));
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      if (mounted) {
+        // Perform updates to the UI
+        Navigator.of(context, rootNavigator: true)
+            .pushReplacement(ScaleRoute(page: SignInPage()));
+      }
+    });
   }
 
   profileDataBlock(String tagName, var tagData, bool enableUpdateButton) {
@@ -802,7 +811,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           fontFamily: 'gilroy_bold'),
                     ),
                     onPressed: () {
-                      Navigator.push(ctx, ScaleRoute(page: EnrollPage()));
+                      Navigator.push(ctx,
+                          CupertinoPageRoute(builder: (ctx) => EnrollPage()));
+                      // Navigator.of(context, rootNavigator: true)
+                      //     .push(ScaleRoute(page: EnrollPage()));
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

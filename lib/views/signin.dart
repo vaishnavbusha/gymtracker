@@ -90,7 +90,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'GymTracker',
+                                      'Login',
                                       style: TextStyle(
                                         //foreground: Paint()..shader = linearGradient,
                                         color: Colors.white,
@@ -218,7 +218,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                               ),
                                               child: Center(
                                                 child: Text(
-                                                  'Login',
+                                                  'Sign In',
                                                   style: TextStyle(
                                                       fontFamily: 'gilroy_bold',
                                                       fontSize: 20.sp,
@@ -318,7 +318,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                         ),
                                       ),
                                       InkWell(
-                                        onTap: () {
+                                        onTap: () async {
                                           Navigator.pushReplacement(
                                               context,
                                               ScaleRoute(

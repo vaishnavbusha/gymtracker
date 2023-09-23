@@ -323,7 +323,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                               ),
                                               child: Center(
                                                 child: Text(
-                                                  'Register',
+                                                  'Sign Up',
                                                   style: TextStyle(
                                                       fontFamily: 'gilroy_bold',
                                                       fontSize: 20.sp,
@@ -569,13 +569,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             validator: (value) {
               if (labeltext == 'UserName') {
                 if (value!.isEmpty) {
-                  return '"Username" can\'t be empty !';
+                  return '" Username " can\'t be empty !';
                 } else {
                   return null;
                 }
               } else if (labeltext == 'Email') {
                 if (value!.isEmpty) {
-                  return '"Email" field can\'t be empty !';
+                  return '" Email " field can\'t be empty !';
                 } else if (!RegExp(
                         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                     .hasMatch(value)) {
@@ -585,17 +585,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 }
               } else if (labeltext == 'Password') {
                 if (value!.isEmpty) {
-                  return '"password" field can\'t be empty';
-                } else if (!RegExp(
+                  return '" password " field can\'t be empty';
+                } else if (value.length < 6) {
+                  return 'minimum 6 characters required !';
+                }
+                if (!RegExp(
                         r'^((?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9!@\-+()#$%&*]{6,20})$')
                     .hasMatch(value)) {
-                  return 'minimum 6 characters, atleast one letter and one number is must!';
+                  return 'Atleast one letter and one number is must!';
                 } else {
                   return null;
                 }
               } else if (labeltext == 'Confirm Password') {
                 if (value!.isEmpty) {
-                  return '"confirm password" field can\'t be empty';
+                  return '" confirm password " field can\'t be empty';
                 } else if (!RegExp(
                         r'^((?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9!@\-+()#$%&*]{6,20})$')
                     .hasMatch(value)) {
@@ -610,14 +613,12 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 }
               } else if (labeltext == 'Phone') {
                 if (value!.isEmpty) {
-                  return '"phone number" can\'t be empty !';
+                  return '" phone number " can\'t be empty !';
                 } else if (!RegExp(r"^[0-9]{10}$").hasMatch(value)) {
                   return 'should contain 10 digits !';
                 } else {
                   return null;
                 }
-              } else {
-                return null;
               }
             },
             cursorHeight: 18.sp,
@@ -694,7 +695,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide: const BorderSide(color: Colors.red, width: 0.5),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),

@@ -36,13 +36,17 @@ class LoginController extends ChangeNotifier {
             .signInWithEmailAndPassword(email: email, password: password);
         is_login_details_uploading = false;
         await storeUserDetailsToHive(creds.user!.uid);
-        CustomSnackBar.buildSnackbar(
-          color: const Color(0xff4CB944),
-          context: ctx,
-          message: 'Login Success. Redirecting...',
-          textcolor: const Color(0xffFDFFFC),
-          iserror: false,
-        );
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          CustomSnackBar.buildSnackbar(
+            color: const Color(0xff4CB944),
+            context: ctx,
+            message: 'Login Success. Redirecting...',
+            textcolor: const Color(0xffFDFFFC),
+            iserror: false,
+          );
+          // ... show the culprit SnackBar here.
+        });
+
         Navigator.pushReplacement(
             ctx,
             ScaleRoute(
@@ -52,13 +56,15 @@ class LoginController extends ChangeNotifier {
       }
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
-        print(e.code);
+        print('ecode =' + e.code);
       }
-      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+      if (e.code == 'user-not-found' ||
+          e.code == 'wrong-password' ||
+          e.code == 'unknown') {
         CustomSnackBar.buildSnackbar(
           color: Colors.red[500]!,
           context: ctx,
-          message: 'wrong username/password, try again !',
+          message: 'wrong email/password, try again !',
           textcolor: const Color(0xffFDFFFC),
           iserror: true,
         );
@@ -109,6 +115,7 @@ class LoginController extends ChangeNotifier {
   }
 
   Future resetPassword(String _emailID, BuildContext context) async {
+    notifyListeners();
     isResetPasswordLoading = true;
     try {
       bool isUserExists = await fireBaseFireStore
@@ -129,8 +136,7 @@ class LoginController extends ChangeNotifier {
           CustomSnackBar.buildSnackbar(
             color: Colors.green,
             context: context,
-            message:
-                'An email has been sent to $_emailID for resetting the password.',
+            message: 'Email sent to $_emailID for password reset',
             textcolor: const Color(0xffFDFFFC),
             iserror: false,
           );

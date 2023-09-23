@@ -33,7 +33,7 @@ class QRGenerator extends StatelessWidget {
                   'QR Code',
                   style: TextStyle(
                       fontFamily: 'gilroy_bold',
-                      color: Color(0xff2D77D0),
+                      color: color_gt_green,
                       fontSize: 20.sp,
                       fontStyle: FontStyle.normal),
                   textAlign: TextAlign.center,
@@ -61,7 +61,7 @@ class QRGenerator extends StatelessWidget {
           ),
           child: Center(
             child: QrImage(
-              foregroundColor: Color(0xff2D77D0),
+              foregroundColor: color_gt_green,
               data: EncryptController.encryptData(QRData),
               version: QrVersions.auto,
               size: 300,

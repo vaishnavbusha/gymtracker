@@ -27,6 +27,7 @@ void main() async {
   Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox(userDetailsHIVE);
   await Hive.openBox(miscellaneousDataHIVE);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(ProviderScope(child: const MyApp()));
 }
 
@@ -80,20 +81,85 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(milliseconds: 900), () {
+    Timer(Duration(milliseconds: 1000), () {
       changepage();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Color> x = <Color>[Colors.white, Colors.white54];
+    final Shader linearGradient = LinearGradient(
+      colors: <Color>[Colors.white, Colors.white54],
+    ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-          child: Text(
-        'GymTracker',
-        style: TextStyle(color: Colors.white),
-      )),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xff122B32), Colors.black],
+          ),
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ShaderMask(
+                        shaderCallback: (bounds) {
+                          return linearGradient;
+                        },
+                        child: Image.asset(
+                          'assets/images/playstore.png',
+                          height: 100.h,
+                          fit: BoxFit.contain,
+                        ),
+                        blendMode: BlendMode.srcATop),
+                    // SizedBox(
+                    //   //color: Colors.blue.withOpacity(0.2),
+                    //   height: 100.h,
+                    //   child: Image.asset(
+                    //     'assets/images/playstore.png',
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                    Text(
+                      'GymTracker',
+                      style: TextStyle(
+                          fontFamily: 'gilroy_bolditalic',
+                          fontSize: 35.sp,
+                          foreground: Paint()..shader = linearGradient),
+                    ),
+                  ]),
+            ),
+            Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'from',
+                      style: TextStyle(
+                          fontFamily: 'gilroy_regular',
+                          color: color_gt_textColorBlueGrey),
+                    ),
+                    Text(
+                      'Aquela Studios',
+                      style: TextStyle(
+                          fontFamily: 'gilroy_regular',
+                          color: color_gt_green,
+                          fontSize: 20.sp),
+                    ),
+                  ]),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

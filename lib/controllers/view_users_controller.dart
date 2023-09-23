@@ -86,18 +86,24 @@ class EnrolledUsersNotifier extends ChangeNotifier {
 
   Future loadInitialUserData() async {
     initialPaginationLoading = true;
-
-    if (limit > usersUIDsListLength) {
-      //get the whole remaining data from uid's list
-      for (int i = lastIndex; i < usersUIDsList.length; i++) {
+    if (usersUIDsListLength <= limit) {
+      for (int i = 0; i < usersUIDsList.length; i++) {
         await getUsersFromUIDs(usersUIDsList[i]);
       }
-    } else if (limit < usersUIDsListLength) {
-      for (int i = lastIndex; i < (lastIndex + limit); i++) {
-        await getUsersFromUIDs(usersUIDsList[i]);
+      hasMoreData = false;
+    } else {
+      if (limit > usersUIDsListLength) {
+        //get the whole remaining data from uid's list
+        for (int i = lastIndex; i < usersUIDsList.length; i++) {
+          await getUsersFromUIDs(usersUIDsList[i]);
+        }
+      } else if (limit < usersUIDsListLength) {
+        for (int i = lastIndex; i < (lastIndex + limit); i++) {
+          await getUsersFromUIDs(usersUIDsList[i]);
+        }
+        lastIndex += limit;
+        usersUIDsListLength = usersUIDsListLength - limit;
       }
-      lastIndex += limit;
-      usersUIDsListLength = usersUIDsListLength - limit;
     }
     initialPaginationLoading = false;
     notifyListeners();

@@ -154,30 +154,31 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                                 child: Ink(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.r),
-                                      color:
-                                          (_searchController!.text.isNotEmpty)
-                                              ? (_searchUsersState
-                                                          .isSearchLoading ||
-                                                      _searchController!
-                                                          .text.characters
-                                                          .contains(" "))
-                                                  ? Colors.grey
-                                                  : color_gt_green
-                                              : Colors.grey),
+                                      color: (_searchController!.text
+                                              .trim()
+                                              .isNotEmpty)
+                                          ? (_searchUsersState.isSearchLoading)
+                                              ? Colors.grey
+                                              : color_gt_green
+                                          : Colors.grey),
                                   height: 32.h,
                                   width: 65.w,
                                   child: InkWell(
                                     onTap: () async {
-                                      (_searchController!.text.isNotEmpty &&
-                                              !_searchController!
-                                                  .text.characters
-                                                  .contains(" "))
+                                      print(_searchController!.text
+                                          .replaceAll(RegExp("[ \n\t\r\f]"), '')
+                                          .length);
+                                      (_searchController!.text
+                                              .trim()
+                                              .isNotEmpty)
                                           ? (_searchUsersState.isSearchLoading)
                                               ? null
-                                              : _searchUsersState
-                                                  .searchForAUser(
-                                                      _searchController!.text,
-                                                      context)
+                                              : _searchUsersState.searchForAUser(
+                                                  _searchController!.text
+                                                      .replaceAll(
+                                                          RegExp("[ \n\t\r\f]"),
+                                                          ''),
+                                                  context)
                                           : null;
                                     },
                                     child: Center(
