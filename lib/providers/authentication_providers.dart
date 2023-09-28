@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymtracker/controllers/add_manual_attendance_controller.dart';
+import 'package:gymtracker/controllers/add_user_manually_controller.dart';
 import 'package:gymtracker/controllers/attendance_bydate_controller.dart';
 import 'package:gymtracker/controllers/expired_users_controller.dart';
 import 'package:gymtracker/controllers/search_users_controller.dart';
@@ -100,6 +102,16 @@ final searchUsersProvider = ChangeNotifierProvider.autoDispose(
 final expiredUsersProvider = ChangeNotifierProvider.autoDispose(
   (ref) {
     return ExpiredUsersController();
+  },
+);
+final addUserManuallyProvider = ChangeNotifierProvider.autoDispose(
+  (ref) {
+    return AddUserManuallyNotifier(DateTime.now());
+  },
+);
+final addManualAttendanceProvider = ChangeNotifierProvider.autoDispose(
+  (ref) {
+    return AddManualAttendanceNotifier();
   },
 );
 // final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>(

@@ -187,7 +187,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
                           height: 85.h,
                           decoration: BoxDecoration(
                               color: Colors.blue.withOpacity(0.07),
-                              borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10.r)),
                           child: Icon(
                             (Gender == 'Male') ? Icons.male : Icons.female,
                             color: (Gender == 'Male')
@@ -254,7 +254,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
               border: Border.all(width: 1.w, color: Colors.white12),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(6.0),
+              padding: EdgeInsets.all(6.w),
               child: Text(
                 (noOfDays < 0)
                     ? (isRequestedForApproval)

@@ -83,6 +83,7 @@ class SignUpController extends ChangeNotifier {
   }) async {
     notifyListeners();
     try {
+      List userNamesList = [];
       // if (username.isNotEmpty &&
       //     email.isNotEmpty &&
       //     password.isNotEmpty &&
@@ -92,6 +93,10 @@ class SignUpController extends ChangeNotifier {
       //     throw ('Re-Confirm entered password !');
       //   }
       is_register_details_uploading = true;
+      if (await isUserNameUnique(userModel.userName)) {
+        throw '"${userModel.userName}" already exists, try with different name !';
+      }
+
       UserCredential cred = await fireBaseAuth.createUserWithEmailAndPassword(
           email: userModel.email, password: password);
       // String downloadurl = await _uploadtoStorage(pickedImage);
@@ -102,7 +107,21 @@ class SignUpController extends ChangeNotifier {
         uid: cred.user?.uid,
         //profilephoto: downloadurl,
       );
-
+      await fireBaseFireStore
+          .collection('usernames_list')
+          .doc('uniqueUserNames')
+          .get()
+          .then(
+        (value) {
+          userNamesList =
+              (value.data() as Map<String, dynamic>)['usernames'] ?? [];
+          userNamesList.add(userModel.userName);
+        },
+      );
+      await fireBaseFireStore
+          .collection('usernames_list')
+          .doc('uniqueUserNames')
+          .update({'usernames': userNamesList});
       await fireBaseFireStore
           .collection("users")
           .doc(cred.user!.uid)
@@ -163,6 +182,30 @@ class SignUpController extends ChangeNotifier {
     notifyListeners();
   }
 
+  isUserNameUnique(String newUserName) async {
+    int y = 0;
+    await fireBaseFireStore
+        .collection('usernames_list')
+        .doc('uniqueUserNames')
+        .get()
+        .then(
+      (value) {
+        final List userNamesList =
+            (value.data() as Map<String, dynamic>)['usernames'] ?? [];
+        for (var x in userNamesList) {
+          if (x == newUserName) {
+            y = 1;
+            break;
+          }
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        print('something went wrong');
+      },
+    );
+    return (y == 1) ? true : false;
+  }
   // changeToDefaultProfilePhoto(BuildContext ctx) async {
   //   no_of_times_profilechanged = 0;
   //   CustomSnackBar.buildSnackbar(

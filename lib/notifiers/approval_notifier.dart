@@ -14,17 +14,22 @@ import '../widgets/customsnackbar.dart';
 class ApprovalState {
   bool? isApproved;
   bool? isDetailsUpdating;
+  DateTime? pickedDate;
+
   ApprovalState({
     this.isApproved,
     this.isDetailsUpdating,
+    this.pickedDate,
   });
 
   ApprovalState copyWith({
     bool? isApproved,
     bool? isDetailsUpdating,
+    DateTime? pickedDate,
   }) {
     return ApprovalState(
       isApproved: isApproved ?? this.isApproved,
+      pickedDate: pickedDate ?? this.pickedDate,
       isDetailsUpdating: isDetailsUpdating ?? this.isDetailsUpdating,
     );
   }
@@ -82,6 +87,10 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
 
   restoreDetails() {
     state = state.copyWith(isApproved: true, isDetailsUpdating: false);
+  }
+
+  updateDate(DateTime value) {
+    state = state.copyWith(pickedDate: value);
   }
 
   approveUser({

@@ -282,32 +282,40 @@ class ScanController extends ChangeNotifier {
     final currMonth = DateFormat('MMM').format(DateTime.now());
     final date = DateFormat('dd-MM-yyyy').format(DateTime.now());
     print('inside the fucntion');
-    await fireBaseFireStore
-        .collection(userData.enrolledGym!)
-        .doc(currMonth)
-        .collection(date)
-        .where('userName', isEqualTo: userData.userName)
-        .get()
-        .then(
-      (value) {
-        if (value.docs.isEmpty) {
-          Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', false);
-        } else {
-          for (var x in value.docs) {
-            final y = x.data();
-            print(y);
-            isEnterScanScanned =
-                (y['exitScannedDateTime'] == null) ? true : false;
-            Hive.box(miscellaneousDataHIVE)
-                .put('isEnterScanScanned', isEnterScanScanned);
-          }
-        }
-      },
-    ).onError(
-      (error, stackTrace) {
-        print(error);
-      },
-    );
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      if (userData.enrolledGym != null) {
+        await fireBaseFireStore
+            .collection(userData.enrolledGym!)
+            .doc(currMonth)
+            .collection(date)
+            .where('userName', isEqualTo: userData.userName)
+            .get()
+            .then(
+          (value) {
+            if (value.docs.isEmpty) {
+              Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', false);
+            } else {
+              for (var x in value.docs) {
+                final y = x.data();
+                print(y);
+                isEnterScanScanned =
+                    (y['exitScannedDateTime'] == null) ? true : false;
+                Hive.box(miscellaneousDataHIVE)
+                    .put('isEnterScanScanned', isEnterScanScanned);
+              }
+            }
+          },
+        ).onError(
+          (error, stackTrace) {
+            print(error);
+          },
+        );
+      } else {
+        Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', false);
+      }
+      // Add Your Code here.
+    });
+
     isDataReady = true;
     notifyListeners();
   }

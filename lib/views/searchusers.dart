@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -268,120 +266,115 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
     required var expiresOn,
     required var uid,
   }) {
-    return Consumer(builder: (context, ref, __) {
-      return Padding(
-        padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
-        child: Column(children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.white10,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.w),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 7.w),
-                        child: Container(
-                          height: 85.h,
-                          decoration: BoxDecoration(
-                              color: (Gender == 'Male')
-                                  ? Colors.blue.withOpacity(0.07)
-                                  : Colors.pinkAccent.withOpacity(0.07),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Icon(
-                            (Gender == 'Male') ? Icons.male : Icons.female,
+    return Padding(
+      padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
+      child: Column(children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: Colors.white10,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(right: 10.w),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 7.w),
+                      child: Container(
+                        height: 85.h,
+                        decoration: BoxDecoration(
                             color: (Gender == 'Male')
-                                ? Colors.blue
-                                : Colors.pinkAccent,
-                          ),
+                                ? Colors.blue.withOpacity(0.07)
+                                : Colors.pinkAccent.withOpacity(0.07),
+                            borderRadius: BorderRadius.circular(10.r)),
+                        child: Icon(
+                          (Gender == 'Male') ? Icons.male : Icons.female,
+                          color: (Gender == 'Male')
+                              ? Colors.blue
+                              : Colors.pinkAccent,
                         ),
                       ),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            getTagNameTextWidget('Name'),
-                            getTagNameTextWidget('Phone'),
-                            //getTagNameTextWidget('Gender'),
-                            getTagNameTextWidget('Renewed On'),
-                            getTagNameTextWidget('Expires On'),
-                          ]),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            getColonSpacing(),
-                            getColonSpacing(),
-                            // getColonSpacing(),
-                            getColonSpacing(),
-                            getColonSpacing(),
-                          ]),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            getTagDataTextWidget(Name),
-                            getTagDataTextWidget(Phone),
-                            // getTagDataTextWidget(Gender),
-                            getTagDataTextWidget(joinedOn),
-                            getTagDataTextWidget(expiresOn),
-                          ]),
-                    ]),
-                    expiryInDaysButton(expiresOn, uid),
+                    ),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getTagNameTextWidget('Name'),
+                          getTagNameTextWidget('Phone'),
+                          //getTagNameTextWidget('Gender'),
+                          getTagNameTextWidget('Renewed On'),
+                          getTagNameTextWidget('Expires On'),
+                        ]),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getColonSpacing(),
+                          getColonSpacing(),
+                          // getColonSpacing(),
+                          getColonSpacing(),
+                          getColonSpacing(),
+                        ]),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getTagDataTextWidget(Name),
+                          getTagDataTextWidget(Phone),
+                          // getTagDataTextWidget(Gender),
+                          getTagDataTextWidget(joinedOn),
+                          getTagDataTextWidget(expiresOn),
+                        ]),
                   ]),
-            ),
+                  expiryInDaysButton(expiresOn, uid),
+                ]),
           ),
-        ]),
-      );
-    });
+        ),
+      ]),
+    );
   }
 
   expiryInDaysButton(var expiresOn, String uid) {
     final searchUsersState = ref.read(searchUsersProvider);
     final noOfDays = searchUsersState.calculateNoOfDays(expiresOn);
     final isRequestedForApproval = searchUsersState.isRequestedForApproval(uid);
-    return Padding(
-      padding: EdgeInsets.only(right: 20),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: (noOfDays > 15)
-                  ? color_gt_green
-                  : (noOfDays >= 8)
-                      ? Colors.orange
-                      : (isRequestedForApproval)
-                          ? const Color(0xff2D77D0)
-                          : Colors.red,
-              borderRadius: BorderRadius.circular(5.r),
-              border: Border.all(width: 1, color: Colors.white12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Text(
-                (noOfDays < 0)
-                    ? (isRequestedForApproval)
-                        ? 'Awaiting Renewal'
-                        : 'Expired'
-                    : '$noOfDays day(s)',
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: color_gt_headersTextColorWhite,
-                  fontFamily: 'gilroy_bolditalic',
-                ),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: (noOfDays > 15)
+                ? color_gt_green
+                : (noOfDays >= 8)
+                    ? Colors.orange
+                    : (isRequestedForApproval)
+                        ? const Color(0xff2D77D0)
+                        : Colors.red,
+            borderRadius: BorderRadius.circular(5.r),
+            border: Border.all(width: 1.w, color: Colors.white12),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(6.r),
+            child: Text(
+              (noOfDays < 0)
+                  ? (isRequestedForApproval)
+                      ? 'Awaiting Renewal'
+                      : 'Expired'
+                  : '$noOfDays day(s)',
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: color_gt_headersTextColorWhite,
+                fontFamily: 'gilroy_bolditalic',
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   getColonSpacing() {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         '  :   ',
         style: TextStyle(
@@ -395,7 +388,7 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
 
   getTagNameTextWidget(String tagName) {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         tagName,
         style: TextStyle(
@@ -409,7 +402,7 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
 
   getTagDataTextWidget(var tagData) {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         (tagData.runtimeType == DateTime)
             ? DateFormat('dd-MMM-yyyy').format(tagData)

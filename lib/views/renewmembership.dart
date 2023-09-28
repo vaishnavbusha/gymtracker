@@ -116,7 +116,8 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
                                                       color_gt_textColorBlueGrey
                                                           .withOpacity(0.2),
                                                   borderRadius:
-                                                      BorderRadius.circular(10),
+                                                      BorderRadius.circular(
+                                                          10.r),
                                                 ),
                                                 child: Column(children: [
                                                   dataBlock(
@@ -405,16 +406,16 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
       required var joinedOn,
       required var expiresOn}) {
     return Padding(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
+      padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
       child: Column(children: [
         Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: EdgeInsets.only(left: 10.h, right: 10.h),
           child: Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Colors.white10,
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(width: 1, color: Colors.white12),
+              border: Border.all(width: 1.w, color: Colors.white12),
             ),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -461,7 +462,7 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
 
   expiryInDaysButton(var renewedOn, var expiresOn) {
     return Padding(
-      padding: EdgeInsets.only(right: 20),
+      padding: EdgeInsets.only(right: 20.w),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -511,7 +512,7 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
 
   getColonSpacing() {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         '  :   ',
         style: TextStyle(
@@ -525,7 +526,7 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
 
   getTagNameTextWidget(String tagName) {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         tagName,
         style: TextStyle(
@@ -539,7 +540,7 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
 
   getTagDataTextWidget(var tagData) {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         (tagData.runtimeType == DateTime)
             ? DateFormat('dd-MMM-yyyy').format(tagData)

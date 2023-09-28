@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import '../constants.dart';
 import '../controllers/network_controller.dart';
 import '../widgets/animated_route.dart';
+import '../widgets/customsnackbar.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -273,12 +274,14 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                 Consumer(builder: (context, ref, child) {
                                   final registerprovider =
                                       ref.watch(signUpControllerProvider);
+
                                   return InkWell(
-                                    onTap: () {
+                                    onTap: () async {
                                       SystemChannels.textInput
                                           .invokeMethod('TextInput.hide');
                                       final FormState form =
                                           _formKey.currentState!;
+
                                       if (form.validate()) {
                                         UserModel userData = UserModel(
                                           pendingApprovals: null,
@@ -290,7 +293,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                           isUser: true,
                                           registeredDate: DateTime.now(),
                                           userName: _userNameController.text
-                                              .toLowerCase(),
+                                              .toLowerCase()
+                                              .trim(),
                                           userType: userLevels[0]!,
                                           gender:
                                               registerprovider.selectedgender,
@@ -570,6 +574,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               if (labeltext == 'UserName') {
                 if (value!.isEmpty) {
                   return '" Username " can\'t be empty !';
+                } else if (value.length > 16) {
+                  return 'Cant exceed 16 characters !';
                 } else {
                   return null;
                 }

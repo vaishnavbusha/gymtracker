@@ -21,6 +21,8 @@ Color color_gt_textColorBlueGrey = Colors.blueGrey;
 final fireBaseAuth = FirebaseAuth.instance;
 final fireBaseStorage = FirebaseStorage.instance;
 final fireBaseFireStore = FirebaseFirestore.instance;
+
+const IconData customRupeeIcon = IconData(0xf05db, fontFamily: 'MaterialIcons');
 final pagesList = [
   //const ExplorePage(),
   const ScanPage(),

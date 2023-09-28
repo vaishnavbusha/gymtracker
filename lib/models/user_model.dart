@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
@@ -16,8 +18,8 @@ class UserModel extends HiveObject {
   String userName;
   @HiveField(2)
   String? uid;
-  // @HiveField(3)
-  // String? profilephoto;
+  @HiveField(3)
+  bool? isManuallyRegisteredByAdmin;
   @HiveField(4)
   String email;
   @HiveField(5)
@@ -58,7 +60,7 @@ class UserModel extends HiveObject {
     required this.userType,
     required this.userName,
     this.uid,
-    //this.profilephoto,
+    this.isManuallyRegisteredByAdmin = false,
     required this.email,
     required this.gender,
     required this.DOB,
@@ -80,8 +82,7 @@ class UserModel extends HiveObject {
 
   @override
   String toString() {
-    //, profilephoto: $profilephoto
-    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry, phoneNumber: $phoneNumber, isAwaitingEnrollment: $isAwaitingEnrollment, pendingApprovals: $pendingApprovals, memberShipFeesPaid: $memberShipFeesPaid, recentRenewedOn: $recentRenewedOn, pendingRenewals: $pendingRenewals, enrolledGymOwnerName: $enrolledGymOwnerName, enrolledGymOwnerUID: $enrolledGymOwnerUID, awaitingRenewal: $awaitingRenewal,)';
+    return 'UserModel(userType: $userType, userName: $userName, uid: $uid, isManuallyRegisteredByAdmin: $isManuallyRegisteredByAdmin, email: $email, gender: $gender, DOB: $DOB, isUser: $isUser, registeredDate: $registeredDate, enrolledGym: $enrolledGym, enrolledGymDate: $enrolledGymDate, membershipExpiry: $membershipExpiry, phoneNumber: $phoneNumber, isAwaitingEnrollment: $isAwaitingEnrollment, pendingApprovals: $pendingApprovals, memberShipFeesPaid: $memberShipFeesPaid, recentRenewedOn: $recentRenewedOn, pendingRenewals: $pendingRenewals, enrolledGymOwnerName: $enrolledGymOwnerName, enrolledGymOwnerUID: $enrolledGymOwnerUID, awaitingRenewal: $awaitingRenewal)';
   }
 
   @override
@@ -91,7 +92,7 @@ class UserModel extends HiveObject {
     return other.userType == userType &&
         other.userName == userName &&
         other.uid == uid &&
-        //other.profilephoto == profilephoto &&
+        other.isManuallyRegisteredByAdmin == isManuallyRegisteredByAdmin &&
         other.email == email &&
         other.gender == gender &&
         other.DOB == DOB &&
@@ -116,7 +117,7 @@ class UserModel extends HiveObject {
     return userType.hashCode ^
         userName.hashCode ^
         uid.hashCode ^
-        // profilephoto.hashCode ^
+        isManuallyRegisteredByAdmin.hashCode ^
         email.hashCode ^
         gender.hashCode ^
         DOB.hashCode ^
@@ -158,7 +159,8 @@ class UserModel extends HiveObject {
       'pendingRenewals': pendingRenewals,
       'awaitingRenewal': awaitingRenewal,
       'enrolledGymOwnerName': enrolledGymOwnerName,
-      'enrolledGymOwnerUID': enrolledGymOwnerUID
+      'enrolledGymOwnerUID': enrolledGymOwnerUID,
+      'isManuallyRegisteredByAdmin': isManuallyRegisteredByAdmin,
     };
   }
 
@@ -179,9 +181,11 @@ class UserModel extends HiveObject {
       registeredDate: mapData['registeredDate'].toDate(),
       uid: mapData['uid'],
       userName: mapData['userName'],
+
       userType: mapData['userType'],
       enrolledGym: mapData['enrolledGym'],
       pendingRenewals: mapData['pendingRenewals'],
+      isManuallyRegisteredByAdmin: mapData['isManuallyRegisteredByAdmin'],
       memberShipFeesPaid: mapData['memberShipFeesPaid'],
       enrolledGymDate: (mapData['enrolledGymDate'] == null)
           ? null
@@ -211,7 +215,7 @@ class UserModel extends HiveObject {
     String? userType,
     String? userName,
     String? uid,
-    String? profilephoto,
+    bool? isManuallyRegisteredByAdmin,
     String? email,
     String? gender,
     String? DOB,
@@ -234,7 +238,8 @@ class UserModel extends HiveObject {
       userType: userType ?? this.userType,
       userName: userName ?? this.userName,
       uid: uid ?? this.uid,
-      // profilephoto: profilephoto ?? this.profilephoto,
+      isManuallyRegisteredByAdmin:
+          isManuallyRegisteredByAdmin ?? this.isManuallyRegisteredByAdmin,
       email: email ?? this.email,
       gender: gender ?? this.gender,
       DOB: DOB ?? this.DOB,

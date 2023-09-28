@@ -103,8 +103,8 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                             dropdownColor: color_gt_textColorBlueGrey,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20.0,
-                                vertical: 3.0,
+                                horizontal: 20.w,
+                                vertical: 3.h,
                               ),
                               filled: true,
                               fillColor: Colors.white10,
@@ -213,7 +213,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                     final attendanceByMonthState =
                         ref.watch(attendanceByMonthProvider);
                     return Padding(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 20.h),
                       child: (attendanceByMonthState.attendanceByRow.isNotEmpty)
                           ? SingleChildScrollView(
                               physics: BouncingScrollPhysics(),
@@ -248,7 +248,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
     return DataTable(
       border: TableBorder.all(
           color: color_gt_textColorBlueGrey,
-          borderRadius: BorderRadius.circular(10)),
+          borderRadius: BorderRadius.circular(10.r)),
       headingRowColor: MaterialStateProperty.all(Colors.white10),
       sortColumnIndex: 1,
       sortAscending: true,

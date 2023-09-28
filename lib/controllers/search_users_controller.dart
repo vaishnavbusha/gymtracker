@@ -15,21 +15,7 @@ class SearchUsersController extends ChangeNotifier {
   bool isInitital = true;
   UserModel adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
   List<UserModel> searchedUsersDataList = List<UserModel>.empty(growable: true);
-  // Future getEnrolledUIDsList() async {
-  //   isLoading = true;
-  //   await fireBaseFireStore
-  //       .collection('gympartners')
-  //       .doc(Hive.box(miscellaneousDataHIVE).get('uid'))
-  //       .get()
-  //       .then(
-  //     (value) {
-  //       enrollModel = EnrollModel.fromMap(value.data() as Map<String, dynamic>);
-  //       usersUIDsList = enrollModel!.users!;
-  //     },
-  //   );
-  //   isLoading = false;
-  //   notifyListeners();
-  // }
+
   checkForInitial() {
     if (searchedUsersDataList.isNotEmpty) {
       isInitital = false;
@@ -74,11 +60,12 @@ class SearchUsersController extends ChangeNotifier {
   Future searchForAUser(String userName, BuildContext context) async {
     isSearchLoading = true;
     searchedUsersDataList.clear();
+    print(userName);
     await fireBaseFireStore
         .collection('users')
-        .where('userName', isGreaterThanOrEqualTo: userName.toLowerCase())
+        .where('userName', isEqualTo: userName.toLowerCase())
         .where('enrolledGym', isEqualTo: adminData.enrolledGym)
-        .orderBy('userName')
+        // .orderBy('userName')
         .get()
         .then(
       (value) {
@@ -111,7 +98,7 @@ class SearchUsersController extends ChangeNotifier {
       CustomSnackBar.buildSnackbar(
         color: Colors.red[500]!,
         context: context,
-        message: 'Couldn\'t find the user !',
+        message: 'No user found !',
         textcolor: const Color(0xffFDFFFC),
         iserror: true,
       );

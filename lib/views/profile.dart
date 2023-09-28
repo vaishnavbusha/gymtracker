@@ -580,6 +580,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     await Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', null);
     await Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
     Hive.box(miscellaneousDataHIVE).put('pendingRenewalsLength', null);
+    await Hive.box(manualAttendanceEntryListHIVE).clear();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       if (mounted) {
         // Perform updates to the UI
@@ -830,8 +831,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             decoration: BoxDecoration(
                 color: Color(0xff2D77D0),
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(2),
-                    bottomRight: Radius.circular(2))),
+                    bottomLeft: Radius.circular(2.r),
+                    bottomRight: Radius.circular(2.r))),
           )
         : Container();
   }

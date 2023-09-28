@@ -39,7 +39,7 @@ class _DataTableWidgetState extends State<DataTableWidget> {
         headingRowColor: MaterialStateProperty.all(Colors.white10),
         sortAscending: isAscending,
         sortColumnIndex: sortColumnIndex,
-        dataRowHeight: 40,
+        dataRowHeight: 40.h,
         headingTextStyle: TextStyle(
           fontSize: 13.sp,
           color: color_gt_green,

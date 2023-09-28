@@ -268,7 +268,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
     final isRequestedForApproval =
         enrolledUsersState.isRequestedForApproval(uid);
     return Padding(
-      padding: EdgeInsets.only(right: 20),
+      padding: EdgeInsets.only(right: 20.w),
       child: Column(
         children: [
           Container(
@@ -284,7 +284,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
               border: Border.all(width: 1, color: Colors.white12),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(6.0),
+              padding: EdgeInsets.all(6.w),
               child: Text(
                 (noOfDays < 0)
                     ? (isRequestedForApproval)
@@ -329,7 +329,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
 
   getColonSpacing() {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         '  :   ',
         style: TextStyle(
@@ -343,7 +343,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
 
   getTagNameTextWidget(String tagName) {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         tagName,
         style: TextStyle(
@@ -357,7 +357,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
 
   getTagDataTextWidget(var tagData) {
     return Padding(
-      padding: EdgeInsets.only(top: 3, bottom: 3),
+      padding: EdgeInsets.only(top: 3.h, bottom: 3.h),
       child: Text(
         (tagData.runtimeType == DateTime)
             ? DateFormat('dd-MMM-yyyy').format(tagData)

@@ -695,7 +695,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 50.h,
                       child: VerticalDivider(
                         color: Colors.white24,
                         thickness: 0.5,

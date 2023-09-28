@@ -24,9 +24,10 @@ class ApprovalsPage extends ConsumerStatefulWidget {
 class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
   // TextEditingController? _validityController;
   // TextEditingController? _moneyPaidController;
-
+  late TextEditingController _dateController;
   @override
   void initState() {
+    _dateController = TextEditingController();
     // _validityController = TextEditingController();
     // _moneyPaidController = TextEditingController();
     //getDetailsFromController();
@@ -43,6 +44,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
     ref.read(approvalControllerProvider)
       ..getApproveeUID(widget.pendingApprovals)
       ..getAllUsersDataFromFireStore();
+    //..get_isApprovalMembershipStartDateEditable();
   }
 
   @override
@@ -141,6 +143,16 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                                             .usersModelData[index] as UserModel)
                                         .enrolledGymDate,
                                     tagName: 'Submited On'),
+                                // approvalState.isDateEditable!
+                                //     ? birthYearSelectionWidget((approvalState
+                                //             .usersModelData[index] as UserModel)
+                                //         .enrolledGymDate!)
+                                //     : dataApprovalBlock(
+                                //         tagData:
+                                //             (approvalState.usersModelData[index]
+                                //                     as UserModel)
+                                //                 .enrolledGymDate,
+                                //         tagName: 'Submited On'),
                                 dataApprovalBlock(
                                     tagData: DateTime.now(),
                                     tagName: 'Approving On'),
@@ -255,6 +267,113 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
     );
   }
 
+  birthYearSelectionWidget(DateTime date) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 5.h, top: 10.h, left: 10.w, right: 10.w),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ThemeData().colorScheme.copyWith(
+                primary: color_gt_green,
+              ),
+        ),
+        child: Consumer(builder: (context, ref, child) {
+          final approvalState = ref.watch(approvalControllerProvider);
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Start Date : ',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: color_gt_green,
+                  fontFamily: 'gilroy_bold',
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.65,
+                child: TextFormField(
+                  enableInteractiveSelection: false,
+                  showCursor: false,
+                  keyboardType: TextInputType.none,
+                  cursorHeight: 18.sp,
+                  cursorRadius: Radius.circular(30.r),
+                  style: TextStyle(
+                      fontSize: 15.sp,
+                      fontFamily: 'gilroy_regular',
+                      color: Colors.white70),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white10,
+                    floatingLabelStyle: TextStyle(
+                      fontFamily: "gilroy_bolditalic",
+                      fontSize: 16.sp,
+                      color: color_gt_headersTextColorWhite.withOpacity(0.9),
+                    ),
+                    labelText: 'Membership start date',
+                    labelStyle: TextStyle(
+                      fontSize: 16.sp,
+                      color: color_gt_headersTextColorWhite.withOpacity(0.75),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: const BorderSide(color: Colors.white10),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: BorderSide(
+                          color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                    ),
+                    errorStyle: TextStyle(
+                        fontFamily: 'gilroy_regularitalic',
+                        color: Colors.red[500]!,
+                        fontSize: 12.sp),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: const BorderSide(color: Colors.white10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: BorderSide(
+                          color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                    ),
+                  ),
+                  controller: _dateController,
+                  cursorColor: color_gt_textColorBlueGrey,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDatePickerMode: DatePickerMode.year,
+                      initialEntryMode: DatePickerEntryMode.calendarOnly,
+                      initialDate: date,
+                      firstDate: DateTime(
+                          1900), //DateTime.now() - not to allow to choose before today.
+                      lastDate: DateTime(2101),
+                    );
+                    if (pickedDate != null) {
+                      print(pickedDate);
+                      String dateForDisplay =
+                          convertDateToDisplayFormat(pickedDate);
+                      String dateForDb =
+                          DateFormat('dd-MM-yyyy').format(pickedDate);
+                      approvalState.updateDate(pickedDate);
+
+                      _dateController.text = dateForDb;
+                    }
+                  },
+                ),
+              ),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  String convertDateToDisplayFormat(DateTime dt) {
+    // convert datetime obj to display compatible date format
+    return DateFormat('dd-MM-yyyy').format(dt);
+  }
+
   customTextField({
     required TextEditingController controller,
     required TextInputAction tia,
@@ -285,7 +404,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                 }
                 return null;
               }
-              if (labeltext == 'Amount Paid (₹)') {
+              if (labeltext == 'Membership fees (₹)') {
                 if (controller.text.isEmpty) {
                   return 'enter the money paid for the membership !';
                 }

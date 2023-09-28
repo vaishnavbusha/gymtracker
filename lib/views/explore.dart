@@ -21,6 +21,8 @@ import 'package:gymtracker/widgets/animated_route.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../constants.dart';
+import 'add_user_manually.dart';
+import 'manual_daily_attendance.dart';
 
 class ExplorePage extends ConsumerStatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -95,11 +97,21 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                       crossAxisCount: 2,
                       childAspectRatio: 1.2,
                       mainAxisSpacing: 15.0,
-                      crossAxisSpacing: 15.0,
+                      crossAxisSpacing: 15.w,
                       children: <Widget>[
-                        viewButton(' My Users', () {
+                        viewButton('My User(s)', () {
                           Navigator.of(context, rootNavigator: true).push(
                             ScaleRoute(page: MyUsers()),
+                          );
+                        }),
+                        viewButton('Add user manually', () {
+                          Navigator.of(context, rootNavigator: true).push(
+                            ScaleRoute(page: AddUserManually()),
+                          );
+                        }),
+                        viewButton('Mark attendance manually', () {
+                          Navigator.of(context, rootNavigator: true).push(
+                            ScaleRoute(page: ManualDailyAttendance()),
                           );
                         }),
                         viewButton('Search User(s)', () {
@@ -127,15 +139,6 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                             ScaleRoute(page: AttendanceByMonth()),
                           );
                         }),
-
-                        // viewButton('Expired User(s)', () {
-                        //   Navigator.of(context, rootNavigator: true).push(
-                        //     MaterialPageRoute(
-                        //       builder: (_) => RenewMembershipsPage(),
-                        //     ),
-                        //   );
-                        // }),
-                        // viewButton('Download Monthly report', () {}),
                         (Hive.box(miscellaneousDataHIVE)
                                     .get("pendingRenewalsLength") !=
                                 null)
@@ -154,7 +157,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                                         })
                                       : Container();
                                 })
-                            : Container(),
+                            : SizedBox(),
                       ],
                     ),
                   ],
