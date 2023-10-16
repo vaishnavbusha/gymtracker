@@ -14,6 +14,7 @@ import 'package:gymtracker/views/navigation.dart';
 import 'package:gymtracker/views/signin.dart';
 
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -27,18 +28,61 @@ void main() async {
   Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox(userDetailsHIVE);
   await Hive.openBox(miscellaneousDataHIVE);
+  await Hive.openBox(maxClickAttemptsHIVE);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(ProviderScope(child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final userData = Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel;
+  @override
+  void initState() {
+    if (!userData.isUser) {
+      getConstraints();
+    }
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future getConstraints() async {
+    await fireBaseFireStore
+        .collection(userData.enrolledGym!)
+        .doc('constraints')
+        .get()
+        .then(
+      (value) {
+        final data = value.data() as Map<String, dynamic>;
+      },
+    );
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     if (Hive.box(miscellaneousDataHIVE).get('isLoggedIn') == null) {
       Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
+    }
+    final todaysdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+    if (!userData.isUser) {
+      if (Hive.box(miscellaneousDataHIVE).get('todaysdate') == null ||
+          Hive.box(miscellaneousDataHIVE).get('todaysdate') != todaysdate) {
+        // Hive.box(miscellaneousDataHIVE)
+        //     .put('isTodaysAttendanceMarkCompleted', null);
+
+        Hive.box(miscellaneousDataHIVE).put('todaysdate', todaysdate);
+        Hive.box(maxClickAttemptsHIVE).put(
+            'maxAttendanceByDateInCurrentMonthCount',
+            maxAttendanceByDateInCurrentMonthCount);
+        Hive.box(maxClickAttemptsHIVE)
+            .put('maxMonthlyAttendanceCount', maxMonthlyAttendanceCount);
+      }
     }
     // if (Hive.box(miscellaneousDataHIVE).get('isAwaitingEnrollment') == null) {
     //   Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment',
@@ -202,18 +246,18 @@ class _SplashScreenState extends State<SplashScreen> {
 //   }
 // }
 
-// hiveListenerAuthStatusCheck() {
-//   return ValueListenableBuilder<Box<dynamic>>(
-//     valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
-//     builder: (context, value, child) {
-//       if (value.get('isLoggedIn') == false) {
-//         return SignInPage();
-//       } else {
-//         return NavigationPage();
-//       }
-//     },
-//   );
-// }
+hiveListenerAuthStatusCheck() {
+  return ValueListenableBuilder<Box<dynamic>>(
+    valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
+    builder: (context, value, child) {
+      if (value.get('isLoggedIn') == false) {
+        return SignInPage();
+      } else {
+        return NavigationPage();
+      }
+    },
+  );
+}
 
 // Widget checkAuthStatus() {
 //   return StreamBuilder(

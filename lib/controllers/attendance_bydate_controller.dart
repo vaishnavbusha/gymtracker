@@ -19,9 +19,8 @@ class AttendanceByDateController extends ChangeNotifier {
   var sortColumnIndex = 1;
   final String monthData = DateFormat('MMM').format(DateTime.now());
 
-  bool? isLoading;
-
   bool isDataLoading = false;
+  bool isDateDataLoading = true;
   AttendanceByDateController() {
     //getDatesListFromGymPartner();
     //initialiseGymPartnerCollection();
@@ -62,6 +61,7 @@ class AttendanceByDateController extends ChangeNotifier {
   }
 
   Future getDatesListFromGymPartner() async {
+    isDateDataLoading = true;
     await fireBaseFireStore
         .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
         .doc(monthData)
@@ -69,15 +69,23 @@ class AttendanceByDateController extends ChangeNotifier {
         .then(
       (value) {
         availabledatesList =
-            (value.data() as Map<String, dynamic>)['datesList'];
+            (value.data() as Map<String, dynamic>)['datesList'] ?? [];
       },
     );
     print(availabledatesList);
+    isDateDataLoading = false;
     notifyListeners();
   }
 
   Future getAttendanceListByDate() async {
+    Hive.box(maxClickAttemptsHIVE).put(
+        'maxAttendanceByDateInCurrentMonthCount',
+        Hive.box(maxClickAttemptsHIVE)
+                .get('maxAttendanceByDateInCurrentMonthCount') -
+            1);
+    notifyListeners();
     isDataLoading = true;
+
     int index = 1;
     await fireBaseFireStore
         .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)

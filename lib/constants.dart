@@ -34,3 +34,6 @@ final adminPagesList = [
 ];
 final userDetailsHIVE = 'userINFO';
 final miscellaneousDataHIVE = 'appDATA';
+final maxClickAttemptsHIVE = 'maxClickAttempts';
+final int maxAttendanceByDateInCurrentMonthCount = 7;
+final int maxMonthlyAttendanceCount = 3;

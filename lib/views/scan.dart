@@ -13,6 +13,7 @@ import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ScanPage extends ConsumerStatefulWidget {
   const ScanPage({Key? key}) : super(key: key);
@@ -25,19 +26,13 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   @override
   void initState() {
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
-    if (Hive.box(miscellaneousDataHIVE).get('isEnterScanScanned') == null) {
-      getData();
-    }
-    if (datetime != Hive.box(miscellaneousDataHIVE).get('scannedDate')) {
-      Hive.box(miscellaneousDataHIVE).put('scannedDate', null);
-      Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', false);
-    }
-    // TODO: implement initState
+    getData();
     super.initState();
   }
 
   getData() async {
-    await ref.read(scanControllerProvider).checkForEntryScannedFromFireBase();
+    //await ref.read(scanControllerProvider).checkForEntryScannedFromFireBase();
+    await ref.read(scanControllerProvider).initialCheckInOrOutTime();
   }
 
   @override
@@ -168,222 +163,314 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                   : Container();
                             })
                         : Container(),
-                    (Hive.box(miscellaneousDataHIVE)
-                                .get("isEnterScanScanned") !=
-                            null)
-                        ? ValueListenableBuilder<Box<dynamic>>(
-                            valueListenable:
-                                Hive.box(miscellaneousDataHIVE).listenable(),
-                            builder: (context, box, __) {
-                              final bool = box.get('isEnterScanScanned');
-                              // var expiresOn =
-                              //     DateTime(date.year, date.month, date.day);
-                              // int days =
-                              //     (expiresOn.difference(DateTime.now()).inHours / 24)
-                              //         .round();
-
-                              // return (days < 0)
-                              //     ?
-                              return (bool ||
-                                      globalScanState.isEnterScanScanned!)
-                                  ? Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      color: Colors.orange.withOpacity(0.5),
-                                      alignment: Alignment.topCenter,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15.sp),
-                                        child: Center(
-                                          child: Text(
-                                            'Today\'s entry time has been marked, kindly re-scan the QR for marking exit-time before leaving the gym.',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 13.sp,
-                                                fontFamily:
-                                                    'gilroy_regularitalic'),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Container();
-                              //: Container();
-                            })
+                    (globalScanState.isEnterScanned)
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.orange.withOpacity(0.5),
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.all(15.sp),
+                              child: Center(
+                                child: Text(
+                                  'Today\'s entry time has been marked, kindly re-scan the QR for marking exit-time before leaving the gym.',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13.sp,
+                                      fontFamily: 'gilroy_regularitalic'),
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    (globalScanState.todaysAttendanceMarked)
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.green,
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.all(15.sp),
+                              child: Center(
+                                child: Text(
+                                  "Today's both time-in and time-out has been marked. Scanner will be re-enabled tomorrow.",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13.sp,
+                                      fontFamily: 'gilroy_regularitalic'),
+                                ),
+                              ),
+                            ),
+                          )
                         : Container(),
                     Consumer(builder: (context, ref, __) {
                       final scanState = ref.watch(scanControllerProvider);
-                      return Flexible(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 90.w),
-                                child: (Hive.box(miscellaneousDataHIVE)
-                                            .get("membershipExpiry") !=
-                                        null)
-                                    ? ValueListenableBuilder<Box<dynamic>>(
-                                        valueListenable:
-                                            Hive.box(miscellaneousDataHIVE)
-                                                .listenable(),
-                                        builder: (context, box, __) {
-                                          final date =
-                                              box.get('membershipExpiry');
-                                          DateTime? expiresOn;
-                                          bool? isExpired;
-                                          if (date == null) {
-                                            return Container();
-                                          } else {
-                                            expiresOn = DateTime(
-                                              date.year,
-                                              date.month,
-                                              date.day,
-                                              date.hour,
-                                              date.minute,
-                                              date.second,
-                                              date.millisecond,
-                                            );
-                                            // int days = (expiresOn
-                                            //             .difference(DateTime.now())
-                                            //             .inHours /
-                                            //         24)
-                                            //     .round();
-                                            isExpired = expiresOn
-                                                .isBefore(DateTime.now());
-                                          }
+                      return (scanState.isSearchLoading)
+                          ? Center(
+                              child: Loader(loadercolor: Colors.blue),
+                            )
+                          : Flexible(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 90.w),
+                                      child: (Hive.box(miscellaneousDataHIVE)
+                                                  .get("membershipExpiry") !=
+                                              null)
+                                          ? ValueListenableBuilder<
+                                                  Box<dynamic>>(
+                                              valueListenable: Hive.box(
+                                                      miscellaneousDataHIVE)
+                                                  .listenable(),
+                                              builder: (context, box, __) {
+                                                final date =
+                                                    box.get('membershipExpiry');
 
-                                          return ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              //onPrimary: Colors.black,  //to change text color
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 7.h),
-                                              primary: (box.get(
+                                                //DateTime? expiresOn;
+                                                bool? isExpired;
+                                                if (date == null) {
+                                                  return Container();
+                                                } else {
+                                                  isExpired =
+                                                      scanState.isExpired(date);
+                                                  // expiresOn = DateTime(
+                                                  //   date.year,
+                                                  //   date.month,
+                                                  //   date.day,
+                                                  //   date.hour,
+                                                  //   date.minute,
+                                                  //   date.second,
+                                                  //   date.millisecond,
+                                                  // );
+
+                                                  // isExpired = expiresOn
+                                                  //     .isBefore(DateTime.now());
+                                                }
+
+                                                return ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    //onPrimary: Colors.black,  //to change text color
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 7.h),
+                                                    primary: (isExpired!)
+                                                        ? Colors.red
+                                                        : (box.get('isAwaitingEnrollment') ==
+                                                                    true ||
+                                                                scanState
+                                                                    .todaysAttendanceMarked
+                                                            // ||
+                                                            // box.get('isTodaysAttendanceMarkCompleted') ==
+                                                            //     true
+                                                            )
+                                                            ? Colors.grey
+                                                            : (scanState
+                                                                    .isEnterScanned)
+                                                                ? Colors.orange
+                                                                    .withOpacity(
+                                                                        0.85)
+                                                                : color_gt_green, // button color
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius
+                                                          .circular(10
+                                                              .r), // <-- Radius
+                                                    ),
+                                                    textStyle: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20.sp,
+                                                        fontFamily:
+                                                            'gilroy_bold'),
+                                                  ),
+                                                  onPressed: () async {
+                                                    if (box.get('isAwaitingEnrollment') ||
+                                                            isExpired! ||
+                                                            scanState
+                                                                .todaysAttendanceMarked
+                                                        // ||
+                                                        // box.get('isTodaysAttendanceMarkCompleted') ==
+                                                        //     true
+                                                        ) {
+                                                      null;
+                                                    } else {
+                                                      String barcodeScanRes =
+                                                          await FlutterBarcodeScanner
+                                                              .scanBarcode(
+                                                                  "#ff6666",
+                                                                  'cancel',
+                                                                  false,
+                                                                  ScanMode.QR);
+                                                      await scanState
+                                                          .getScannedData(
+                                                              barcodeScanRes,
+                                                              context);
+                                                    }
+                                                  },
+                                                  child: (box.get(
                                                               'isAwaitingEnrollment') ==
-                                                          true ||
-                                                      (isExpired))
-                                                  ? Colors.grey
-                                                  : (Hive.box(miscellaneousDataHIVE)
-                                                              .get(
-                                                                  "isEnterScanScanned") ||
-                                                          scanState
-                                                              .isEnterScanScanned!)
-                                                      ? Colors.orange
-                                                          .withOpacity(0.85)
-                                                      : color_gt_green, // button color
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.r), // <-- Radius
-                                              ),
-                                              textStyle: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20.sp,
-                                                  fontFamily: 'gilroy_bold'),
-                                            ),
-                                            onPressed: () async {
-                                              if (box.get(
-                                                      'isAwaitingEnrollment') ||
-                                                  isExpired!) {
-                                                null;
-                                              } else {
-                                                String barcodeScanRes =
-                                                    await FlutterBarcodeScanner
-                                                        .scanBarcode(
-                                                            "#ff6666",
-                                                            'cancel',
-                                                            false,
-                                                            ScanMode.QR);
-                                                await scanState.getScannedData(
-                                                    barcodeScanRes, context);
-
-                                                // scanState.validateScannedResult(context);
-                                                // x.updateQRButtonClick();
-                                                // barCode = null;
-                                              }
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                (scanState.isDataUploading!)
-                                                    ? Loader(
-                                                        loadercolor:
-                                                            Colors.green,
-                                                      )
-                                                    : Icon(
+                                                          true)
+                                                      ? Text(
+                                                          'Awaiting Approval',
+                                                          style: TextStyle(
+                                                            fontSize: 17.sp,
+                                                            color:
+                                                                color_gt_headersTextColorWhite,
+                                                            fontFamily:
+                                                                'gilroy_bolditalic',
+                                                          ),
+                                                        )
+                                                      : (isExpired)
+                                                          ? Text(
+                                                              'Expired',
+                                                              style: TextStyle(
+                                                                fontSize: 17.sp,
+                                                                color:
+                                                                    color_gt_headersTextColorWhite,
+                                                                fontFamily:
+                                                                    'gilroy_bolditalic',
+                                                              ),
+                                                            )
+                                                          : Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .qr_code_scanner_rounded,
+                                                                  size: 40.w,
+                                                                ),
+                                                                SizedBox(
+                                                                    width: 5.w),
+                                                                (scanState
+                                                                        .todaysAttendanceMarked)
+                                                                    ? Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(6.w),
+                                                                        child:
+                                                                            Text(
+                                                                          'marked',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontSize:
+                                                                                17.sp,
+                                                                            color:
+                                                                                color_gt_headersTextColorWhite,
+                                                                            fontFamily:
+                                                                                'gilroy_bolditalic',
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(6.w),
+                                                                        child: (scanState.checkLoading)
+                                                                            ? LoadingAnimationWidget.stretchedDots(
+                                                                                color: color_gt_headersTextColorWhite,
+                                                                                size: 20,
+                                                                              )
+                                                                            : Text(
+                                                                                (scanState.isEnterScanned) ? 'mark Out-Time' : 'Scan QR',
+                                                                                style: TextStyle(
+                                                                                  fontSize: 17.sp,
+                                                                                  color: color_gt_headersTextColorWhite,
+                                                                                  fontFamily: 'gilroy_bolditalic',
+                                                                                ),
+                                                                              ),
+                                                                      ),
+                                                              ],
+                                                            ),
+                                                );
+                                              })
+                                          : ValueListenableBuilder<
+                                                  Box<dynamic>>(
+                                              valueListenable: Hive.box(
+                                                      miscellaneousDataHIVE)
+                                                  .listenable(),
+                                              builder: (context, box, __) {
+                                                return ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    //onPrimary: Colors.black,  //to change text color
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 7.h),
+                                                    primary: (box.get(
+                                                            'isAwaitingEnrollment')
+                                                        //     ||
+                                                        // box.get('isTodaysAttendanceMarkCompleted') ==
+                                                        //     true
+                                                        )
+                                                        ? Colors.grey
+                                                        : color_gt_green, // button color
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius
+                                                          .circular(10
+                                                              .r), // <-- Radius
+                                                    ),
+                                                    textStyle: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20.sp,
+                                                        fontFamily:
+                                                            'gilroy_bold'),
+                                                  ),
+                                                  onPressed: () async {
+                                                    if (box.get(
+                                                        'isAwaitingEnrollment')) {
+                                                      null;
+                                                    } else {
+                                                      String barcodeScanRes =
+                                                          await FlutterBarcodeScanner
+                                                              .scanBarcode(
+                                                                  "#ff6666",
+                                                                  'cancel',
+                                                                  false,
+                                                                  ScanMode.QR);
+                                                      scanState.getScannedData(
+                                                          barcodeScanRes,
+                                                          context);
+                                                    }
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Icon(
                                                         Icons
                                                             .qr_code_scanner_rounded,
                                                         size: 40.w,
                                                       ),
-                                                SizedBox(width: 10.w),
-                                                Text(
-                                                  'Scan QR',
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        })
-                                    : ValueListenableBuilder<Box<dynamic>>(
-                                        valueListenable:
-                                            Hive.box(miscellaneousDataHIVE)
-                                                .listenable(),
-                                        builder: (context, box, __) {
-                                          return ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              //onPrimary: Colors.black,  //to change text color
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 7.h),
-                                              primary: (box.get(
-                                                      'isAwaitingEnrollment'))
-                                                  ? Colors.grey
-                                                  : color_gt_green, // button color
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.r), // <-- Radius
-                                              ),
-                                              textStyle: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20.sp,
-                                                  fontFamily: 'gilroy_bold'),
-                                            ),
-                                            onPressed: () async {
-                                              if (box.get(
-                                                  'isAwaitingEnrollment')) {
-                                                null;
-                                              } else {
-                                                String barcodeScanRes =
-                                                    await FlutterBarcodeScanner
-                                                        .scanBarcode(
-                                                            "#ff6666",
-                                                            'cancel',
-                                                            false,
-                                                            ScanMode.QR);
-                                                scanState.getScannedData(
-                                                    barcodeScanRes, context);
-                                                // scanState.validateScannedResult(context);
-                                                // x.updateQRButtonClick();
-                                                // barCode = null;
-                                              }
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.qr_code_scanner_rounded,
-                                                  size: 40.w,
-                                                ),
-                                                SizedBox(width: 10.w),
-                                                Text(
-                                                  'Scan QR',
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }),
-                              ),
-                            ]),
-                      );
+                                                      SizedBox(width: 10.w),
+                                                      ValueListenableBuilder<
+                                                              Box<dynamic>>(
+                                                          valueListenable: Hive.box(
+                                                                  miscellaneousDataHIVE)
+                                                              .listenable(),
+                                                          builder: (context,
+                                                              box, __) {
+                                                            // final bool = box.get(
+                                                            //     'isTodaysAttendanceMarkCompleted');
+                                                            // print(bool);
+                                                            return Text(
+                                                              // (bool != null ||
+                                                              //         bool == true)
+                                                              //     ? "Today's attendance marked"
+                                                              //     :
+                                                              'Scan QR',
+                                                            );
+                                                          }),
+                                                    ],
+                                                  ),
+                                                );
+                                              }),
+                                    ),
+                                  ]),
+                            );
                     }),
                   ],
                 ),

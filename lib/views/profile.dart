@@ -301,6 +301,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         Flexible(
                                           child: Text(
                                             'Awaiting approval !  Your request has been sent to ${userModelData.enrolledGym}. Your request will be approved soon...',
+                                            textAlign: TextAlign.justify,
                                             style: TextStyle(
                                                 color:
                                                     color_gt_headersTextColorWhite,
@@ -515,7 +516,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               children: <TextSpan>[
                                                 TextSpan(
                                                     text:
-                                                        'gymtracker@gmail.com',
+                                                        'aquelastudios@gmail.com',
                                                     style: TextStyle(
                                                         fontFamily:
                                                             'gilroy_regular',
@@ -580,7 +581,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     await Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', null);
     await Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
     Hive.box(miscellaneousDataHIVE).put('pendingRenewalsLength', null);
-    await Hive.box(manualAttendanceEntryListHIVE).clear();
+
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       if (mounted) {
         // Perform updates to the UI

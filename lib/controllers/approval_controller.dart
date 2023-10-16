@@ -21,6 +21,8 @@ class ApprovalController extends ChangeNotifier {
   List _usersUIDs = [];
   DateTime? pickedDate;
   bool? isDateEditable;
+  bool? isPlanStartDateEnabled;
+  bool? isDataLoading = true;
   ApprovalController() {
     usersCollection = fireBaseFireStore.collection('users');
     gymPartnersCollection = fireBaseFireStore.collection('gympartners');
@@ -29,10 +31,28 @@ class ApprovalController extends ChangeNotifier {
     //fetchApproveeDetails();
     //notifyListeners();
   }
+  Future getConstraintDetails() async {
+    await fireBaseFireStore
+        .collection(
+            (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel)
+                .enrolledGym!)
+        .doc('constraints')
+        .get()
+        .then(
+      (value) {
+        final data = value.data() as Map<String, dynamic>;
+        isPlanStartDateEnabled = data['isPlanStartDateEnabled'];
+      },
+    );
+    notifyListeners();
+  }
+
   getAllUsersDataFromFireStore() async {
+    isDataLoading = true;
     for (String uid in ApproveeUIDs!) {
       await fireStoreCall(uid);
     }
+    isDataLoading = false;
     notifyListeners();
     print(usersModelData);
   }

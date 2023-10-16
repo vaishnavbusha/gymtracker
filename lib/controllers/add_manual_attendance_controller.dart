@@ -174,10 +174,7 @@ class AddManualAttendanceNotifier extends ChangeNotifier {
         .collection(datetime)
         .doc(userModel!.uid)
         .set(attendanceModel.toMap());
-    final entryList = Hive.box(manualAttendanceEntryListHIVE)
-        .get('manualEntryData', defaultValue: []);
-    entryList.add(userModel!.userName);
-    Hive.box(manualAttendanceEntryListHIVE).put('manualEntryData', entryList);
+
     CustomSnackBar.buildSnackbar(
         iserror: false,
         color: Colors.green[500]!,
@@ -185,8 +182,7 @@ class AddManualAttendanceNotifier extends ChangeNotifier {
         message:
             '${userModel!.userName}\'s (${DateFormat('dd-MM-yyyy').format(DateTime.now())}) entry (time-in) has been marked !',
         textcolor: Colors.white);
-    print(Hive.box(manualAttendanceEntryListHIVE)
-        .get('manualEntryData', defaultValue: []));
+
     isEnterScanned = true;
     checkLoading = false;
     notifyListeners();

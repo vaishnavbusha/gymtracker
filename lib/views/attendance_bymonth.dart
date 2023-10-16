@@ -7,10 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/widgets/loader.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
 import '../controllers/network_controller.dart';
+import '../widgets/customsnackbar.dart';
 import '../widgets/nointernet_widget.dart';
 
 class AttendanceByMonth extends ConsumerStatefulWidget {
@@ -94,116 +97,157 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                       SizedBox(
                         //height: 35.h,
                         width: MediaQuery.of(context).size.width * 0.6,
-                        child: Consumer(builder: (context, ref, child) {
-                          final attendanceByMonthState =
-                              ref.watch(attendanceByMonthProvider);
-                          return DropdownButtonFormField<String>(
-                            isExpanded: true,
-                            menuMaxHeight: 250.h,
-                            dropdownColor: color_gt_textColorBlueGrey,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 3.h,
-                              ),
-                              filled: true,
-                              fillColor: Colors.white10,
-                              floatingLabelStyle: TextStyle(
-                                fontFamily: "gilroy_bolditalic",
-                                fontSize: 16.sp,
-                                color: color_gt_headersTextColorWhite
-                                    .withOpacity(0.9),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.r),
-                                borderSide:
-                                    const BorderSide(color: Colors.white12),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.r),
-                                borderSide: BorderSide(
-                                    color: color_gt_textColorBlueGrey
-                                        .withOpacity(0.3)),
-                              ),
-                            ),
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: color_gt_headersTextColorWhite,
-                              fontFamily: 'gilroy_regular',
-                            ),
-                            value: attendanceByMonthState.dropdownvalue,
-                            hint: Text(
-                              'Select month',
-                              style: TextStyle(
-                                fontSize: 15.sp,
-                                color: color_gt_headersTextColorWhite
-                                    .withOpacity(0.7),
-                                fontFamily: 'gilroy_regular',
-                              ),
-                            ),
-                            onChanged: (value) {
-                              attendanceByMonthState
-                                  .changeselectedMonth(value!);
-                            },
-                            items: attendanceByMonthState.availableMonths
-                                .map((item) {
-                              return DropdownMenuItem<String>(
-                                child: Center(
-                                  child: Text(
-                                    item,
-                                    style: TextStyle(
-                                      fontFamily: 'gilroy_bolditalic',
+                        child: ValueListenableBuilder<Box<dynamic>>(
+                            valueListenable:
+                                Hive.box(maxClickAttemptsHIVE).listenable(),
+                            builder: (context, val, child) {
+                              return Consumer(builder: (context, ref, child) {
+                                final attendanceByMonthState =
+                                    ref.watch(attendanceByMonthProvider);
+                                return DropdownButtonFormField<String>(
+                                  isExpanded: true,
+                                  menuMaxHeight: 250.h,
+                                  dropdownColor: color_gt_textColorBlueGrey,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 20.w,
+                                      vertical: 3.h,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white10,
+                                    floatingLabelStyle: TextStyle(
+                                      fontFamily: "gilroy_bolditalic",
+                                      fontSize: 16.sp,
+                                      color: color_gt_headersTextColorWhite
+                                          .withOpacity(0.9),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white12),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      borderSide: BorderSide(
+                                          color: color_gt_textColorBlueGrey
+                                              .withOpacity(0.3)),
                                     ),
                                   ),
-                                ),
-                                value: item,
-                              );
-                            }).toList(),
-                          );
-                        }),
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: color_gt_headersTextColorWhite,
+                                    fontFamily: 'gilroy_regular',
+                                  ),
+                                  value: attendanceByMonthState.dropdownvalue,
+                                  hint: Text(
+                                    'Select month',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: color_gt_headersTextColorWhite
+                                          .withOpacity(0.7),
+                                      fontFamily: 'gilroy_regular',
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    val.get('maxMonthlyAttendanceCount') < 1
+                                        ? CustomSnackBar.buildSnackbar(
+                                            color: Colors.red[500]!,
+                                            context: context,
+                                            message:
+                                                'limit exceeded for the day !',
+                                            textcolor: const Color(0xffFDFFFC),
+                                            iserror: true,
+                                          )
+                                        : attendanceByMonthState
+                                            .changeselectedMonth(value!);
+                                  },
+                                  items: attendanceByMonthState.availableMonths
+                                      .map((item) {
+                                    return DropdownMenuItem<String>(
+                                      child: Center(
+                                        child: Text(
+                                          item,
+                                          style: TextStyle(
+                                            fontFamily: 'gilroy_bolditalic',
+                                          ),
+                                        ),
+                                      ),
+                                      value: item,
+                                    );
+                                  }).toList(),
+                                );
+                              });
+                            }),
                       ),
                       Consumer(builder: (context, value, child) {
                         final attendanceByMonthState =
                             ref.watch(attendanceByMonthProvider);
-                        return (attendanceByMonthState.isDataLoading)
+                        return (attendanceByMonthState.isDataLoading ||
+                                attendanceByMonthState.isGettingDatesLoading)
                             ? Loader(
-                                loadercolor: Color(0xff2D77D0),
+                                loadercolor:
+                                    attendanceByMonthState.isGettingDatesLoading
+                                        ? Colors.orangeAccent
+                                        : Color(0xff2D77D0),
                               )
-                            : Material(
-                                borderRadius: BorderRadius.circular(10.r),
-                                child: Ink(
-                                  decoration: BoxDecoration(
+                            : ValueListenableBuilder<Box<dynamic>>(
+                                valueListenable:
+                                    Hive.box(maxClickAttemptsHIVE).listenable(),
+                                builder: (context, value, child) {
+                                  return Material(
                                     borderRadius: BorderRadius.circular(10.r),
-                                    color:
-                                        (attendanceByMonthState.isMonthSelected)
-                                            ? color_gt_green
-                                            : Colors.grey,
-                                  ),
-                                  height: 32.h,
-                                  width: 65.w,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      (attendanceByMonthState.dropdownvalue !=
-                                                  null &&
-                                              attendanceByMonthState
-                                                  .attendanceByRow.isEmpty)
-                                          ? (attendanceByMonthState
-                                                  .isDataLoading)
-                                              ? null
-                                              : await attendanceByMonthState
-                                                  .getWholeAttendanceByMonthData()
-                                          : null;
-                                    },
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.arrow_forward_ios_sharp,
-                                        color: Colors.white,
-                                        size: 20.r,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                        color: (value.get(
+                                                    'maxMonthlyAttendanceCount') <
+                                                1)
+                                            ? Colors.grey
+                                            : (attendanceByMonthState
+                                                    .isMonthSelected)
+                                                ? color_gt_green
+                                                : Colors.grey,
+                                      ),
+                                      height: 32.h,
+                                      width: 65.w,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          (value.get('maxMonthlyAttendanceCount') <
+                                                  1)
+                                              ? CustomSnackBar.buildSnackbar(
+                                                  color: Colors.red[500]!,
+                                                  context: context,
+                                                  message:
+                                                      'limit exceeded for the day !',
+                                                  textcolor:
+                                                      const Color(0xffFDFFFC),
+                                                  iserror: true,
+                                                )
+                                              : (attendanceByMonthState
+                                                              .dropdownvalue !=
+                                                          null &&
+                                                      attendanceByMonthState
+                                                          .attendanceByRow
+                                                          .isEmpty)
+                                                  ? (attendanceByMonthState
+                                                          .isDataLoading)
+                                                      ? null
+                                                      : await attendanceByMonthState
+                                                          .getWholeAttendanceByMonthData()
+                                                  : null;
+                                        },
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.arrow_forward_ios_sharp,
+                                            color: Colors.white,
+                                            size: 20.r,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
+                                  );
+                                });
                       }),
                     ],
                   ),

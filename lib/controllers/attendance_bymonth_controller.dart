@@ -22,7 +22,7 @@ class AttendanceByMonthController extends ChangeNotifier {
   List<Map<String, String>> usersDataUIDs_names = [];
   List attendanceByRow = [];
   bool isMonthSelected = false;
-
+  bool isGettingDatesLoading = false;
   bool isDataLoading = false;
   //final String monthData = DateFormat('MMM').format(DateTime.now());
 
@@ -51,6 +51,7 @@ class AttendanceByMonthController extends ChangeNotifier {
         },
       );
     }
+    isGettingDatesLoading = false;
     notifyListeners();
   }
 
@@ -90,6 +91,7 @@ class AttendanceByMonthController extends ChangeNotifier {
   }
 
   Future getDatesListFromGymPartner() async {
+    isGettingDatesLoading = true;
     await fireBaseFireStore
         .collection(Hive.box(userDetailsHIVE).get('usermodeldata').enrolledGym)
         .doc(dropdownvalue)
@@ -109,8 +111,11 @@ class AttendanceByMonthController extends ChangeNotifier {
   }
 
   Future getWholeAttendanceByMonthData() async {
+    Hive.box(maxClickAttemptsHIVE).put('maxMonthlyAttendanceCount',
+        Hive.box(maxClickAttemptsHIVE).get('maxMonthlyAttendanceCount') - 1);
     notifyListeners();
     isDataLoading = true;
+
     // int index = 1;
     for (String x in availabledatesList) {
       await fireBaseFireStore

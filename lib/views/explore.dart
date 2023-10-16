@@ -21,6 +21,7 @@ import 'package:gymtracker/widgets/animated_route.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../constants.dart';
+import '../widgets/customsnackbar.dart';
 import 'add_user_manually.dart';
 import 'manual_daily_attendance.dart';
 
@@ -171,60 +172,107 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
   viewButton(String text, Function func) {
     return Material(
       borderRadius: BorderRadius.circular(15.r),
-      child: Ink(
-        decoration: BoxDecoration(
-          color: Color(0xff2D77D0),
-          borderRadius: BorderRadius.circular(15.r),
-          //border: Border.all(width: 1, color: Colors.white12),
-        ),
-        child: InkWell(
-          onTap: () => func(),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    color: color_gt_headersTextColorWhite,
-                    fontFamily: 'gilroy_regularitalic',
+      child: ValueListenableBuilder<Box<dynamic>>(
+          valueListenable: Hive.box(maxClickAttemptsHIVE).listenable(),
+          builder: (context, value, child) {
+            return Ink(
+              decoration: BoxDecoration(
+                color: ((text == 'Attendance by date in current month' &&
+                            value.get(
+                                    'maxAttendanceByDateInCurrentMonthCount') <
+                                1) ||
+                        (text == 'Attendance monthly basis' &&
+                            value.get('maxMonthlyAttendanceCount') < 1))
+                    ? Colors.grey
+                    : Color(0xff2D77D0),
+                borderRadius: BorderRadius.circular(15.r),
+                //border: Border.all(width: 1, color: Colors.white12),
+              ),
+              child: InkWell(
+                onTap: () => ((text == 'Attendance by date in current month' &&
+                            value.get(
+                                    'maxAttendanceByDateInCurrentMonthCount') <
+                                1) ||
+                        (text == 'Attendance monthly basis' &&
+                            value.get('maxMonthlyAttendanceCount') < 1))
+                    ? CustomSnackBar.buildSnackbar(
+                        color: Colors.red[500]!,
+                        context: context,
+                        message: 'limit exceeded for the day !',
+                        textcolor: const Color(0xffFDFFFC),
+                        iserror: true,
+                      )
+                    : func(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          color: color_gt_headersTextColorWhite,
+                          fontFamily: 'gilroy_regularitalic',
+                        ),
+                      ),
+                      (text == 'Renewal Request(s)')
+                          ? SizedBox(height: 10.h)
+                          : Container(),
+                      (text == 'Renewal Request(s)')
+                          ? (Hive.box(miscellaneousDataHIVE)
+                                      .get("pendingRenewalsLength") !=
+                                  null)
+                              ? ValueListenableBuilder<Box<dynamic>>(
+                                  valueListenable:
+                                      Hive.box(miscellaneousDataHIVE)
+                                          .listenable(),
+                                  builder: (context, box, __) {
+                                    return (box.get('pendingRenewalsLength') >
+                                            0)
+                                        ? Text(
+                                            box
+                                                .get('pendingRenewalsLength')
+                                                .toString(),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 18.sp,
+                                              color: Color(0xff9fe2bf),
+                                              fontFamily: 'gilroy_bolditalic',
+                                            ),
+                                          )
+                                        : Container();
+                                  })
+                              : Container()
+                          : Container(),
+                      (text == 'Attendance by date in current month' ||
+                              text == 'Attendance monthly basis')
+                          ? ValueListenableBuilder<Box<dynamic>>(
+                              valueListenable:
+                                  Hive.box(maxClickAttemptsHIVE).listenable(),
+                              builder: (context, value, child) {
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 15.h),
+                                  child: Text(
+                                    '${(text == 'Attendance by date in current month') ? value.get('maxAttendanceByDateInCurrentMonthCount').toString() : value.get('maxMonthlyAttendanceCount').toString()} attempt(s) left',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      color: color_gt_headersTextColorWhite,
+                                      fontFamily: 'gilroy_bolditalic',
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : Container()
+                    ],
                   ),
                 ),
-                (text == 'Renewal Request(s)')
-                    ? SizedBox(height: 10.h)
-                    : Container(),
-                (text == 'Renewal Request(s)')
-                    ? (Hive.box(miscellaneousDataHIVE)
-                                .get("pendingRenewalsLength") !=
-                            null)
-                        ? ValueListenableBuilder<Box<dynamic>>(
-                            valueListenable:
-                                Hive.box(miscellaneousDataHIVE).listenable(),
-                            builder: (context, box, __) {
-                              return (box.get('pendingRenewalsLength') > 0)
-                                  ? Text(
-                                      box
-                                          .get('pendingRenewalsLength')
-                                          .toString(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 18.sp,
-                                        color: Color(0xff9fe2bf),
-                                        fontFamily: 'gilroy_bolditalic',
-                                      ),
-                                    )
-                                  : Container();
-                            })
-                        : Container()
-                    : Container(),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            );
+          }),
     );
   }
 }

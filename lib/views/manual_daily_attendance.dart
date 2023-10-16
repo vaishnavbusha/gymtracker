@@ -81,7 +81,7 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
                   ),
                 ),
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   child: Column(children: [
                     Padding(
                       padding: EdgeInsets.symmetric(

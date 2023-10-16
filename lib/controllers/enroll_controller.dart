@@ -55,9 +55,9 @@ class EnrollController extends ChangeNotifier {
     await usersCollection
         .doc(Hive.box(miscellaneousDataHIVE).get('uid'))
         .update({
+      'enrolledGymDate': DateTime.now(),
       'isAwaitingEnrollment': true,
       'enrolledGym': dropdownvalue,
-      'enrolledGymDate': DateTime.now(),
     }).then(
       (value) {
         if (kDebugMode) {
