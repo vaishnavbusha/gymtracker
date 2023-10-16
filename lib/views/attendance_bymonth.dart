@@ -149,7 +149,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                                     ),
                                   ),
                                   onChanged: (value) {
-                                    val.get('maxMonthlyAttendanceCount') < 1
+                                    val.get('currMonthlyAttendanceCount') < 1
                                         ? CustomSnackBar.buildSnackbar(
                                             color: Colors.red[500]!,
                                             context: context,
@@ -201,7 +201,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                                         borderRadius:
                                             BorderRadius.circular(10.r),
                                         color: (value.get(
-                                                    'maxMonthlyAttendanceCount') <
+                                                    'currMonthlyAttendanceCount') <
                                                 1)
                                             ? Colors.grey
                                             : (attendanceByMonthState
@@ -213,7 +213,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                                       width: 65.w,
                                       child: InkWell(
                                         onTap: () async {
-                                          (value.get('maxMonthlyAttendanceCount') <
+                                          (value.get('currMonthlyAttendanceCount') <
                                                   1)
                                               ? CustomSnackBar.buildSnackbar(
                                                   color: Colors.red[500]!,

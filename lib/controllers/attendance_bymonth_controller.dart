@@ -24,6 +24,7 @@ class AttendanceByMonthController extends ChangeNotifier {
   bool isMonthSelected = false;
   bool isGettingDatesLoading = false;
   bool isDataLoading = false;
+  final adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
   //final String monthData = DateFormat('MMM').format(DateTime.now());
 
   getGymPartnerDetails() async {
@@ -87,6 +88,7 @@ class AttendanceByMonthController extends ChangeNotifier {
         }
       },
     );
+    availableMonths.remove('constraints');
     notifyListeners();
   }
 
@@ -111,8 +113,19 @@ class AttendanceByMonthController extends ChangeNotifier {
   }
 
   Future getWholeAttendanceByMonthData() async {
-    Hive.box(maxClickAttemptsHIVE).put('maxMonthlyAttendanceCount',
-        Hive.box(maxClickAttemptsHIVE).get('maxMonthlyAttendanceCount') - 1);
+    Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount',
+        Hive.box(maxClickAttemptsHIVE).get('currMonthlyAttendanceCount') - 1);
+    final currMonthlyAttendanceCount =
+        Hive.box(maxClickAttemptsHIVE).get('currMonthlyAttendanceCount');
+    await fireBaseFireStore
+        .collection(adminData.enrolledGym!)
+        .doc('constraints')
+        .update(
+            {'currMonthlyAttendanceCount': currMonthlyAttendanceCount}).onError(
+      (error, stackTrace) {
+        print(error);
+      },
+    );
     notifyListeners();
     isDataLoading = true;
 

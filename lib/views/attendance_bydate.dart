@@ -198,7 +198,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                                     ),
                                                   ),
                                                   onChanged: (value) {
-                                                    val.get('maxAttendanceByDateInCurrentMonthCount') <
+                                                    val.get('currAttendanceByDateInCurrentMonthCount') <
                                                             1
                                                         ? CustomSnackBar
                                                             .buildSnackbar(
@@ -265,7 +265,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                                             vertical: 7.h,
                                                             horizontal: 10.w),
                                                     primary: (value.get(
-                                                                'maxAttendanceByDateInCurrentMonthCount') <
+                                                                'currAttendanceByDateInCurrentMonthCount') <
                                                             1)
                                                         ? Colors.grey
                                                         : (attendanceByDateState
@@ -286,7 +286,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                                             'gilroy_bold'),
                                                   ),
                                                   onPressed: () async {
-                                                    (value.get('maxAttendanceByDateInCurrentMonthCount') <
+                                                    (value.get('currAttendanceByDateInCurrentMonthCount') <
                                                             1)
                                                         ? CustomSnackBar
                                                             .buildSnackbar(

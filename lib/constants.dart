@@ -2,7 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gymtracker/views/explore.dart';
 import 'package:gymtracker/views/profile.dart';
@@ -19,7 +18,6 @@ Color color_gt_greenHalfOpacity = const Color(0xff20B05E).withOpacity(0.5);
 Color color_gt_headersTextColorWhite = Colors.white;
 Color color_gt_textColorBlueGrey = Colors.blueGrey;
 final fireBaseAuth = FirebaseAuth.instance;
-final fireBaseStorage = FirebaseStorage.instance;
 final fireBaseFireStore = FirebaseFirestore.instance;
 
 const IconData customRupeeIcon = IconData(0xf05db, fontFamily: 'MaterialIcons');

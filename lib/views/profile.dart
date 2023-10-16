@@ -211,7 +211,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                           color_gt_headersTextColorWhite,
                                                       fontFamily:
                                                           'gilroy_regularitalic',
-                                                      fontSize: 12.sp),
+                                                      fontSize: 15.sp),
                                                 ),
                                                 Text(
                                                   userModelData

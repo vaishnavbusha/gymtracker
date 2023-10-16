@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gymtracker/constants.dart';
+import 'package:gymtracker/models/gympartner_constraints_model.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +19,7 @@ class AttendanceByDateController extends ChangeNotifier {
   var isAscending = true;
   var sortColumnIndex = 1;
   final String monthData = DateFormat('MMM').format(DateTime.now());
-
+  final adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
   bool isDataLoading = false;
   bool isDateDataLoading = true;
   AttendanceByDateController() {
@@ -79,10 +80,24 @@ class AttendanceByDateController extends ChangeNotifier {
 
   Future getAttendanceListByDate() async {
     Hive.box(maxClickAttemptsHIVE).put(
-        'maxAttendanceByDateInCurrentMonthCount',
+        'currAttendanceByDateInCurrentMonthCount',
         Hive.box(maxClickAttemptsHIVE)
-                .get('maxAttendanceByDateInCurrentMonthCount') -
+                .get('currAttendanceByDateInCurrentMonthCount') -
             1);
+    final currAttendanceByDateInCurrentMonthCount =
+        Hive.box(maxClickAttemptsHIVE)
+            .get('currAttendanceByDateInCurrentMonthCount');
+    await fireBaseFireStore
+        .collection(adminData.enrolledGym!)
+        .doc('constraints')
+        .update({
+      'currAttendanceByDateInCurrentMonthCount':
+          currAttendanceByDateInCurrentMonthCount
+    }).onError(
+      (error, stackTrace) {
+        print(error);
+      },
+    );
     notifyListeners();
     isDataLoading = true;
 

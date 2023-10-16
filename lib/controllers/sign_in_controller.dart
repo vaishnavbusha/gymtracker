@@ -8,8 +8,10 @@ import 'package:gymtracker/views/navigation.dart';
 import 'package:gymtracker/widgets/animated_route.dart';
 import 'package:gymtracker/widgets/customsnackbar.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 
 import '../constants.dart';
+import '../models/gympartner_constraints_model.dart';
 
 class LoginController extends ChangeNotifier {
   bool pass_isobscure = true;
@@ -46,7 +48,9 @@ class LoginController extends ChangeNotifier {
           );
           // ... show the culprit SnackBar here.
         });
-
+        // final todaysdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+        // Hive.box(miscellaneousDataHIVE).put('todaysdate', todaysdate);
+        //await getConstraints();
         Navigator.pushReplacement(
             ctx,
             ScaleRoute(
@@ -159,4 +163,70 @@ class LoginController extends ChangeNotifier {
     isResetPasswordLoading = true;
     notifyListeners();
   }
+
+  // Future getConstraints() async {
+  //   print('adds');
+  //   GymPartnerConstraints? gymPartnerConstraints;
+  //   final userData =
+  //       Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel;
+  //   final todaysdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  //   if (!userData.isUser) {
+  //     print('heeyaw');
+  //     await fireBaseFireStore
+  //         .collection(userData.enrolledGym!)
+  //         .doc('constraints')
+  //         .get()
+  //         .then(
+  //       (value) {
+  //         gymPartnerConstraints = GymPartnerConstraints.fromMap(
+  //             value.data() as Map<String, dynamic>);
+  //         print(gymPartnerConstraints);
+  //       },
+  //     );
+
+  //     if (Hive.box(miscellaneousDataHIVE).get('todaysdate') == null) {
+  //       Hive.box(maxClickAttemptsHIVE).put(
+  //           'currAttendanceByDateInCurrentMonthCount',
+  //           gymPartnerConstraints!.currAttendanceByDateInCurrentMonthCount);
+  //       Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount',
+  //           gymPartnerConstraints!.currMonthlyAttendanceCount);
+  //     } else if (Hive.box(miscellaneousDataHIVE).get('todaysdate') !=
+  //         todaysdate) {
+  //       // Hive.box(miscellaneousDataHIVE)
+  //       //     .put('isTodaysAttendanceMarkCompleted', null);
+  //       print('constraint func');
+  //       Hive.box(miscellaneousDataHIVE).put('todaysdate', todaysdate);
+  //       Hive.box(maxClickAttemptsHIVE).put(
+  //           'currAttendanceByDateInCurrentMonthCount',
+  //           gymPartnerConstraints!.maxAttendanceByDateInCurrentMonthCount);
+  //       Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount',
+  //           gymPartnerConstraints!.maxMonthlyAttendanceCount);
+  //       // await fireBaseFireStore
+  //       //     .collection(userData.enrolledGym!)
+  //       //     .doc('constraints')
+  //       //     .update({
+  //       //   'currMonthlyAttendanceCount':
+  //       //       gymPartnerConstraints!.maxMonthlyAttendanceCount,
+  //       //   'currAttendanceByDateInCurrentMonthCount':
+  //       //       gymPartnerConstraints!.maxAttendanceByDateInCurrentMonthCount,
+  //       // }).onError(
+  //       //   (error, stackTrace) {
+  //       //     print(error);
+  //       //   },
+  //       // );
+  //       // Hive.box(maxClickAttemptsHIVE).put(
+  //       //     'maxAttendanceByDateInCurrentMonthCount',
+  //       //     maxAttendanceByDateInCurrentMonthCount);
+  //       // Hive.box(maxClickAttemptsHIVE)
+  //       //     .put('maxMonthlyAttendanceCount', maxMonthlyAttendanceCount);
+  //     } else {
+  //       Hive.box(maxClickAttemptsHIVE).put(
+  //           'currAttendanceByDateInCurrentMonthCount',
+  //           gymPartnerConstraints!.currAttendanceByDateInCurrentMonthCount);
+  //       Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount',
+  //           gymPartnerConstraints!.currMonthlyAttendanceCount);
+  //     }
+  //   }
+  //   notifyListeners();
+  // }
 }

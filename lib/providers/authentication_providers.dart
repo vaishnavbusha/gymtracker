@@ -3,6 +3,7 @@ import 'package:gymtracker/controllers/add_manual_attendance_controller.dart';
 import 'package:gymtracker/controllers/add_user_manually_controller.dart';
 import 'package:gymtracker/controllers/attendance_bydate_controller.dart';
 import 'package:gymtracker/controllers/expired_users_controller.dart';
+import 'package:gymtracker/controllers/globalapp_controller.dart';
 import 'package:gymtracker/controllers/qr_generator_controller.dart';
 import 'package:gymtracker/controllers/search_users_controller.dart';
 import 'package:gymtracker/controllers/view_users_controller.dart';
@@ -118,6 +119,11 @@ final addManualAttendanceProvider = ChangeNotifierProvider.autoDispose(
 final qrGeneratorProvider = ChangeNotifierProvider.autoDispose(
   (ref) {
     return QRGeneratorNotifier();
+  },
+);
+final globalAppProvider = ChangeNotifierProvider.autoDispose(
+  (ref) {
+    return GlobalAppNotifier();
   },
 );
 // final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>(

@@ -21,6 +21,7 @@ import 'package:gymtracker/widgets/animated_route.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../constants.dart';
+import '../providers/authentication_providers.dart';
 import '../widgets/customsnackbar.dart';
 import 'add_user_manually.dart';
 import 'manual_daily_attendance.dart';
@@ -37,9 +38,17 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
       (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).isUser;
   @override
   void initState() {
+    getData();
     //(!isUser) ? getData() : null;
     // TODO: implement initState
     super.initState();
+  }
+
+  Future getData() async {
+    final globalAppState = ref.read(globalAppProvider);
+
+    await globalAppState.getConstraints();
+    //getConstraints();
   }
 
   @override
@@ -179,10 +188,10 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
               decoration: BoxDecoration(
                 color: ((text == 'Attendance by date in current month' &&
                             value.get(
-                                    'maxAttendanceByDateInCurrentMonthCount') <
+                                    'currAttendanceByDateInCurrentMonthCount') <
                                 1) ||
                         (text == 'Attendance monthly basis' &&
-                            value.get('maxMonthlyAttendanceCount') < 1))
+                            value.get('currMonthlyAttendanceCount') < 1))
                     ? Colors.grey
                     : Color(0xff2D77D0),
                 borderRadius: BorderRadius.circular(15.r),
@@ -191,10 +200,10 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
               child: InkWell(
                 onTap: () => ((text == 'Attendance by date in current month' &&
                             value.get(
-                                    'maxAttendanceByDateInCurrentMonthCount') <
+                                    'currAttendanceByDateInCurrentMonthCount') <
                                 1) ||
                         (text == 'Attendance monthly basis' &&
-                            value.get('maxMonthlyAttendanceCount') < 1))
+                            value.get('currMonthlyAttendanceCount') < 1))
                     ? CustomSnackBar.buildSnackbar(
                         color: Colors.red[500]!,
                         context: context,
@@ -255,7 +264,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                                 return Padding(
                                   padding: EdgeInsets.only(top: 15.h),
                                   child: Text(
-                                    '${(text == 'Attendance by date in current month') ? value.get('maxAttendanceByDateInCurrentMonthCount').toString() : value.get('maxMonthlyAttendanceCount').toString()} attempt(s) left',
+                                    '${(text == 'Attendance by date in current month') ? value.get('currAttendanceByDateInCurrentMonthCount').toString() : value.get('currMonthlyAttendanceCount').toString()} attempt(s) left',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 18.sp,

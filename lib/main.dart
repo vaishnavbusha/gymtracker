@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/user_model.dart';
+import 'package:gymtracker/providers/authentication_providers.dart';
 
 import 'package:gymtracker/views/navigation.dart';
 
@@ -15,6 +16,8 @@ import 'package:gymtracker/views/signin.dart';
 
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
+
+import 'models/gympartner_constraints_model.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -33,35 +36,45 @@ void main() async {
   runApp(ProviderScope(child: const MyApp()));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  final userData = Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel;
-  @override
-  void initState() {
-    if (!userData.isUser) {
-      getConstraints();
-    }
-    // TODO: implement initState
-    super.initState();
-  }
+class _MyAppState extends ConsumerState<MyApp> {
+  GymPartnerConstraints? gymPartnerConstraints;
 
-  Future getConstraints() async {
-    await fireBaseFireStore
-        .collection(userData.enrolledGym!)
-        .doc('constraints')
-        .get()
-        .then(
-      (value) {
-        final data = value.data() as Map<String, dynamic>;
-      },
-    );
-  }
+  // @override
+  // void initState() {
+  //   getData();
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
+
+  // Future getData() async {
+  //   final globalAppState = ref.read(globalAppProvider);
+
+  //   await globalAppState.getConstraints();
+  //   //getConstraints();
+  // }
+
+  // Future getConstraints() async {
+  //   await fireBaseFireStore
+  //       .collection(userData.enrolledGym!)
+  //       .doc('constraints')
+  //       .get()
+  //       .then(
+  //     (value) {
+  //       setState(() {
+  //         gymPartnerConstraints = GymPartnerConstraints.fromMap(
+  //             value.data() as Map<String, dynamic>);
+  //         print(gymPartnerConstraints);
+  //       });
+  //     },
+  //   );
+  // }
 
   // This widget is the root of your application.
   @override
@@ -69,21 +82,32 @@ class _MyAppState extends State<MyApp> {
     if (Hive.box(miscellaneousDataHIVE).get('isLoggedIn') == null) {
       Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
     }
-    final todaysdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
-    if (!userData.isUser) {
-      if (Hive.box(miscellaneousDataHIVE).get('todaysdate') == null ||
-          Hive.box(miscellaneousDataHIVE).get('todaysdate') != todaysdate) {
-        // Hive.box(miscellaneousDataHIVE)
-        //     .put('isTodaysAttendanceMarkCompleted', null);
+    // final todaysdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+    // if (!userData.isUser) {
+    //   if (Hive.box(miscellaneousDataHIVE).get('todaysdate') == null ||
+    //       Hive.box(miscellaneousDataHIVE).get('todaysdate') != todaysdate) {
+    //     // Hive.box(miscellaneousDataHIVE)
+    //     //     .put('isTodaysAttendanceMarkCompleted', null);
 
-        Hive.box(miscellaneousDataHIVE).put('todaysdate', todaysdate);
-        Hive.box(maxClickAttemptsHIVE).put(
-            'maxAttendanceByDateInCurrentMonthCount',
-            maxAttendanceByDateInCurrentMonthCount);
-        Hive.box(maxClickAttemptsHIVE)
-            .put('maxMonthlyAttendanceCount', maxMonthlyAttendanceCount);
-      }
-    }
+    //     Hive.box(miscellaneousDataHIVE).put('todaysdate', todaysdate);
+    //     Hive.box(maxClickAttemptsHIVE).put(
+    //         'currAttendanceByDateInCurrentMonthCount',
+    //         gymPartnerConstraints!.maxAttendanceByDateInCurrentMonthCount);
+    //     Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount',
+    //         gymPartnerConstraints!.maxMonthlyAttendanceCount);
+    //     // Hive.box(maxClickAttemptsHIVE).put(
+    //     //     'maxAttendanceByDateInCurrentMonthCount',
+    //     //     maxAttendanceByDateInCurrentMonthCount);
+    //     // Hive.box(maxClickAttemptsHIVE)
+    //     //     .put('maxMonthlyAttendanceCount', maxMonthlyAttendanceCount);
+    //   } else {
+    //     Hive.box(maxClickAttemptsHIVE).put(
+    //         'currAttendanceByDateInCurrentMonthCount',
+    //         gymPartnerConstraints!.currAttendanceByDateInCurrentMonthCount);
+    //     Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount',
+    //         gymPartnerConstraints!.currMonthlyAttendanceCount);
+    //   }
+    // }
     // if (Hive.box(miscellaneousDataHIVE).get('isAwaitingEnrollment') == null) {
     //   Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment',
     //       Hive.box(userDetailsHIVE).get('usermodeldata').isAwaitingEnrollment);
