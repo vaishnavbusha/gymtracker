@@ -34,7 +34,7 @@ We want to inform users of this Service that these third parties have access to 
 ### Security  
 We value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over  the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee its absolute security.  
 
-###Data Safety
+### Data Safety
 We at Aquelastudios give atmost priority in safely storing and transmitting the data for processing. However in some cases if not satisfied, a link is provided for requesting account deletion.
 https://gymtracker-app.firebaseapp.com/
 
