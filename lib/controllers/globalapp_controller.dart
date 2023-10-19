@@ -27,11 +27,8 @@ class GlobalAppNotifier extends ChangeNotifier {
         },
       );
       print(Hive.box(miscellaneousDataHIVE).get('todaysdate'));
-      if ((Hive.box(miscellaneousDataHIVE).get('todaysdate') == null &&
-              gymPartnerConstraints!.currAttendanceByDateInCurrentMonthCount! <=
-                  0 &&
-              gymPartnerConstraints!.currMonthlyAttendanceCount! <= 0) ||
-          Hive.box(miscellaneousDataHIVE).get('todaysdate') != todaysdate) {
+      if (Hive.box(miscellaneousDataHIVE).get('todaysdate') != todaysdate &&
+          (Hive.box(miscellaneousDataHIVE).get('todaysdate') != null)) {
         print('hive date today date same');
         Hive.box(miscellaneousDataHIVE).put('todaysdate', todaysdate);
         Hive.box(maxClickAttemptsHIVE).put(
@@ -61,7 +58,5 @@ class GlobalAppNotifier extends ChangeNotifier {
             gymPartnerConstraints!.currMonthlyAttendanceCount);
       }
     }
-
-    notifyListeners();
   }
 }
