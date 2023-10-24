@@ -573,13 +573,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Future<void> signOut() async {
     await fireBaseAuth.signOut();
-    await Hive.box(userDetailsHIVE).clear();
-    await Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
-
-    await Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', false);
-    await Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
-    await Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', null);
-    await Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
+    Hive.box(userDetailsHIVE).clear();
+    Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
+    Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount', null);
+    Hive.box(maxClickAttemptsHIVE)
+        .put('currAttendanceByDateInCurrentMonthCount', null);
+    Hive.box(miscellaneousDataHIVE).put('todaysdate', null);
+    Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment', false);
+    Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
+    Hive.box(miscellaneousDataHIVE).put('isEnterScanScanned', null);
+    Hive.box(miscellaneousDataHIVE).put('awaitingRenewal', false);
     Hive.box(miscellaneousDataHIVE).put('pendingRenewalsLength', null);
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {

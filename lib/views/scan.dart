@@ -26,7 +26,9 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   @override
   void initState() {
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
-    getData();
+    if ((Hive.box(miscellaneousDataHIVE).get("membershipExpiry") != null)) {
+      getData();
+    }
     super.initState();
   }
 
@@ -203,7 +205,10 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                         : Container(),
                     Consumer(builder: (context, ref, __) {
                       final scanState = ref.watch(scanControllerProvider);
-                      return (scanState.isSearchLoading)
+                      return (scanState.isSearchLoading &&
+                              (Hive.box(miscellaneousDataHIVE)
+                                      .get("membershipExpiry") !=
+                                  null))
                           ? Center(
                               child: Loader(loadercolor: Colors.blue),
                             )

@@ -84,7 +84,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     }
     // final todaysdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
     // if (!userData.isUser) {
-    //   if (Hive.box(miscellaneousDataHIVE).get('todaysdate') == null ||
+    //   if (Hive.box(miscellaneousDataHIVE). get('todaysdate') == null ||
     //       Hive.box(miscellaneousDataHIVE).get('todaysdate') != todaysdate) {
     //     // Hive.box(miscellaneousDataHIVE)
     //     //     .put('isTodaysAttendanceMarkCompleted', null);
@@ -105,9 +105,6 @@ class _MyAppState extends ConsumerState<MyApp> {
     //         'currAttendanceByDateInCurrentMonthCount',
     //         gymPartnerConstraints!.currAttendanceByDateInCurrentMonthCount);
     //     Hive.box(maxClickAttemptsHIVE).put('currMonthlyAttendanceCount',
-    //         gymPartnerConstraints!.currMonthlyAttendanceCount);
-    //   }
-    // }
     // if (Hive.box(miscellaneousDataHIVE).get('isAwaitingEnrollment') == null) {
     //   Hive.box(miscellaneousDataHIVE).put('isAwaitingEnrollment',
     //       Hive.box(userDetailsHIVE).get('usermodeldata').isAwaitingEnrollment);
@@ -150,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(milliseconds: 1000), () {
-      changepage();
+      // changepage();
     });
   }
 
@@ -166,6 +163,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
+          //color: Color(0xff1A1F25),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -188,14 +186,6 @@ class _SplashScreenState extends State<SplashScreen> {
                           fit: BoxFit.contain,
                         ),
                         blendMode: BlendMode.srcATop),
-                    // SizedBox(
-                    //   //color: Colors.blue.withOpacity(0.2),
-                    //   height: 100.h,
-                    //   child: Image.asset(
-                    //     'assets/images/playstore.png',
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
                     Text(
                       'GymTracker',
                       style: TextStyle(
@@ -205,6 +195,29 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ]),
             ),
+            // Padding(
+            //   padding: EdgeInsets.only(bottom: 10.h),
+            //   child: Center(
+            //     child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.end,
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         children: [
+            //           Text(
+            //             'from',
+            //             style: TextStyle(
+            //                 fontFamily: 'gilroy_bolditalic',
+            //                 color: Color(0xff7E7D7D)),
+            //           ),
+            //           Text(
+            //             'Aquela Studios',
+            //             style: TextStyle(
+            //                 fontFamily: 'gilroy_bolditalic',
+            //                 color: Color(0xffFED428),
+            //                 fontSize: 20.sp),
+            //           ),
+            //         ]),
+            //   ),
+            // ),
             Center(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,

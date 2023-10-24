@@ -38,7 +38,9 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
       (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).isUser;
   @override
   void initState() {
-    getData();
+    if (!isUser) {
+      getData();
+    }
     //(!isUser) ? getData() : null;
     // TODO: implement initState
     super.initState();

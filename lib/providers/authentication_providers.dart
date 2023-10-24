@@ -121,7 +121,7 @@ final qrGeneratorProvider = ChangeNotifierProvider.autoDispose(
     return QRGeneratorNotifier();
   },
 );
-final globalAppProvider = ChangeNotifierProvider.autoDispose(
+final globalAppProvider = ChangeNotifierProvider(
   (ref) {
     return GlobalAppNotifier();
   },
