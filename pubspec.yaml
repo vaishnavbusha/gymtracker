@@ -91,6 +91,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/playstore.png
+    - assets/images/gymtracker_white.png
+    - assets/images/view-users.png
+    - assets/images/manualattendance.png
+    - assets/images/datewise-attendance.png
+    - assets/images/expired-usesr.png
+    - assets/images/month-wise-attendance.png
+    - assets/images/todays_attendance.png
+    - assets/images/renew-user.png
   #   - assets/images/coming_soon_wallpapers.jpg
   #   - assets/images/icon_with_shadow.png 
   #   - assets/images/Male0.png

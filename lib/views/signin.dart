@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, must_be_immutable
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/views/signup.dart';
 import 'package:gymtracker/widgets/loader.dart';
@@ -34,7 +35,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     _passwordResetEmailController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    // TODO: implement initState
+
     super.initState();
   }
 
@@ -42,12 +43,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    // TODO: implement dispose
+
     super.dispose();
   }
 
   final Shader linearGradient = LinearGradient(
-    colors: <Color>[Color(0xffFCFCFC), Color(0xff565656)],
+    colors: <Color>[Colors.white, Colors.white54],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
   @override
   Widget build(BuildContext context) {
@@ -58,19 +59,16 @@ class _SignInPageState extends ConsumerState<SignInPage> {
               FocusScope.of(context).unfocus();
             },
             child: Scaffold(
-              // resizeToAvoidBottomInset: false,
-
-              //backgroundColor: Colors.black,
+              //resizeToAvoidBottomInset: false,
               body: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xff122B32), Colors.black],
-                  ),
-                ),
+                color: Color(0xff1A1F25),
+                // decoration: BoxDecoration(
+                //   gradient: LinearGradient(
+                //     begin: Alignment.topLeft,
+                //     end: Alignment.bottomRight,
+                //     colors: [Color(0xff122B32), Colors.black],
+                //   ),
+                // ),
                 child: SafeArea(
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -79,58 +77,131 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     ),
                     child: Form(
                       key: _formKey,
-                      child: Center(
-                        child: SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Flexible(
+                              child: Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    Image.asset(
+                                      'assets/images/gymtracker_white.png',
+                                      height: 80.h,
+                                      fit: BoxFit.contain,
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
                                     Text(
-                                      'Login',
+                                      'LOGIN',
                                       style: TextStyle(
                                         //foreground: Paint()..shader = linearGradient,
-                                        color: Colors.white,
-                                        fontFamily: "teko-med",
-                                        fontSize: 60.sp,
+                                        //color: Colors.white,
+                                        fontFamily: "gilroy_bold",
+                                        fontSize: 35.sp,
+                                        foreground: Paint()
+                                          ..shader = linearGradient,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                SizedBox(height: 15.h),
-                                // Padding(
-                                //   padding: EdgeInsets.only(top: 20.h),
-                                //   child: Row(children: [
-                                //     Text(
-                                //       'Login',
-                                //       style: TextStyle(
-                                //         foreground: Paint()..shader = linearGradient,
-                                //         //color: Colors.white,
-                                //         fontFamily: "teko-med",
-                                //         fontSize: 30.sp,
-                                //       ),
-                                //     ),
-                                //   ]),
-                                // ),
-                                CustomTextFieldSignIn(
-                                  controller: _emailController,
-                                  icon: Icons.email,
-                                  isObscure: false,
-                                  labeltext: 'Email',
-                                  tia: TextInputAction.next,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
+                                    SizedBox(height: 15.h),
+                                    // Padding(
+                                    //   padding: EdgeInsets.only(top: 20.h),
+                                    //   child: Row(children: [
+                                    //     Text(
+                                    //       'Login',
+                                    //       style: TextStyle(
+                                    //         foreground: Paint()..shader = linearGradient,
+                                    //         //color: Colors.white,
+                                    //         fontFamily: "teko-med",
+                                    //         fontSize: 30.sp,
+                                    //       ),
+                                    //     ),
+                                    //   ]),
+                                    // ),
+                                    CustomTextFieldSignIn(
+                                      controller: _emailController,
+                                      icon: Icons.email,
+                                      isObscure: false,
+                                      labeltext: 'Email',
+                                      tia: TextInputAction.next,
+                                    ),
                                     CustomTextFieldSignIn(
                                       controller: _passwordController,
                                       icon: Icons.security_outlined,
                                       isObscure: true,
                                       labeltext: 'Password',
                                       tia: TextInputAction.done,
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 17.w,
+                                      ),
+                                      child:
+                                          Consumer(builder: (context, ref, _) {
+                                        final login = ref.watch(loginProvider);
+
+                                        return (login
+                                                    .is_login_details_uploading ==
+                                                false)
+                                            ? GestureDetector(
+                                                onTap: () async {
+                                                  SystemChannels.textInput
+                                                      .invokeMethod(
+                                                          'TextInput.hide');
+                                                  //validateAndSave();
+                                                  final FormState form =
+                                                      _formKey.currentState!;
+                                                  if (form.validate()) {
+                                                    await login.loginuser(
+                                                      ctx: context,
+                                                      email:
+                                                          _emailController.text,
+                                                      password:
+                                                          _passwordController
+                                                              .text,
+                                                    );
+                                                  } else {
+                                                    print('Form is invalid');
+                                                  }
+                                                  // login.loginuser(
+                                                  //   ctx: context,
+                                                  //   email: _emailController.text,
+                                                  //   password: _passwordController.text,
+                                                  // );
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  height: 50.h,
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xffFED428),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.r),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Sign In',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'gilroy_bold',
+                                                          fontSize: 21.sp,
+                                                          color: Color(
+                                                              0xff1A1F25)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : Loader(
+                                                loadercolor: Color(0xffFED428),
+                                              );
+                                      }),
                                     ),
                                     Consumer(builder: (context, ref, __) {
                                       final signInState =
@@ -144,12 +215,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.only(
                                                     topLeft:
-                                                        Radius.circular(15),
+                                                        Radius.circular(30.r),
                                                     topRight:
-                                                        Radius.circular(15)),
+                                                        Radius.circular(30.r)),
                                               ),
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 11, 28, 34),
+                                              backgroundColor:
+                                                  Color(0xff1A1F25),
                                               builder: (context) {
                                                 return modalbottomsheet(
                                                     context);
@@ -158,11 +229,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                         },
                                         child: Padding(
                                           padding: EdgeInsets.only(
-                                              top: 2.h, bottom: 10.h),
+                                              top: 15.h, bottom: 10.h),
                                           child: Text(
-                                            'Forgot your password ?',
+                                            'Forgot password ?',
+                                            textAlign: TextAlign.center,
                                             style: TextStyle(
-                                                color: color_gt_green,
+                                                fontSize: 13.sp,
+                                                color: Color(0xffFED428),
                                                 fontFamily:
                                                     'gilroy_bolditalic'),
                                           ),
@@ -171,189 +244,43 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                     }),
                                   ],
                                 ),
-
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 17.w,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 15.h),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Don\'t have an account? ',
+                                    style: TextStyle(
+                                      color: color_gt_headersTextColorWhite,
+                                      fontSize: 14.sp,
+                                      fontFamily: 'gilroy_bolditalic',
+                                    ),
                                   ),
-                                  child: Consumer(builder: (context, ref, _) {
-                                    final login = ref.watch(loginProvider);
-
-                                    return (login.is_login_details_uploading ==
-                                            false)
-                                        ? GestureDetector(
-                                            onTap: () async {
-                                              SystemChannels.textInput
-                                                  .invokeMethod(
-                                                      'TextInput.hide');
-                                              //validateAndSave();
-                                              final FormState form =
-                                                  _formKey.currentState!;
-                                              if (form.validate()) {
-                                                await login.loginuser(
-                                                  ctx: context,
-                                                  email: _emailController.text,
-                                                  password:
-                                                      _passwordController.text,
-                                                );
-                                              } else {
-                                                print('Form is invalid');
-                                              }
-                                              // login.loginuser(
-                                              //   ctx: context,
-                                              //   email: _emailController.text,
-                                              //   password: _passwordController.text,
-                                              // );
-                                            },
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 50.h,
-                                              decoration: BoxDecoration(
-                                                color: color_gt_green,
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(5.r),
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  'Sign In',
-                                                  style: TextStyle(
-                                                      fontFamily: 'gilroy_bold',
-                                                      fontSize: 20.sp,
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : Loader(
-                                            loadercolor: color_gt_green,
-                                          );
-                                  }),
-                                ),
-                                // Padding(
-                                //   padding: EdgeInsets.only(
-                                //     top: 7.w,
-                                //   ),
-                                //   child: Row(
-                                //       mainAxisAlignment: MainAxisAlignment.center,
-                                //       children: [
-                                //         Flexible(
-                                //             child: Divider(
-                                //           color: color_gt_greenHalfOpacity,
-                                //           height: 1.h,
-                                //           thickness: 1,
-                                //           endIndent: 10.w,
-                                //           indent: 20.w,
-                                //         )),
-                                //         Text(
-                                //           'or',
-                                //           style: TextStyle(
-                                //               fontFamily: 'gilroy_regular',
-                                //               fontSize: 15.sp,
-                                //               color: color_gt_green),
-                                //         ),
-                                //         Flexible(
-                                //             child: Divider(
-                                //           color: color_gt_greenHalfOpacity,
-                                //           height: 1.h,
-                                //           thickness: 1,
-                                //           endIndent: 20.w,
-                                //           indent: 10.w,
-                                //         )),
-                                //       ]),
-                                // ),
-                                // Padding(
-                                //   padding: EdgeInsets.only(
-                                //     top: 7.w,
-                                //   ),
-                                //   child: Container(
-                                //     width: MediaQuery.of(context).size.width,
-                                //     height: 40.h,
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //         width: 1,
-                                //         color: color_gt_green,
-                                //         style: BorderStyle.solid,
-                                //       ),
-                                //       borderRadius: BorderRadius.all(
-                                //         Radius.circular(5.r),
-                                //       ),
-                                //     ),
-                                //     child: Row(
-                                //       mainAxisAlignment: MainAxisAlignment.center,
-                                //       children: [
-                                //         SvgPicture.asset(
-                                //           'assets/images/icons8-google.svg',
-                                //           semanticsLabel: 'My SVG Image',
-                                //           height: 20,
-                                //           width: 20,
-                                //         ),
-                                //         SizedBox(
-                                //           width: 10,
-                                //         ),
-                                //         Text(
-                                //           'Log-in with Google',
-                                //           style: TextStyle(
-                                //               fontFamily: 'gilroy_bold',
-                                //               fontSize: 15.sp,
-                                //               color: color_gt_headersTextColorWhite),
-                                //         ),
-                                //       ],
-                                //     ),
-                                //   ),
-                                // ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 27.h),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Don\'t have an account? ',
-                                        style: TextStyle(
-                                          color: color_gt_headersTextColorWhite,
-                                          fontSize: 14.sp,
-                                          fontFamily: 'gilroy_regular',
-                                        ),
+                                  InkWell(
+                                    onTap: () async {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          ScaleRoute(
+                                            page: SignUpPage(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      'Sign-up here !',
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        color: Color(0xffFED428),
+                                        fontFamily: 'gilroy_bolditalic',
                                       ),
-                                      InkWell(
-                                        onTap: () async {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              ScaleRoute(
-                                                page: SignUpPage(),
-                                              ));
-                                          // Navigator.pushReplacement(
-                                          //     context,
-
-                                          //     MaterialPageRoute(
-                                          //       builder: (context) => SignUpPage(),
-                                          //     ));
-                                          // Navigator.pushReplacement(
-                                          //     context,
-                                          //     ScaleRoute(
-                                          //       page: ChangeNotifierProvider(
-                                          //         create: (context) => RegisterController(),
-                                          //         child: RegisterScreen(),
-                                          //       ),
-                                          //     ));
-                                        },
-                                        child: Text(
-                                          'Sign-up here !',
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: color_gt_green,
-                                            fontFamily: 'gilroy_bolditalic',
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ]),
                     ),
                   ),
                 ),
@@ -372,94 +299,102 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             padding: MediaQuery.of(context).viewInsets,
             duration: const Duration(milliseconds: 100),
             curve: Curves.decelerate,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 2.h, bottom: 10.h),
-                  ),
-                  Container(
-                    width: 35.w,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30.r),
-                        color: color_gt_green),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15.h, bottom: 10.h),
-                    child: Text(
-                      'Forgot Password',
-                      style: TextStyle(
-                        fontFamily: 'gilroy_bold',
-                        color: color_gt_green.withOpacity(0.8),
-                        fontSize: 22.sp,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30.r),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.h, bottom: 10.h),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  // Divider(
-                  //   height: 1,
-                  //   color: Colors.white24,
-                  // ),
-                  CustomTextFieldSignIn(
-                    controller: _passwordResetEmailController,
-                    icon: Icons.email,
-                    isObscure: false,
-                    labeltext: 'Email',
-                    tia: TextInputAction.done,
-                  ),
-                  Consumer(builder: (context, ref, __) {
-                    final signInState = ref.watch(loginProvider);
-                    return Padding(
-                      padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
-                      child: (signInState.isResetPasswordLoading)
-                          ? Loader(
-                              loadercolor: Colors.green,
-                            )
-                          : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                //onPrimary: Colors.black,  //to change text color
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10.h, horizontal: 20.h),
-                                primary: color_gt_green, // button color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(10.r), // <-- Radius
+                      Container(
+                        width: 35.w,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.r),
+                            color: Color(0xffFED428)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 15.h, bottom: 10.h),
+                        child: Text(
+                          'Forgot Password',
+                          style: TextStyle(
+                            fontFamily: 'gilroy_bold',
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.sp,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      // Divider(
+                      //   height: 1,
+                      //   color: Colors.white24,
+                      // ),
+                      CustomTextFieldSignIn(
+                        controller: _passwordResetEmailController,
+                        icon: Icons.email,
+                        isObscure: false,
+                        labeltext: 'Email',
+                        tia: TextInputAction.done,
+                      ),
+                      Consumer(builder: (context, ref, __) {
+                        final signInState = ref.watch(loginProvider);
+                        return Padding(
+                          padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
+                          child: (signInState.isResetPasswordLoading)
+                              ? Loader(
+                                  loadercolor: Colors.green,
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Color(
+                                        0xff1A1F25), //to change text color
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10.h, horizontal: 20.h),
+                                    primary: Color(0xffFED428), // button color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10.r), // <-- Radius
+                                    ),
+                                    textStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15.sp,
+                                        fontFamily: 'gilroy_bold'),
+                                  ),
+                                  onPressed: () async {
+                                    if (_passwordResetEmailController
+                                        .text.isEmpty) {
+                                      Navigator.pop(context);
+                                      CustomSnackBar.buildSnackbar(
+                                        color: Colors.red[500]!,
+                                        context: context,
+                                        message:
+                                            'Enter email-ID for resetting your password !',
+                                        textcolor: const Color(0xffFDFFFC),
+                                        iserror: false,
+                                      );
+                                      _passwordResetEmailController.text = '';
+                                    } else {
+                                      await signInState.resetPassword(
+                                          _passwordResetEmailController.text,
+                                          context);
+                                      _passwordResetEmailController.text = '';
+                                    }
+                                    //await signOut();
+                                  },
+                                  child: Text(
+                                    'Reset Password',
+                                  ),
                                 ),
-                                textStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15.sp,
-                                    fontFamily: 'gilroy_bold'),
-                              ),
-                              onPressed: () async {
-                                if (_passwordResetEmailController
-                                    .text.isEmpty) {
-                                  Navigator.pop(context);
-                                  CustomSnackBar.buildSnackbar(
-                                    color: Colors.red[500]!,
-                                    context: context,
-                                    message:
-                                        'Enter email-ID for resetting your password !',
-                                    textcolor: const Color(0xffFDFFFC),
-                                    iserror: false,
-                                  );
-                                  _passwordResetEmailController.text = '';
-                                } else {
-                                  await signInState.resetPassword(
-                                      _passwordResetEmailController.text,
-                                      context);
-                                  _passwordResetEmailController.text = '';
-                                }
-                                //await signOut();
-                              },
-                              child: Text(
-                                'Reset Password',
-                              ),
-                            ),
-                    );
-                  }),
-                ],
+                        );
+                      }),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -502,7 +437,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
       child: Theme(
         data: Theme.of(context).copyWith(
           colorScheme: ThemeData().colorScheme.copyWith(
-                primary: color_gt_green,
+                primary: Color(0xffFED428),
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
@@ -538,7 +473,9 @@ class CustomTextFieldSignIn extends StatelessWidget {
             textInputAction: tia,
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.white10,
+              //fillColor: Colors.white10,
+              fillColor: Color(0xff20242A),
+
               floatingLabelStyle: TextStyle(
                 fontFamily: "gilroy_bolditalic",
                 fontSize: 16.sp,
@@ -551,7 +488,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
               ),
               prefixIcon: Icon(
                 icon,
-                color: color_gt_headersTextColorWhite.withOpacity(0.7),
+                color: Color(0xff7e7d7d).withOpacity(0.7),
               ),
               suffixIcon: (isObscure)
                   ? GestureDetector(
@@ -561,11 +498,11 @@ class CustomTextFieldSignIn extends StatelessWidget {
                       child: (isPassObscure)
                           ? Icon(
                               Icons.visibility_off,
-                              color: color_gt_green.withOpacity(0.5),
+                              color: Color(0xffFED428).withOpacity(0.5),
                             )
                           : Icon(
                               Icons.visibility,
-                              color: color_gt_green,
+                              color: Color(0xffFED428),
                             ))
                   : GestureDetector(
                       onTap: () {
@@ -574,23 +511,23 @@ class CustomTextFieldSignIn extends StatelessWidget {
                       child: (isPassObscure)
                           ? Icon(
                               Icons.visibility_off,
-                              color: color_gt_green.withOpacity(0.5),
+                              color: Color(0xffFED428).withOpacity(0.5),
                               size: 0,
                             )
                           : Icon(
                               Icons.visibility,
-                              color: color_gt_green,
+                              color: Color(0xffFED428),
                               size: 0,
                             ),
                     ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide: BorderSide(color: Colors.red, width: 0.25),
               ),
               errorStyle: TextStyle(
                   fontFamily: 'gilroy_regularitalic',
@@ -598,12 +535,13 @@ class CustomTextFieldSignIn extends StatelessWidget {
                   fontSize: 12.sp),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
             ),
             controller: controller,

@@ -23,15 +23,19 @@ class CustomSnackBar {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
-                child: Text(
-                  message,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontFamily: 'gilroy_bolditalic',
-                      color: textcolor,
-                      fontSize: 13.sp),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    message,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontFamily: 'gilroy_bolditalic',
+                        color: textcolor,
+                        fontSize: 13.sp),
+                  ),
                 ),
               ),
               iserror

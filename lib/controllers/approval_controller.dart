@@ -26,10 +26,6 @@ class ApprovalController extends ChangeNotifier {
   ApprovalController() {
     usersCollection = fireBaseFireStore.collection('users');
     gymPartnersCollection = fireBaseFireStore.collection('gympartners');
-    //getAllUsersDataFromFireStore();
-    //getAllUsersDataFromFireStore();
-    //fetchApproveeDetails();
-    //notifyListeners();
   }
   Future getConstraintDetails() async {
     await fireBaseFireStore

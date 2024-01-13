@@ -27,7 +27,7 @@ class Loader extends StatelessWidget {
             child: Transform.rotate(
               angle: -45 * math.pi / 180,
               child: LoadingAnimationWidget.threeArchedCircle(
-                color: Colors.white,
+                color: const Color(0xff1A1F25),
                 size: 30,
               ),
             ),

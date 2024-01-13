@@ -74,54 +74,69 @@ class RenewNotifer extends StateNotifier<RenewState> {
       {required int index,
       required UserModel userModelData,
       required BuildContext context}) async {
-    final membershipExpiry = DateTime.now();
-    var newDate = DateTime(
-      membershipExpiry.year,
-      membershipExpiry.month + int.parse(validityController.text),
-      membershipExpiry.day,
-      membershipExpiry.day,
-      membershipExpiry.hour,
-      membershipExpiry.minute,
-      membershipExpiry.second,
-      membershipExpiry.millisecond,
-    );
-    updateDetails();
-    await fireBaseFireStore.collection('users').doc(userModelData.uid).update({
-      'membershipExpiry': newDate,
-      'memberShipFeesPaid': int.parse(moneyPaidController.text),
-      'recentRenewedOn': DateTime.now(),
-      'awaitingRenewal': false,
-    }).then(
-      (value) {
-        print('membership renewal updated on user');
-      },
-    );
-    UserModel adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
-    adminData.pendingRenewals!.remove(userModelData.uid);
-    await fireBaseFireStore.collection('users').doc(adminData.uid).update({
-      'pendingRenewals': adminData.pendingRenewals,
-    }).then(
-      (value) {
-        print('admin pending renewals updated');
-        CustomSnackBar.buildSnackbar(
-            color: const Color(0xff4CB944),
-            context: context,
-            iserror: false,
-            message:
-                'Membership of ${userModelData.userName} has been renewed for ${validityController.text} month(s).',
-            textcolor: color_gt_headersTextColorWhite);
-      },
-    ).onError(
-      (error, stackTrace) {
-        CustomSnackBar.buildSnackbar(
-            color: Colors.red,
-            context: context,
-            iserror: true,
-            message: 'Something went wrong !',
-            textcolor: color_gt_headersTextColorWhite);
-      },
-    );
-    restoreDetails();
+    try {
+      updateDetails();
+
+      final membershipExpiry = DateTime.now();
+      var newDate = DateTime(
+        membershipExpiry.year,
+        membershipExpiry.month + int.parse(validityController.text),
+        membershipExpiry.day,
+        membershipExpiry.day,
+        membershipExpiry.hour,
+        membershipExpiry.minute,
+        membershipExpiry.second,
+        membershipExpiry.millisecond,
+      );
+
+      await fireBaseFireStore
+          .collection('users')
+          .doc(userModelData.uid)
+          .update({
+        'membershipExpiry': newDate,
+        'memberShipFeesPaid': int.parse(moneyPaidController.text),
+        'recentRenewedOn': DateTime.now(),
+        'awaitingRenewal': false,
+      }).then(
+        (value) {
+          print('membership renewal updated on user');
+        },
+      );
+      UserModel adminData = Hive.box(userDetailsHIVE).get('usermodeldata');
+      adminData.pendingRenewals!.remove(userModelData.uid);
+      await fireBaseFireStore.collection('users').doc(adminData.uid).update({
+        'pendingRenewals': adminData.pendingRenewals,
+      }).then(
+        (value) {
+          print('admin pending renewals updated');
+          CustomSnackBar.buildSnackbar(
+              color: const Color(0xff4CB944),
+              context: context,
+              iserror: false,
+              message:
+                  'Membership of ${userModelData.userName} has been renewed for ${validityController.text} month(s).',
+              textcolor: color_gt_headersTextColorWhite);
+        },
+      ).onError(
+        (error, stackTrace) {
+          CustomSnackBar.buildSnackbar(
+              color: Colors.red,
+              context: context,
+              iserror: true,
+              message: 'Something went wrong !',
+              textcolor: color_gt_headersTextColorWhite);
+        },
+      );
+      restoreDetails();
+    } catch (e) {
+      CustomSnackBar.buildSnackbar(
+          color: Colors.red,
+          context: context,
+          iserror: true,
+          message: 'Re-check the entered fields !',
+          textcolor: color_gt_headersTextColorWhite);
+      state = state.copyWith(isApproved: false, isDetailsUpdating: false);
+    }
   }
 
   @override

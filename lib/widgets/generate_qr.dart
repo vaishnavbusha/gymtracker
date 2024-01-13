@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/controllers/encrypt_controller.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -17,8 +18,9 @@ import 'package:screenshot/screenshot.dart';
 import '../models/user_model.dart';
 
 class QRGenerator extends ConsumerStatefulWidget {
-  final UserModel userModelData;
-  const QRGenerator({Key? key, required this.userModelData}) : super(key: key);
+  final UserModel userModelData =
+      Hive.box(userDetailsHIVE).get('usermodeldata');
+  QRGenerator({Key? key}) : super(key: key);
 
   @override
   ConsumerState<QRGenerator> createState() => _QRGeneratorState();
@@ -27,7 +29,6 @@ class QRGenerator extends ConsumerStatefulWidget {
 class _QRGeneratorState extends ConsumerState<QRGenerator> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -43,18 +44,17 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           qrGeneratorState.isGeneratingPDF();
-          //_createPDF(context);
         },
-        backgroundColor: Color(0xff122B32),
+        backgroundColor: Color(0xff1A1F25),
         splashColor: color_gt_textColorBlueGrey,
         child: (qrGeneratorState.isLoading)
             ? LoadingAnimationWidget.staggeredDotsWave(
-                color: Colors.white,
+                color: Color(0xffFED428),
                 size: 20.sp,
               )
             : Icon(
-                Icons.file_download_outlined,
-                color: Colors.green,
+                Icons.share_rounded,
+                color: Color(0xffFED428),
                 size: 30,
               ),
       ),
@@ -66,14 +66,21 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                 centerTitle: true,
                 title: FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(
-                    'QR Code',
-                    style: TextStyle(
-                        fontFamily: 'gilroy_bold',
-                        color: Color(0xff30d5c8),
-                        fontSize: 20.sp,
-                        fontStyle: FontStyle.normal),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/images/gymtracker_white.png',
+                        height: 15.h,
+                        fit: BoxFit.contain,
+                      ),
+                      Text(
+                        'QR Code',
+                        style: TextStyle(
+                          fontFamily: 'gilroy_bolditalic',
+                          color: Color(0xffFED428),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 elevation: 0.0,
@@ -98,13 +105,6 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                       children: [
                         QrImage(
                           foregroundColor: Colors.black,
-                          // embeddedImage: Image.asset(
-                          //   'assets/images/playstore.png',
-                          // ).image,
-                          // embeddedImageStyle: QrEmbeddedImageStyle(
-                          //   size: Size(40, 40),
-                          //   color: Colors.red,
-                          // ),
                           data: EncryptController.encryptData(QRData),
                           version: QrVersions.auto,
                           size: 300,
@@ -134,15 +134,35 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 5),
-                              Text(
-                                'GymTracker',
-                                style: TextStyle(
-                                    fontFamily: 'gilroy_bolditalic',
-                                    color: Colors.black,
-                                    fontSize: 25.sp,
-                                    fontStyle: FontStyle.normal),
-                                textAlign: TextAlign.center,
+                              SizedBox(width: 5.h),
+                              SizedBox(
+                                height: 30.h,
+                                child: Stack(
+                                  children: [
+                                    Text(
+                                      'GymTracker',
+                                      style: TextStyle(
+                                          fontFamily: 'gilroy_bolditalic',
+                                          color: Colors.black,
+                                          fontSize: 25.sp,
+                                          fontStyle: FontStyle.normal),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Positioned(
+                                      bottom: 3.h,
+                                      right: 0,
+                                      child: Text(
+                                        'by AquelaStudios.',
+                                        style: TextStyle(
+                                            fontFamily: 'gilroy_bolditalic',
+                                            color: Colors.black,
+                                            fontSize: 7.sp,
+                                            fontStyle: FontStyle.normal),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ]),
                       ]),
@@ -163,7 +183,7 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                           Text(
                             'Aquela Studios',
                             style: TextStyle(
-                                fontFamily: 'gilroy_regularitalic',
+                                fontFamily: 'gilroy_bolditalic',
                                 color: Colors.black,
                                 fontSize: 20.sp),
                           ),

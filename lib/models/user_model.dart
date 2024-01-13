@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
@@ -34,7 +32,6 @@ class UserModel extends HiveObject {
   String? enrolledGym;
   @HiveField(10)
   DateTime? enrolledGymDate;
-
   @HiveField(11)
   DateTime? membershipExpiry;
   @HiveField(12)

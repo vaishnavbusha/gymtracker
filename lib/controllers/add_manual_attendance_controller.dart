@@ -85,7 +85,7 @@ class AddManualAttendanceNotifier extends ChangeNotifier {
           bool isExpiredvar = isExpired(userModel!.membershipExpiry);
           if (isExpiredvar) {
             isSearchLoading = false;
-            throw 'Your account has been expired !';
+            throw '" ${userName.toLowerCase()}\'s " account has been expired !';
           } else {
             checkInOrOutTime();
           }

@@ -151,7 +151,7 @@ class ApprovalNotifier extends StateNotifier<ApprovalState> {
   }) async {
     List _pendingApprovalDataList = [];
     List _usersUIDs = [];
-    var newDate;
+    DateTime newDate;
     EnrollModel? enrollModel;
     CollectionReference? gymPartnersCollection =
         fireBaseFireStore.collection('gympartners');

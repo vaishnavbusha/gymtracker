@@ -6,14 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/controllers/todays_attendance_controller.dart';
-import 'package:gymtracker/models/attendance_display_model.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/views/datatable.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
-
-import '../constants.dart';
 import '../controllers/network_controller.dart';
 
 class TodaysAttendance extends ConsumerStatefulWidget {
@@ -27,8 +24,6 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
   @override
   void initState() {
     getData();
-    //x.getGymName(widget.gymName);
-    // TODO: implement initState
     super.initState();
   }
 
@@ -58,11 +53,9 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
                       child: Text(
                         'Today\'s Attendance ($datetime)',
                         style: TextStyle(
-                            fontFamily: 'gilroy_bold',
-                            color: color_gt_green,
-                            fontSize: 18.sp,
-                            fontStyle: FontStyle.normal),
-                        textAlign: TextAlign.center,
+                          fontFamily: 'gilroy_bolditalic',
+                          color: Color(0xffFED428),
+                        ),
                       ),
                     ),
                     elevation: 0.0,
@@ -75,128 +68,38 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
                 50.0,
               ),
             ),
-            backgroundColor: Colors.black,
-            body: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xff122B32), Colors.black],
-                ),
-              ),
-              child: (!todaysAttendanceState.isLoading!)
-                  ? Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: (todaysAttendanceState.isDataAvailable)
-                          ? SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              child: SingleChildScrollView(
-                                  physics: BouncingScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  child: DataTableWidget(
-                                    attendanceData:
-                                        todaysAttendanceState.attendanceData,
-                                  )),
-                            )
-                          : Center(
-                              child: Text(
-                                'No data yet, kindly check again later.',
-                                style: TextStyle(
-                                  fontSize: 20.sp,
-                                  color: color_gt_headersTextColorWhite,
-                                  fontFamily: 'gilroy_bold',
-                                ),
+            backgroundColor: Color(0xff1A1F25),
+            body: (!todaysAttendanceState.isLoading!)
+                ? Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: (todaysAttendanceState.isDataAvailable)
+                        ? SingleChildScrollView(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                child: DataTableWidget(
+                                  attendanceData:
+                                      todaysAttendanceState.attendanceData,
+                                )),
+                          )
+                        : Center(
+                            child: Text(
+                              'No data yet, kindly check again later.',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                color: Color(0xff7E7D7D),
+                                fontFamily: 'gilroy_bolditalic',
                               ),
-                            )
-                      //
-                      )
-                  : Loader(
-                      loadercolor: Color(0xff2D77D0),
-                    ),
-            ),
+                            ),
+                          )
+                    //
+                    )
+                : Loader(
+                    loadercolor: Color(0xffFED428),
+                  ),
           )
         : NoInternetWidget();
   }
-
-  // getDataTableWidget(List rowData) {
-  //   List columnHeadings = ['S.No', 'UserName', 'time-in'];
-  //   List<DataRow> rowDatavar = returnRowData(rowData);
-
-  //   return DataTable(
-  //     border: TableBorder.all(
-  //         color: color_gt_textColorBlueGrey,
-  //         borderRadius: BorderRadius.circular(10)),
-  //     headingRowColor: MaterialStateProperty.all(Colors.white10),
-  //     sortColumnIndex: 1,
-  //     sortAscending: true,
-  //     dataRowHeight: 40,
-  //     headingTextStyle: TextStyle(
-  //       fontSize: 13.sp,
-  //       color: color_gt_green,
-  //       fontFamily: 'gilroy_bold',
-  //     ),
-  //     columns: columnHeadings.map((columnName) {
-  //       return DataColumn(
-  //         onSort: (columnIndex, ascending) {
-  //           setState(() {
-  //             rowData.sort((a, b) => a.userName.compareTo(b.userName));
-  //           });
-  //         },
-  //         label: Text(
-  //           columnName,
-  //         ),
-  //       );
-  //     }).toList(),
-  //     rows: rowDatavar,
-  //   );
-  // }
-
-  // returnRowData(List rowData) {
-  //   List<DataRow> dataRowvar = [];
-
-  //   for (AttendanceDisplayModel attendanceDisplayModel in rowData) {
-  //     final time = DateFormat.jm()
-  //         .format(attendanceDisplayModel.scannedDateTime!)
-  //         .toString();
-  //     final y = DataRow(
-  //       cells: [
-  //         DataCell(
-  //           Text(
-  //             attendanceDisplayModel.index.toString(),
-  //             style: TextStyle(
-  //               fontSize: 13.sp,
-  //               color: color_gt_headersTextColorWhite,
-  //               fontFamily: 'gilroy_bold',
-  //             ),
-  //           ),
-  //         ),
-  //         DataCell(
-  //           Text(
-  //             attendanceDisplayModel.userName!,
-  //             style: TextStyle(
-  //               fontSize: 13.sp,
-  //               color: color_gt_headersTextColorWhite,
-  //               fontFamily: 'gilroy_regularitalic',
-  //             ),
-  //           ),
-  //         ),
-  //         DataCell(
-  //           Text(
-  //             time,
-  //             style: TextStyle(
-  //               fontSize: 13.sp,
-  //               color: color_gt_headersTextColorWhite,
-  //               fontFamily: 'gilroy_regularitalic',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  //     dataRowvar.add(y);
-  //   }
-  //   return dataRowvar;
-  // }
 }

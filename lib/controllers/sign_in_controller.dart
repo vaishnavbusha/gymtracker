@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/views/navigation.dart';
+import 'package:gymtracker/views/tabview_navigation.dart';
 import 'package:gymtracker/widgets/animated_route.dart';
 import 'package:gymtracker/widgets/customsnackbar.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -34,8 +35,8 @@ class LoginController extends ChangeNotifier {
     try {
       if (email.isNotEmpty && password.isNotEmpty) {
         is_login_details_uploading = true;
-        final creds = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
+        final creds = await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: email.trim(), password: password.trim());
         is_login_details_uploading = false;
         await storeUserDetailsToHive(creds.user!.uid);
         WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -54,7 +55,7 @@ class LoginController extends ChangeNotifier {
         Navigator.pushReplacement(
             ctx,
             ScaleRoute(
-              page: const NavigationPage(),
+              page: const NavigationScreen(),
             ));
         notifyListeners();
       }
@@ -108,14 +109,19 @@ class LoginController extends ChangeNotifier {
       print('jsondata = $userdataJSON');
     }
     UserModel userModelData = UserModel.toModel(userdataJSON);
-    UserModel.saveUserDataToHIVE(userModelData);
+    if (userModelData.userType == 'shunin') {
+      fireBaseAuth.signOut();
+      throw 'Privileged user\'s can\'t sign-in here, sign-in failed !';
+    } else {
+      UserModel.saveUserDataToHIVE(userModelData);
 
-    Hive.box(miscellaneousDataHIVE)
-        .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
-    Hive.box(miscellaneousDataHIVE)
-        .put('membershipExpiry', userModelData.membershipExpiry);
-    Hive.box(miscellaneousDataHIVE)
-        .put('awaitingRenewal', userModelData.awaitingRenewal);
+      Hive.box(miscellaneousDataHIVE)
+          .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
+      Hive.box(miscellaneousDataHIVE)
+          .put('membershipExpiry', userModelData.membershipExpiry);
+      Hive.box(miscellaneousDataHIVE)
+          .put('awaitingRenewal', userModelData.awaitingRenewal);
+    }
   }
 
   Future resetPassword(String _emailID, BuildContext context) async {

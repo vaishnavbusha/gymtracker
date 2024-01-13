@@ -7,6 +7,7 @@ class AttendanceDisplayModel {
   String? userName;
   DateTime? scannedDateTime;
   DateTime? exitScannedDateTime;
+
   AttendanceDisplayModel({
     this.index,
     this.uid,

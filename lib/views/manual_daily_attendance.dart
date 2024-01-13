@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -49,13 +51,11 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
                       title: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          'Add attendance manually',
+                          'Manual Attendance',
                           style: TextStyle(
-                              fontFamily: 'gilroy_bold',
-                              color: color_gt_green,
-                              fontSize: 20.sp,
-                              fontStyle: FontStyle.normal),
-                          textAlign: TextAlign.center,
+                            fontFamily: 'gilroy_bolditalic',
+                            color: Color(0xffFED428),
+                          ),
                         ),
                       ),
                       elevation: 0.0,
@@ -68,176 +68,162 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
                   50.0,
                 ),
               ),
-              backgroundColor: Colors.black,
+              backgroundColor: Color(0xff1A1F25),
               extendBody: true,
-              body: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xff122B32), Colors.black],
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.h,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(
-                            width: 256.w,
-                            child: TextField(
-                              controller: _searchController,
-                              cursorHeight: 18.sp,
-                              cursorRadius: Radius.circular(30.r),
-                              style: TextStyle(
-                                  fontSize: 15.sp,
-                                  fontFamily: 'gilroy_regular',
-                                  color: Colors.white70),
-                              textInputAction: TextInputAction.done,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white10,
-                                floatingLabelStyle: TextStyle(
-                                  fontFamily: "gilroy_bolditalic",
-                                  fontSize: 16.sp,
-                                  color: color_gt_headersTextColorWhite
-                                      .withOpacity(0.9),
-                                ),
-                                labelText: 'Enter username to mark attendance',
-                                labelStyle: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: color_gt_headersTextColorWhite
-                                      .withOpacity(0.75),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  borderSide: BorderSide(
-                                      color: color_gt_textColorBlueGrey
-                                          .withOpacity(0.2)),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  borderSide:
-                                      const BorderSide(color: Colors.white10),
-                                ),
-                                errorStyle: TextStyle(
-                                    fontFamily: 'gilroy_regularitalic',
-                                    color: Colors.red[500]!,
-                                    fontSize: 12.sp),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  borderSide:
-                                      const BorderSide(color: Colors.white10),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  borderSide: BorderSide(
-                                      color: color_gt_textColorBlueGrey
-                                          .withOpacity(0.2)),
-                                ),
+              body: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: 256.w,
+                          child: TextField(
+                            controller: _searchController,
+                            cursorHeight: 18.sp,
+                            cursorRadius: Radius.circular(30.r),
+                            style: TextStyle(
+                                fontSize: 15.sp,
+                                fontFamily: 'gilroy_regular',
+                                color: Colors.white70),
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xff20242A),
+                              floatingLabelStyle: TextStyle(
+                                fontFamily: "gilroy_bolditalic",
+                                fontSize: 16.sp,
+                                color: color_gt_headersTextColorWhite
+                                    .withOpacity(0.9),
+                              ),
+                              labelText: 'Enter username to mark attendance',
+                              labelStyle: TextStyle(
+                                fontSize: 14.sp,
+                                color: color_gt_headersTextColorWhite
+                                    .withOpacity(0.75),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                                borderSide: BorderSide(
+                                    color: color_gt_textColorBlueGrey
+                                        .withOpacity(0.2)),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                                borderSide:
+                                    BorderSide(color: Colors.red, width: 0.25),
+                              ),
+                              errorStyle: TextStyle(
+                                  fontFamily: 'gilroy_regularitalic',
+                                  color: Colors.red[500]!,
+                                  fontSize: 12.sp),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                                borderSide: BorderSide(
+                                    color: Color(0xff7e7d7d).withOpacity(0.05)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                                borderSide: BorderSide(
+                                    color: Color(0xff7e7d7d).withOpacity(0.05)),
                               ),
                             ),
                           ),
-                          Consumer(builder: (context, ref, child) {
-                            final _searchUsersState =
-                                ref.watch(addManualAttendanceProvider);
+                        ),
+                        Consumer(builder: (context, ref, child) {
+                          final _searchUsersState =
+                              ref.watch(addManualAttendanceProvider);
 
-                            return (!_searchUsersState.isSearchLoading)
-                                ? Material(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10.r),
-                                          color: (_searchController!.text
-                                                  .trim()
-                                                  .isNotEmpty)
-                                              ? (_searchUsersState
-                                                      .isSearchLoading)
-                                                  ? Colors.grey
-                                                  : color_gt_green
-                                              : Colors.grey),
-                                      height: 32.h,
-                                      width: 65.w,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          print(_searchController!.text
-                                              .replaceAll(
-                                                  RegExp("[ \n\t\r\f]"), '')
-                                              .length);
-                                          (_searchController!.text
-                                                  .trim()
-                                                  .isNotEmpty)
-                                              ? (_searchUsersState
-                                                      .isSearchLoading)
-                                                  ? null
-                                                  : await _searchUsersState
-                                                      .searchForAUser(
-                                                          _searchController!
-                                                              .text
-                                                              .replaceAll(
-                                                                  RegExp(
-                                                                      "[ \n\t\r\f]"),
-                                                                  ''),
-                                                          context)
-                                              : null;
-                                        },
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.arrow_forward_ios_sharp,
-                                            color: Colors.white,
-                                            size: 20.r,
-                                          ),
+                          return (!_searchUsersState.isSearchLoading)
+                              ? Material(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  child: Ink(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                        color: (_searchController!.text
+                                                .trim()
+                                                .isNotEmpty)
+                                            ? (_searchUsersState
+                                                    .isSearchLoading)
+                                                ? Color(0xff7E7D7D)
+                                                : Color(0xffFED428)
+                                            : Colors.grey),
+                                    height: 32.h,
+                                    width: 65.w,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        print(_searchController!.text
+                                            .replaceAll(
+                                                RegExp("[ \n\t\r\f]"), '')
+                                            .length);
+                                        (_searchController!.text
+                                                .trim()
+                                                .isNotEmpty)
+                                            ? (_searchUsersState
+                                                    .isSearchLoading)
+                                                ? null
+                                                : await _searchUsersState
+                                                    .searchForAUser(
+                                                        _searchController!.text
+                                                            .replaceAll(
+                                                                RegExp(
+                                                                    "[ \n\t\r\f]"),
+                                                                ''),
+                                                        context)
+                                            : null;
+                                      },
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.arrow_forward_ios_sharp,
+                                          color: Color(0xff1A1F25),
+                                          size: 20.r,
                                         ),
                                       ),
                                     ),
-                                  )
-                                : Loader(
-                                    loadercolor: Colors.blue,
-                                  );
-                          }),
-                        ],
-                      ),
+                                  ),
+                                )
+                              : Loader(
+                                  loadercolor: Color(0xffFED428),
+                                );
+                        }),
+                      ],
                     ),
-                    Consumer(
-                      builder: (context, ref, child) {
-                        final addManualAttendanceState =
-                            ref.watch(addManualAttendanceProvider);
-                        WidgetsBinding.instance!.addPostFrameCallback((_) {
-                          // Add Your Code here.
+                  ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final addManualAttendanceState =
+                          ref.watch(addManualAttendanceProvider);
+                      WidgetsBinding.instance!.addPostFrameCallback((_) {
+                        // Add Your Code here.
 
-                          addManualAttendanceState.checkForInitial();
-                        });
-                        return (addManualAttendanceState.isSearchLoading)
-                            ? Container()
-                            : (addManualAttendanceState.userModel != null)
-                                ? dataWidget(
-                                    Gender: addManualAttendanceState
-                                        .userModel!.gender,
-                                    Name: addManualAttendanceState
-                                        .userModel!.userName,
-                                    Phone: addManualAttendanceState
-                                        .userModel!.phoneNumber
-                                        .toString(),
-                                    joinedOn: addManualAttendanceState
-                                        .userModel!.enrolledGymDate,
-                                    expiresOn: addManualAttendanceState
-                                        .userModel!.membershipExpiry,
-                                    uid:
-                                        addManualAttendanceState.userModel!.uid,
-                                  )
-                                : Container();
-                      },
-                    ),
-                  ]),
-                ),
+                        addManualAttendanceState.checkForInitial();
+                      });
+                      return (addManualAttendanceState.isSearchLoading)
+                          ? Container()
+                          : (addManualAttendanceState.userModel != null)
+                              ? dataWidget(
+                                  Gender: addManualAttendanceState
+                                      .userModel!.gender,
+                                  Name: addManualAttendanceState
+                                      .userModel!.userName,
+                                  Phone: addManualAttendanceState
+                                      .userModel!.phoneNumber
+                                      .toString(),
+                                  joinedOn: addManualAttendanceState
+                                      .userModel!.enrolledGymDate,
+                                  expiresOn: addManualAttendanceState
+                                      .userModel!.membershipExpiry,
+                                  uid: addManualAttendanceState.userModel!.uid,
+                                )
+                              : Container();
+                    },
+                  ),
+                ]),
               ),
             )),
           )
@@ -259,7 +245,7 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
         Container(
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            color: Colors.white10,
+            color: Color(0xff20242A),
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Padding(
@@ -292,7 +278,10 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
                           getTagNameTextWidget('Phone'),
                           //getTagNameTextWidget('Gender'),
                           getTagNameTextWidget('Renewed On'),
-                          getTagNameTextWidget('Expires On'),
+                          getTagNameTextWidget((Hive.box(miscellaneousDataHIVE)
+                                  .get('awaitingRenewal'))
+                              ? 'Expired On'
+                              : 'Expires On'),
                         ]),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,7 +396,7 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
         '  :   ',
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_headersTextColorWhite,
+          color: Color(0xffFED428),
           fontFamily: 'gilroy_bold',
         ),
       ),
@@ -421,7 +410,7 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
         tagName,
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_green,
+          color: Color(0xffFED428),
           fontFamily: 'gilroy_bold',
         ),
       ),
@@ -437,7 +426,7 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
             : tagData,
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_headersTextColorWhite,
+          color: Color(0xff7E7D7D),
           fontFamily: 'gilroy_bolditalic',
         ),
       ),

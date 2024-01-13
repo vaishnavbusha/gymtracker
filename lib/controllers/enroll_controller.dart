@@ -1,43 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymtracker/models/gym_enrollment_model.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:hive/hive.dart';
 
 import '../constants.dart';
-import '../models/enroll_model.dart';
 import '../widgets/customsnackbar.dart';
 
 class EnrollController extends ChangeNotifier {
   CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
-  List<EnrollModel> gymPartnersData = [];
+  List<GymEnrollmentModel> gymPartnersData = [];
   List<String> gymNames = [];
-  CollectionReference? _collectionData;
   String dropdownvalue = '';
   bool isLoading = false;
   bool isEnrolled = false;
   int selectedIndexOfGymPartnersData = 0;
   EnrollController() {
-    _collectionData = fireBaseFireStore.collection("gympartners");
     getGymPartnersDetails();
-    notifyListeners();
   }
   getGymPartnersDetails() async {
-    QuerySnapshot querySnapshot = await _collectionData!.get();
-    final allData = querySnapshot.docs.map((doc) {
-      return doc.data();
-    }).toList();
-    gymPartnersData = allData.map(
-      (e) {
-        final x = e as Map<String, dynamic>;
-        return EnrollModel.fromMap(x);
+    await fireBaseFireStore.collection('gympartnerslist').get().then(
+      (value) {
+        final allData = value.docs.map((doc) {
+          return doc.data();
+        }).toList();
+
+        gymPartnersData = allData.map(
+          (e) {
+            return GymEnrollmentModel.fromMap(e);
+          },
+        ).toList();
+        print(gymPartnersData);
+        for (GymEnrollmentModel x in gymPartnersData) {
+          gymNames.add(x.gymPartnerGYMName!);
+        }
+        dropdownvalue = gymNames[0];
       },
-    ).toList();
-    for (EnrollModel x in gymPartnersData) {
-      gymNames.add(x.gymPartnerGYMName!);
-    }
-    dropdownvalue = gymNames[0];
+    );
+
     notifyListeners();
   }
 

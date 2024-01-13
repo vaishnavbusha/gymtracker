@@ -74,12 +74,11 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                 title: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    'Pending Approvals',
+                    'Pending Approval(s)',
                     style: TextStyle(
-                        fontFamily: 'gilroy_bold',
-                        color: color_gt_green,
-                        fontSize: 20.sp,
-                        fontStyle: FontStyle.normal),
+                      fontFamily: 'gilroy_bolditalic',
+                      color: Color(0xffFED428),
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -93,304 +92,279 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
             56.0,
           ),
         ),
-        backgroundColor: Colors.black,
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xff122B32), Colors.black],
-            ),
-          ),
-          child: (approvalState.isDataLoading!)
-              ? Center(
-                  child: Loader(loadercolor: Colors.blue),
-                )
-              : ListView.builder(
-                  itemCount: approvalState.usersModelData.length,
-                  itemBuilder: (context, index) {
-                    return Consumer(builder: (context, ref, __) {
-                      final approveButtonState =
-                          ref.watch(testApprovalProvider(index));
-                      final approveButtonNotifierState =
-                          ref.watch(testApprovalProvider(index).notifier);
-                      return Form(
-                        key: approveButtonNotifierState.formKey,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 5.h, horizontal: 10.w),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: color_gt_textColorBlueGrey
-                                          .withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Column(children: [
-                                      dataApprovalBlock(
-                                          tagData: (approvalState
-                                                      .usersModelData[index]
-                                                  as UserModel)
-                                              .userName,
-                                          tagName: 'UserName'),
-                                      dataApprovalBlock(
-                                          tagData: (approvalState
-                                                      .usersModelData[index]
-                                                  as UserModel)
-                                              .phoneNumber
-                                              .toString(),
-                                          tagName: 'Phone'),
-                                      dataApprovalBlock(
-                                          tagData: (approvalState
-                                                      .usersModelData[index]
-                                                  as UserModel)
-                                              .enrolledGymDate,
-                                          tagName: 'Submited On'),
-                                      // approvalState.isDateEditable!
-                                      //     ? birthYearSelectionWidget((approvalState
-                                      //             .usersModelData[index] as UserModel)
-                                      //         .enrolledGymDate!)
-                                      //     : dataApprovalBlock(
-                                      //         tagData:
-                                      //             (approvalState.usersModelData[index]
-                                      //                     as UserModel)
-                                      //                 .enrolledGymDate,
-                                      //         tagName: 'Submited On'),
-                                      (approvalState.isPlanStartDateEnabled!)
-                                          ? membershipStartDateWidget()
-                                          : dataApprovalBlock(
-                                              tagData: DateTime.now(),
-                                              tagName: 'Approving On'),
-
-                                      customTextField(
-                                        controller: approveButtonNotifierState
-                                            .validityController,
-                                        isObscure: false,
-                                        labeltext: 'validity (in months)',
-                                        tia: TextInputAction.next,
-                                      ),
-                                      customTextField(
-                                        controller: approveButtonNotifierState
-                                            .moneyPaidController,
-                                        isObscure: false,
-                                        labeltext: 'Membership fees (₹)',
-                                        tia: TextInputAction.next,
-                                      ),
-                                      (approveButtonState.isDetailsUpdating ==
-                                                  false ||
-                                              approveButtonState
-                                                      .isRemovalUpdating ==
-                                                  false)
-                                          ? Padding(
-                                              padding: EdgeInsets.all(10.w),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Consumer(
-                                                    builder:
-                                                        (context, ref, child) {
-                                                      return ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          //onPrimary: Colors.black,  //to change text color
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 7.h,
-                                                                  horizontal:
-                                                                      20.w),
-                                                          primary: (approveButtonState
-                                                                          .isRemoved ==
-                                                                      true ||
-                                                                  approveButtonState
-                                                                          .isApproved ==
-                                                                      true)
-                                                              ? Colors.grey
-                                                              : color_gt_green, // button color
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(10
-                                                                        .r), // <-- Radius
-                                                          ),
-                                                          textStyle: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 15.sp,
-                                                              fontFamily:
-                                                                  'gilroy_bold'),
-                                                        ),
-                                                        onPressed: () {
-                                                          if (approveButtonState
-                                                                      .isRemoved ==
-                                                                  true ||
-                                                              approveButtonState
-                                                                      .isApproved ==
-                                                                  true) {
-                                                            null;
-                                                          } else {
-                                                            final FormState
-                                                                form =
-                                                                approveButtonNotifierState
-                                                                    .formKey
-                                                                    .currentState!;
-                                                            if (form
-                                                                .validate()) {
-                                                              approveButtonNotifierState
-                                                                  .approveUser(
-                                                                approveeUID:
-                                                                    approvalState
-                                                                        .usersModelData[
-                                                                            index]
-                                                                        .uid,
-                                                                index: index,
-                                                                context:
-                                                                    context,
-                                                                userName: approvalState
-                                                                    .usersModelData[
-                                                                        index]
-                                                                    .userName,
-                                                                memberShipStartDate:
-                                                                    (approvalState
-                                                                            .isPlanStartDateEnabled!)
-                                                                        ? approvalState
-                                                                            .pickedDate
-                                                                        : null,
-                                                              );
-                                                              print(
-                                                                  'form is valid');
-                                                            } else {
-                                                              print(
-                                                                  'Form is invalid');
-                                                            }
-                                                            //ref.watch(enrollControllerProvider).updateEnrollmentInfo();
-                                                          }
-                                                        },
-                                                        child: (approveButtonState
-                                                                    .isApproved ==
-                                                                true)
-                                                            ? Text('APPROVED')
-                                                            : Text('APPROVE'),
-                                                      );
-                                                    },
-                                                  ),
-                                                  Consumer(
-                                                    builder:
-                                                        (context, ref, child) {
-                                                      return ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          //onPrimary: Colors.black,  //to change text color
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 7.h,
-                                                                  horizontal:
-                                                                      20.w),
-                                                          primary: (approveButtonState
-                                                                          .isRemoved ==
-                                                                      true ||
-                                                                  approveButtonState
-                                                                          .isApproved ==
-                                                                      true)
-                                                              ? Colors.grey
-                                                              : Colors
-                                                                  .red, // button color
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(10
-                                                                        .r), // <-- Radius
-                                                          ),
-                                                          textStyle: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 15.sp,
-                                                              fontFamily:
-                                                                  'gilroy_bold'),
-                                                        ),
-                                                        onPressed: () {
-                                                          if (approveButtonState
-                                                                      .isRemoved ==
-                                                                  true ||
-                                                              approveButtonState
-                                                                      .isApproved ==
-                                                                  true) {
-                                                            null;
-                                                          } else {
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (ctx) =>
-                                                                  RemoveButtonDialog(
-                                                                index: index,
-                                                                username: (approvalState
-                                                                            .usersModelData[index]
-                                                                        as UserModel)
-                                                                    .userName,
-                                                                uid: (approvalState
-                                                                            .usersModelData[index]
-                                                                        as UserModel)
-                                                                    .uid!,
-                                                              ),
-                                                            );
-
-                                                            // final FormState form =
-                                                            //     approveButtonNotifierState
-                                                            //         .formKey
-                                                            //         .currentState!;
-                                                            // if (form.validate()) {
-
-                                                            //   print('form is valid');
-                                                            // } else {
-                                                            //   print(
-                                                            //       'Form is invalid');
-                                                            // }
-                                                            //ref.watch(enrollControllerProvider).updateEnrollmentInfo();
-                                                          }
-                                                        },
-                                                        child: (approveButtonState
-                                                                    .isRemoved ==
-                                                                true)
-                                                            ? Text('REMOVED')
-                                                            : Text('REMOVE'),
-                                                      );
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : Loader(loadercolor: Colors.blue),
-                                    ]),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 12.h, bottom: 6.h),
-                                    child: Divider(
-                                      color: color_gt_greenHalfOpacity
-                                          .withOpacity(0.3),
-                                      height: 1.h,
-                                      thickness: 1,
-                                      // endIndent: 10.w,
-                                      // indent: 20.w,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-                  },
+        backgroundColor: Color(0xff1A1F25),
+        body: (approvalState.isDataLoading!)
+            ? Center(
+                child: Loader(
+                  loadercolor: Color(0xffFED428),
                 ),
-        ),
+              )
+            : ListView.builder(
+                itemCount: approvalState.usersModelData.length,
+                itemBuilder: (context, index) {
+                  return Consumer(builder: (context, ref, __) {
+                    final approveButtonState =
+                        ref.watch(testApprovalProvider(index));
+                    final approveButtonNotifierState =
+                        ref.watch(testApprovalProvider(index).notifier);
+                    return Form(
+                      key: approveButtonNotifierState.formKey,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5.h, horizontal: 10.w),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff7e7d7d).withOpacity(0.09),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(children: [
+                                    dataApprovalBlock(
+                                        tagData:
+                                            (approvalState.usersModelData[index]
+                                                    as UserModel)
+                                                .userName,
+                                        tagName: 'UserName'),
+                                    dataApprovalBlock(
+                                        tagData:
+                                            (approvalState.usersModelData[index]
+                                                    as UserModel)
+                                                .phoneNumber
+                                                .toString(),
+                                        tagName: 'Phone'),
+                                    dataApprovalBlock(
+                                        tagData:
+                                            (approvalState.usersModelData[index]
+                                                    as UserModel)
+                                                .enrolledGymDate,
+                                        tagName: 'Submited On'),
+                                    // approvalState.isDateEditable!
+                                    //     ? birthYearSelectionWidget((approvalState
+                                    //             .usersModelData[index] as UserModel)
+                                    //         .enrolledGymDate!)
+                                    //     : dataApprovalBlock(
+                                    //         tagData:
+                                    //             (approvalState.usersModelData[index]
+                                    //                     as UserModel)
+                                    //                 .enrolledGymDate,
+                                    //         tagName: 'Submited On'),
+                                    (approvalState.isPlanStartDateEnabled!)
+                                        ? membershipStartDateWidget()
+                                        : dataApprovalBlock(
+                                            tagData: DateTime.now(),
+                                            tagName: 'Approving On'),
+
+                                    customTextField(
+                                      controller: approveButtonNotifierState
+                                          .validityController,
+                                      isObscure: false,
+                                      labeltext: 'validity (in months)',
+                                      tia: TextInputAction.next,
+                                    ),
+                                    customTextField(
+                                      controller: approveButtonNotifierState
+                                          .moneyPaidController,
+                                      isObscure: false,
+                                      labeltext: 'Membership fees (₹)',
+                                      tia: TextInputAction.next,
+                                    ),
+                                    (approveButtonState.isDetailsUpdating ==
+                                                false ||
+                                            approveButtonState
+                                                    .isRemovalUpdating ==
+                                                false)
+                                        ? Padding(
+                                            padding: EdgeInsets.all(10.w),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Consumer(
+                                                  builder:
+                                                      (context, ref, child) {
+                                                    return ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        //onPrimary: Colors.black,  //to change text color
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 7.h,
+                                                                horizontal:
+                                                                    20.w),
+                                                        primary: (approveButtonState
+                                                                        .isRemoved ==
+                                                                    true ||
+                                                                approveButtonState
+                                                                        .isApproved ==
+                                                                    true)
+                                                            ? Colors.grey
+                                                            : color_gt_green, // button color
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius
+                                                              .circular(10
+                                                                  .r), // <-- Radius
+                                                        ),
+                                                        textStyle: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 15.sp,
+                                                            fontFamily:
+                                                                'gilroy_bold'),
+                                                      ),
+                                                      onPressed: () {
+                                                        if (approveButtonState
+                                                                    .isRemoved ==
+                                                                true ||
+                                                            approveButtonState
+                                                                    .isApproved ==
+                                                                true) {
+                                                          null;
+                                                        } else {
+                                                          final FormState form =
+                                                              approveButtonNotifierState
+                                                                  .formKey
+                                                                  .currentState!;
+                                                          if (form.validate()) {
+                                                            approveButtonNotifierState
+                                                                .approveUser(
+                                                              approveeUID:
+                                                                  approvalState
+                                                                      .usersModelData[
+                                                                          index]
+                                                                      .uid,
+                                                              index: index,
+                                                              context: context,
+                                                              userName:
+                                                                  approvalState
+                                                                      .usersModelData[
+                                                                          index]
+                                                                      .userName,
+                                                              memberShipStartDate:
+                                                                  (approvalState
+                                                                          .isPlanStartDateEnabled!)
+                                                                      ? approvalState
+                                                                          .pickedDate
+                                                                      : null,
+                                                            );
+                                                            print(
+                                                                'form is valid');
+                                                          } else {
+                                                            print(
+                                                                'Form is invalid');
+                                                          }
+                                                          //ref.watch(enrollControllerProvider).updateEnrollmentInfo();
+                                                        }
+                                                      },
+                                                      child: (approveButtonState
+                                                                  .isApproved ==
+                                                              true)
+                                                          ? Text('APPROVED')
+                                                          : Text('APPROVE'),
+                                                    );
+                                                  },
+                                                ),
+                                                SizedBox(width: 30.w),
+                                                Consumer(
+                                                  builder:
+                                                      (context, ref, child) {
+                                                    return ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        //onPrimary: Colors.black,  //to change text color
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 7.h,
+                                                                horizontal:
+                                                                    20.w),
+                                                        primary: (approveButtonState
+                                                                        .isRemoved ==
+                                                                    true ||
+                                                                approveButtonState
+                                                                        .isApproved ==
+                                                                    true)
+                                                            ? Colors.grey
+                                                            : Colors
+                                                                .red, // button color
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius
+                                                              .circular(10
+                                                                  .r), // <-- Radius
+                                                        ),
+                                                        textStyle: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 15.sp,
+                                                            fontFamily:
+                                                                'gilroy_bold'),
+                                                      ),
+                                                      onPressed: () {
+                                                        if (approveButtonState
+                                                                    .isRemoved ==
+                                                                true ||
+                                                            approveButtonState
+                                                                    .isApproved ==
+                                                                true) {
+                                                          null;
+                                                        } else {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (ctx) =>
+                                                                RemoveButtonDialog(
+                                                              index: index,
+                                                              username: (approvalState
+                                                                              .usersModelData[
+                                                                          index]
+                                                                      as UserModel)
+                                                                  .userName,
+                                                              uid: (approvalState
+                                                                              .usersModelData[
+                                                                          index]
+                                                                      as UserModel)
+                                                                  .uid!,
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
+                                                      child: (approveButtonState
+                                                                  .isRemoved ==
+                                                              true)
+                                                          ? Text('REMOVED')
+                                                          : Text('REMOVE'),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : Loader(
+                                            loadercolor: Color(0xffFED428),
+                                          ),
+                                  ]),
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 12.h, bottom: 6.h),
+                                  child: Divider(
+                                    color: color_gt_greenHalfOpacity
+                                        .withOpacity(0.3),
+                                    height: 1.h,
+                                    thickness: 1,
+                                    // endIndent: 10.w,
+                                    // indent: 20.w,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+                },
+              ),
       ),
     );
   }
@@ -401,7 +375,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
       child: Theme(
         data: Theme.of(context).copyWith(
           colorScheme: ThemeData().colorScheme.copyWith(
-                primary: color_gt_green,
+                primary: Color(0xffFED428),
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
@@ -413,7 +387,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                 'Start Date : ',
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: color_gt_green,
+                  color: Color(0xffFED428),
                   fontFamily: 'gilroy_bold',
                 ),
               ),
@@ -436,7 +410,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                       color: Colors.white70),
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white10,
+                    fillColor: Color(0xff20242A),
                     floatingLabelStyle: TextStyle(
                       fontFamily: "gilroy_bolditalic",
                       fontSize: 16.sp,
@@ -449,12 +423,13 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
-                      borderSide: const BorderSide(color: Colors.white10),
+                      borderSide:
+                          const BorderSide(color: Colors.red, width: 0.25),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
                       borderSide: BorderSide(
-                          color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                          color: Color(0xff7e7d7d).withOpacity(0.05)),
                     ),
                     errorStyle: TextStyle(
                         fontFamily: 'gilroy_regularitalic',
@@ -462,12 +437,13 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                         fontSize: 12.sp),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
-                      borderSide: const BorderSide(color: Colors.white10),
+                      borderSide: BorderSide(
+                          color: Color(0xff7e7d7d).withOpacity(0.05)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
                       borderSide: BorderSide(
-                          color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                          color: Color(0xff7e7d7d).withOpacity(0.05)),
                     ),
                   ),
                   controller: _dateController,
@@ -556,7 +532,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
             textInputAction: tia,
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.white10,
+              fillColor: Color(0xff20242A),
               floatingLabelStyle: TextStyle(
                 fontFamily: "gilroy_bolditalic",
                 fontSize: 16.sp,
@@ -567,58 +543,14 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                 fontSize: 16.sp,
                 color: color_gt_headersTextColorWhite.withOpacity(0.75),
               ),
-              // prefixIcon: Icon(
-              //   icon,
-              //   color: color_gt_headersTextColorWhite.withOpacity(0.7),
-              // ),
-              // suffixIcon: (isObscure)
-              //     ? GestureDetector(
-              //         onTap: () {
-              //           (labeltext == "Password")
-              //               ? signUpController_var.changePassObscurity()
-              //               : signUpController_var.changeConfirmPassObscurity();
-              //         },
-              //         child: (labeltext == "Password")
-              //             ? (signUpController_var.pass_isobscure)
-              //                 ? Icon(
-              //                     Icons.visibility_off,
-              //                     color: color_gt_greenHalfOpacity,
-              //                   )
-              //                 : Icon(
-              //                     Icons.visibility,
-              //                     color: color_gt_green,
-              //                   )
-              //             : (signUpController_var.confirmpass_isobscure)
-              //                 ? Icon(
-              //                     Icons.visibility_off,
-              //                     color: color_gt_greenHalfOpacity,
-              //                   )
-              //                 : Icon(
-              //                     Icons.visibility,
-              //                     color: color_gt_green,
-              //                   ))
-              //     : GestureDetector(
-              //         onTap: () {
-              //           signUpController_var.changePassObscurity();
-              //         },
-              //         child: (signUpController_var.pass_isobscure)
-              //             ? Icon(
-              //                 Icons.visibility_off,
-              //                 size: 0,
-              //               )
-              //             : Icon(
-              //                 Icons.visibility,
-              //                 size: 0,
-              //               ),
-              //       ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide: const BorderSide(color: Colors.red, width: 0.25),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               errorStyle: TextStyle(
                   fontFamily: 'gilroy_regularitalic',
@@ -626,12 +558,13 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                   fontSize: 12.sp),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
             ),
             controller: controller,
@@ -652,7 +585,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
             '$tagName : ',
             style: TextStyle(
               fontSize: 14.sp,
-              color: color_gt_green,
+              color: Color(0xffFED428),
               fontFamily: 'gilroy_bold',
             ),
           ),
@@ -660,9 +593,10 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
             height: 43.h,
             width: MediaQuery.of(context).size.width * 0.65,
             decoration: BoxDecoration(
-              color: Colors.white10,
+              color: Color(0xff20242A),
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(width: 1, color: Colors.white12),
+              border: Border.all(
+                  width: 1, color: Color(0xff7e7d7d).withOpacity(0.05)),
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 14.h),
@@ -712,25 +646,24 @@ class _RemoveButtonDialogState extends ConsumerState<RemoveButtonDialog> {
       child: AlertDialog(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.r))),
-        //backgroundColor: Color(widget.color),
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xff1A1F25),
         title: Text(
-          "Remove ${widget.username}",
+          "Remove Approval Request",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'gilroy_bold',
-            color: Colors.white,
+            color: Color(0xffFED428),
           ),
         ),
         content: RichText(
-          textAlign: TextAlign.justify,
+          textAlign: TextAlign.center,
           text: TextSpan(
             children: [
               TextSpan(
                 text: 'Are you sure want to remove ',
                 style: TextStyle(
                   fontFamily: 'gilroy_regular',
-                  color: Colors.white,
+                  color: Color(0xff7E7D7D),
                 ),
               ),
               TextSpan(
@@ -741,9 +674,7 @@ class _RemoveButtonDialogState extends ConsumerState<RemoveButtonDialog> {
               TextSpan(
                 text: ' approval request ?',
                 style: TextStyle(
-                  fontFamily: 'gilroy_regular',
-                  color: Colors.white,
-                ),
+                    fontFamily: 'gilroy_regular', color: Color(0xff7E7D7D)),
               ),
             ],
           ),
@@ -752,6 +683,7 @@ class _RemoveButtonDialogState extends ConsumerState<RemoveButtonDialog> {
           // ignore: deprecated_member_use
           Padding(
             padding: EdgeInsets.only(bottom: 5.h),
+            // ignore: deprecated_member_use
             child: FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -767,6 +699,7 @@ class _RemoveButtonDialogState extends ConsumerState<RemoveButtonDialog> {
           ),
           Padding(
             padding: EdgeInsets.only(right: 8.w, bottom: 5.h),
+            // ignore: deprecated_member_use
             child: FlatButton(
               minWidth: 50,
               shape: const RoundedRectangleBorder(

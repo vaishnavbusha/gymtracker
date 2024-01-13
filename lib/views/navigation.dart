@@ -3,18 +3,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/providers/authentication_providers.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
-import 'package:gymtracker/widgets/persistent_bottombar_scaffold.dart';
-import 'package:hive/hive.dart';
+
 import 'package:new_version/new_version.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../controllers/network_controller.dart';
-import '../models/user_model.dart';
+
 import '../widgets/updatedialog.dart';
 
 class NavigationPage extends ConsumerStatefulWidget {

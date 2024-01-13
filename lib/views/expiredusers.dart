@@ -1,4 +1,4 @@
-// ignore_for_file: import_of_legacy_library_into_null_safe
+// ignore_for_file: import_of_legacy_library_into_null_safe, prefer_const_constructors
 
 import 'dart:ui';
 
@@ -54,11 +54,9 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
                         child: Text(
                           'Expired User(s)',
                           style: TextStyle(
-                              fontFamily: 'gilroy_bold',
-                              color: color_gt_green,
-                              fontSize: 20.sp,
-                              fontStyle: FontStyle.normal),
-                          textAlign: TextAlign.center,
+                            fontFamily: 'gilroy_bolditalic',
+                            color: Color(0xffFED428),
+                          ),
                         ),
                       ),
                       elevation: 0.0,
@@ -71,85 +69,72 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
                   50.0,
                 ),
               ),
-              backgroundColor: Colors.black,
+              backgroundColor: Color(0xff1A1F25),
               extendBody: true,
-              body: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xff122B32), Colors.black],
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final _expiredUsersState =
-                          ref.watch(expiredUsersProvider);
+              body: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final _expiredUsersState = ref.watch(expiredUsersProvider);
 
-                      return (_expiredUsersState.isLoading)
-                          ? const Center(
-                              child: Loader(
-                                loadercolor: Color(0xff2D77D0),
-                              ),
-                            )
-                          : (_expiredUsersState.expiredUsersDataList.isEmpty &&
-                                  _expiredUsersState.isLoading == false)
-                              ? Center(
-                                  child: Text(
-                                    'No expired user(s) found. Check again later.',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 17.sp,
-                                        fontFamily: 'gilroy_bolditalic'),
-                                  ),
-                                )
-                              : SingleChildScrollView(
-                                  physics: const BouncingScrollPhysics(),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      ListView.builder(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        itemCount: _expiredUsersState
-                                            .expiredUsersDataList.length,
-                                        itemBuilder: (context, index) {
-                                          return dataWidget(
-                                            Gender: _expiredUsersState
-                                                .expiredUsersDataList[index]
-                                                .gender,
-                                            Name: _expiredUsersState
-                                                .expiredUsersDataList[index]
-                                                .userName,
-                                            Phone: _expiredUsersState
-                                                .expiredUsersDataList[index]
-                                                .phoneNumber
-                                                .toString(),
-                                            joinedOn: _expiredUsersState
-                                                .expiredUsersDataList[index]
-                                                .enrolledGymDate,
-                                            expiresOn: _expiredUsersState
-                                                .expiredUsersDataList[index]
-                                                .membershipExpiry,
-                                            uid: _expiredUsersState
-                                                .expiredUsersDataList[index]
-                                                .uid,
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                    },
-                  ),
+                    return (_expiredUsersState.isLoading)
+                        ? const Center(
+                            child: Loader(
+                              loadercolor: Color(0xffFED428),
+                            ),
+                          )
+                        : (_expiredUsersState.expiredUsersDataList.isEmpty &&
+                                _expiredUsersState.isLoading == false)
+                            ? Center(
+                                child: Text(
+                                  'No expired user(s) found. Check back later.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color(0xff7E7D7D),
+                                      fontSize: 17.sp,
+                                      fontFamily: 'gilroy_bolditalic'),
+                                ),
+                              )
+                            : SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: _expiredUsersState
+                                          .expiredUsersDataList.length,
+                                      itemBuilder: (context, index) {
+                                        return dataWidget(
+                                          Gender: _expiredUsersState
+                                              .expiredUsersDataList[index]
+                                              .gender,
+                                          Name: _expiredUsersState
+                                              .expiredUsersDataList[index]
+                                              .userName,
+                                          Phone: _expiredUsersState
+                                              .expiredUsersDataList[index]
+                                              .phoneNumber
+                                              .toString(),
+                                          joinedOn: _expiredUsersState
+                                              .expiredUsersDataList[index]
+                                              .enrolledGymDate,
+                                          expiresOn: _expiredUsersState
+                                              .expiredUsersDataList[index]
+                                              .membershipExpiry,
+                                          uid: _expiredUsersState
+                                              .expiredUsersDataList[index].uid,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                  },
                 ),
               ),
             ),
@@ -172,7 +157,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
           Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Colors.white10,
+              color: Color(0xff20242A),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Padding(
@@ -203,7 +188,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
                             getTagNameTextWidget('Phone'),
                             // getTagNameTextWidget('Gender'),
                             getTagNameTextWidget('Renewed On'),
-                            getTagNameTextWidget('Expires On'),
+                            getTagNameTextWidget('Expired On'),
                           ]),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +236,6 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
                           ? const Color(0xff2D77D0)
                           : Colors.red,
               borderRadius: BorderRadius.circular(5.r),
-              border: Border.all(width: 1.w, color: Colors.white12),
             ),
             child: Padding(
               padding: EdgeInsets.all(6.w),
@@ -281,7 +265,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
         '  :   ',
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_headersTextColorWhite,
+          color: Color(0xffFED428),
           fontFamily: 'gilroy_bold',
         ),
       ),
@@ -295,7 +279,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
         tagName,
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_green,
+          color: Color(0xffFED428),
           fontFamily: 'gilroy_bold',
         ),
       ),
@@ -311,7 +295,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
             : tagData,
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_headersTextColorWhite,
+          color: Color(0xff7E7D7D),
           fontFamily: 'gilroy_bolditalic',
         ),
       ),

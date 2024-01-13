@@ -20,41 +20,11 @@ class AddUserManually extends ConsumerStatefulWidget {
 }
 
 class _AddUserManuallyState extends ConsumerState<AddUserManually> {
-  // late TextEditingController _dateController;
-  // late TextEditingController _userNameController;
-  // late TextEditingController _phoneNumberController;
-  // late TextEditingController _emailController;
-  // late TextEditingController _moneyPaidController;
-  // late TextEditingController _validityController;
-  // final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // @override
-  // void initState() {
-  //   _dateController = TextEditingController();
-  //   _phoneNumberController = TextEditingController();
-  //   _userNameController = TextEditingController();
-  //   _emailController = TextEditingController();
-  //   _validityController = TextEditingController();
-  //   _moneyPaidController = TextEditingController();
-
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
-
-  @override
-  // void dispose() {
-  //   _phoneNumberController.dispose();
-  //   _userNameController.dispose();
-  //   _emailController.dispose();
-
-  //   // TODO: implement dispose
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final addUserManuallyState = ref.watch(addUserManuallyProvider);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xff1A1F25),
       appBar: PreferredSize(
         child: ClipRRect(
           child: BackdropFilter(
@@ -66,11 +36,9 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
                 child: Text(
                   'Add User Manually',
                   style: TextStyle(
-                      fontFamily: 'gilroy_bold',
-                      color: color_gt_green,
-                      fontSize: 20.sp,
-                      fontStyle: FontStyle.normal),
-                  textAlign: TextAlign.center,
+                    fontFamily: 'gilroy_bolditalic',
+                    color: Color(0xffFED428),
+                  ),
                 ),
               ),
               elevation: 0.0,
@@ -87,171 +55,158 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xff122B32), Colors.black],
-            ),
-          ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Center(
-                  child: Form(
-                    key: addUserManuallyState.formKey,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: 10.h, bottom: 10.h, left: 10.h, right: 10.h),
-                      child: Column(children: [
-                        customTextFieldSignUp(
-                            controller: addUserManuallyState.userNameController,
-                            icon: Icons.person,
-                            isObscure: false,
-                            labeltext: 'UserName',
-                            tia: TextInputAction.next),
-                        Padding(
-                          padding: EdgeInsets.only(top: 11.h, bottom: 5.h),
-                          child: Consumer(builder: (context, ref, child) {
-                            final addUserManuallyState =
-                                ref.watch(addUserManuallyProvider);
-                            return DropdownButtonFormField<String>(
-                              isExpanded: true,
-                              dropdownColor: color_gt_textColorBlueGrey,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white10,
-                                floatingLabelStyle: TextStyle(
-                                  fontFamily: "gilroy_bolditalic",
-                                  fontSize: 16.sp,
-                                  color: color_gt_headersTextColorWhite
-                                      .withOpacity(0.9),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  borderSide:
-                                      const BorderSide(color: Colors.white12),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  borderSide: BorderSide(
-                                      color: color_gt_textColorBlueGrey
-                                          .withOpacity(0.3)),
-                                ),
-                                prefixIcon: Icon(
-                                  (addUserManuallyState.selectedgender ==
-                                          'Male')
-                                      ? Icons.male_rounded
-                                      : Icons.female_rounded,
-                                  color: color_gt_greenHalfOpacity
-                                      .withOpacity(0.7),
-                                ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Center(
+                child: Form(
+                  key: addUserManuallyState.formKey,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: 10.h, bottom: 10.h, left: 10.h, right: 10.h),
+                    child: Column(children: [
+                      customTextFieldSignUp(
+                          controller: addUserManuallyState.userNameController,
+                          icon: Icons.person,
+                          isObscure: false,
+                          labeltext: 'UserName',
+                          tia: TextInputAction.next),
+                      Padding(
+                        padding: EdgeInsets.only(top: 11.h, bottom: 5.h),
+                        child: Consumer(builder: (context, ref, child) {
+                          final addUserManuallyState =
+                              ref.watch(addUserManuallyProvider);
+                          return DropdownButtonFormField<String>(
+                            isExpanded: true,
+                            dropdownColor: Color(0xff7E7D7D),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xff20242A),
+                              floatingLabelStyle: TextStyle(
+                                fontFamily: "gilroy_bolditalic",
+                                fontSize: 16.sp,
+                                color: color_gt_headersTextColorWhite
+                                    .withOpacity(0.9),
                               ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                                borderSide: BorderSide(
+                                    color: Color(0xff7e7d7d).withOpacity(0.05)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                                borderSide: BorderSide(
+                                    color: Color(0xff7e7d7d).withOpacity(0.05)),
+                              ),
+                              prefixIcon: Icon(
+                                (addUserManuallyState.selectedgender == 'Male')
+                                    ? Icons.male_rounded
+                                    : Icons.female_rounded,
+                                color: Color(0xff7e7d7d).withOpacity(0.7),
+                              ),
+                            ),
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: color_gt_headersTextColorWhite,
+                              fontFamily: 'gilroy_regular',
+                            ),
+                            value: addUserManuallyState.selectedgender,
+                            hint: Text(
+                              'Select Gender',
                               style: TextStyle(
                                 fontSize: 16.sp,
-                                color: color_gt_headersTextColorWhite,
+                                color: color_gt_headersTextColorWhite
+                                    .withOpacity(0.7),
                                 fontFamily: 'gilroy_regular',
                               ),
-                              value: addUserManuallyState.selectedgender,
-                              hint: Text(
-                                'Select Gender',
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  color: color_gt_headersTextColorWhite
-                                      .withOpacity(0.7),
-                                  fontFamily: 'gilroy_regular',
-                                ),
-                              ),
-                              onChanged: (value) {
-                                addUserManuallyState.changegender(value!);
-                              },
-                              items: genders.map((item) {
-                                return DropdownMenuItem<String>(
-                                  child: Text(item),
-                                  value: item,
-                                );
-                              }).toList(),
-                            );
-                          }),
-                        ),
-                        birthYearSelectionWidget(),
-                        customTextFieldSignUp(
-                            controller: addUserManuallyState.emailController,
-                            icon: Icons.email,
-                            isObscure: false,
-                            labeltext: 'Email',
-                            tia: TextInputAction.next),
-                        customTextFieldSignUp(
-                            controller:
-                                addUserManuallyState.phoneNumberController,
-                            icon: Icons.phone,
-                            isObscure: false,
-                            labeltext: 'Phone',
-                            tia: TextInputAction.next),
-                        customTextFieldSignUp(
-                          controller: addUserManuallyState.validityController,
-                          icon: Icons.calendar_today_rounded,
+                            ),
+                            onChanged: (value) {
+                              addUserManuallyState.changegender(value!);
+                            },
+                            items: genders.map((item) {
+                              return DropdownMenuItem<String>(
+                                child: Text(item),
+                                value: item,
+                              );
+                            }).toList(),
+                          );
+                        }),
+                      ),
+                      birthYearSelectionWidget(),
+                      customTextFieldSignUp(
+                          controller: addUserManuallyState.emailController,
+                          icon: Icons.email,
                           isObscure: false,
-                          labeltext: 'validity (in months)',
-                          tia: TextInputAction.next,
-                        ),
-                        customTextFieldSignUp(
-                            controller:
-                                addUserManuallyState.moneyPaidController,
-                            icon: Icons.attach_money_rounded,
-                            isObscure: false,
-                            labeltext: 'Membership fees (₹)',
-                            tia: TextInputAction.done),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10.h),
-                          child: Consumer(builder: (context, ref, __) {
-                            final adduserManuallyProvider =
-                                ref.watch(addUserManuallyProvider);
-                            return (adduserManuallyProvider.isDataUploading)
-                                ? Loader(
-                                    loadercolor: Colors.green,
-                                  )
-                                : ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      //onPrimary: Colors.black,  //to change text color
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 10.h, horizontal: 20.w),
-                                      primary: color_gt_green, // button color
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            10.r), // <-- Radius
-                                      ),
-                                      textStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15.sp,
-                                          fontFamily: 'gilroy_bold'),
+                          labeltext: 'Email',
+                          tia: TextInputAction.next),
+                      customTextFieldSignUp(
+                          controller:
+                              addUserManuallyState.phoneNumberController,
+                          icon: Icons.phone,
+                          isObscure: false,
+                          labeltext: 'Phone',
+                          tia: TextInputAction.next),
+                      customTextFieldSignUp(
+                        controller: addUserManuallyState.validityController,
+                        icon: Icons.calendar_today_rounded,
+                        isObscure: false,
+                        labeltext: 'validity (in months)',
+                        tia: TextInputAction.next,
+                      ),
+                      customTextFieldSignUp(
+                          controller: addUserManuallyState.moneyPaidController,
+                          icon: Icons.attach_money_rounded,
+                          isObscure: false,
+                          labeltext: 'Membership fees (₹)',
+                          tia: TextInputAction.done),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.h),
+                        child: Consumer(builder: (context, ref, __) {
+                          final adduserManuallyProvider =
+                              ref.watch(addUserManuallyProvider);
+                          return (adduserManuallyProvider.isDataUploading)
+                              ? Loader(
+                                  loadercolor: Color(0xffFED428),
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    //onPrimary: Colors.black,  //to change text color
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10.h, horizontal: 20.w),
+                                    primary: Color(0xffFED428), // button color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10.r), // <-- Radius
                                     ),
-                                    onPressed: () async {
-                                      SystemChannels.textInput
-                                          .invokeMethod('TextInput.hide');
-                                      final FormState form =
-                                          addUserManuallyState
-                                              .formKey.currentState!;
-                                      if (form.validate()) {
-                                        print('form is valid');
-                                        await adduserManuallyProvider.addUser(
-                                          context: context,
-                                        );
-                                      } else {
-                                        print('Form is invalid');
-                                      }
-                                    },
-                                    child: Text('ADD USER'),
-                                  );
-                          }),
-                        )
-                      ]),
-                    ),
+                                  ),
+                                  onPressed: () async {
+                                    SystemChannels.textInput
+                                        .invokeMethod('TextInput.hide');
+                                    final FormState form = addUserManuallyState
+                                        .formKey.currentState!;
+                                    if (form.validate()) {
+                                      print('form is valid');
+                                      await adduserManuallyProvider.addUser(
+                                        context: context,
+                                      );
+                                    } else {
+                                      print('Form is invalid');
+                                    }
+                                  },
+                                  child: Text(
+                                    'ADD USER',
+                                    style: TextStyle(
+                                        color: Color(0xff1A1F25),
+                                        fontSize: 15.sp,
+                                        fontFamily: 'gilroy_bold'),
+                                  ),
+                                );
+                        }),
+                      )
+                    ]),
                   ),
-                )),
-          ),
+                ),
+              )),
         ),
       ),
     );
@@ -284,11 +239,11 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
       child: Theme(
         data: Theme.of(context).copyWith(
           colorScheme: ThemeData().colorScheme.copyWith(
-                primary: color_gt_green,
+                primary: Color(0xffFED428),
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
-          final signUpController_var = ref.watch(signUpControllerProvider);
+          final signUpControllerVar = ref.watch(signUpControllerProvider);
           return TextFormField(
             validator: (value) {
               if (labeltext == 'UserName') {
@@ -333,8 +288,8 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
             cursorRadius: Radius.circular(30.r),
             obscureText: (isObscure)
                 ? (labeltext == "Password")
-                    ? signUpController_var.pass_isobscure
-                    : signUpController_var.confirmpass_isobscure
+                    ? signUpControllerVar.pass_isobscure
+                    : signUpControllerVar.confirmpass_isobscure
                 : false,
             style: TextStyle(
                 fontSize: 15.sp,
@@ -348,7 +303,7 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
             textInputAction: tia,
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.white10,
+              fillColor: Color(0xff20242A),
               floatingLabelStyle: TextStyle(
                 fontFamily: "gilroy_bolditalic",
                 fontSize: 16.sp,
@@ -361,39 +316,39 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
               ),
               prefixIcon: Icon(
                 icon,
-                color: color_gt_headersTextColorWhite.withOpacity(0.7),
+                color: Color(0xff7e7d7d).withOpacity(0.7),
               ),
               suffixIcon: (isObscure)
                   ? GestureDetector(
                       onTap: () {
                         (labeltext == "Password")
-                            ? signUpController_var.changePassObscurity()
-                            : signUpController_var.changeConfirmPassObscurity();
+                            ? signUpControllerVar.changePassObscurity()
+                            : signUpControllerVar.changeConfirmPassObscurity();
                       },
                       child: (labeltext == "Password")
-                          ? (signUpController_var.pass_isobscure)
+                          ? (signUpControllerVar.pass_isobscure)
                               ? Icon(
                                   Icons.visibility_off,
-                                  color: color_gt_greenHalfOpacity,
+                                  color: Color(0xffFED428).withOpacity(0.5),
                                 )
                               : Icon(
                                   Icons.visibility,
-                                  color: color_gt_green,
+                                  color: Color(0xffFED428),
                                 )
-                          : (signUpController_var.confirmpass_isobscure)
+                          : (signUpControllerVar.confirmpass_isobscure)
                               ? Icon(
                                   Icons.visibility_off,
-                                  color: color_gt_greenHalfOpacity,
+                                  color: Color(0xffFED428).withOpacity(0.5),
                                 )
                               : Icon(
                                   Icons.visibility,
-                                  color: color_gt_green,
+                                  color: Color(0xffFED428),
                                 ))
                   : GestureDetector(
                       onTap: () {
-                        signUpController_var.changePassObscurity();
+                        signUpControllerVar.changePassObscurity();
                       },
-                      child: (signUpController_var.pass_isobscure)
+                      child: (signUpControllerVar.pass_isobscure)
                           ? Icon(
                               Icons.visibility_off,
                               size: 0,
@@ -405,12 +360,12 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
                     ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.red, width: 0.5),
+                borderSide: const BorderSide(color: Colors.red, width: 0.25),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               errorStyle: TextStyle(
                   fontFamily: 'gilroy_regularitalic',
@@ -418,12 +373,13 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
                   fontSize: 12.sp),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
             ),
             controller: controller,
@@ -465,7 +421,7 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
                 color: Colors.white70),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.white10,
+              fillColor: Color(0xff20242A),
               floatingLabelStyle: TextStyle(
                 fontFamily: "gilroy_bolditalic",
                 fontSize: 16.sp,
@@ -482,12 +438,12 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide: const BorderSide(color: Colors.red, width: 0.25),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               errorStyle: TextStyle(
                   fontFamily: 'gilroy_regularitalic',
@@ -495,12 +451,13 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
                   fontSize: 12.sp),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: const BorderSide(color: Colors.white10),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(
-                    color: color_gt_textColorBlueGrey.withOpacity(0.2)),
+                borderSide:
+                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
             ),
             controller: addUserManuallyState.dateController,

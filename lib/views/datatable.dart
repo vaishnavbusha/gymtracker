@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, avoid_print
+// ignore_for_file: must_be_immutable, avoid_print, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,11 +30,12 @@ class _DataTableWidgetState extends State<DataTableWidget> {
     List<DataRow> rowDatavar = returnRowData(widget.attendanceData);
     return Theme(
       data: Theme.of(context).copyWith(
-          iconTheme:
-              Theme.of(context).iconTheme.copyWith(color: color_gt_green)),
+          iconTheme: Theme.of(context).iconTheme.copyWith(
+                color: Color(0xffFED428),
+              )),
       child: DataTable(
         border: TableBorder.all(
-            color: color_gt_textColorBlueGrey,
+            color: Color(0xff7e7d7d).withOpacity(0.5),
             borderRadius: BorderRadius.circular(10)),
         headingRowColor: MaterialStateProperty.all(Colors.white10),
         sortAscending: isAscending,
@@ -42,7 +43,7 @@ class _DataTableWidgetState extends State<DataTableWidget> {
         dataRowHeight: 40.h,
         headingTextStyle: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_green,
+          color: Color(0xffFED428),
           fontFamily: 'gilroy_bold',
         ),
         columns: <DataColumn>[

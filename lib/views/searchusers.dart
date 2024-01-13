@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -48,11 +50,9 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                         child: Text(
                           'Search User',
                           style: TextStyle(
-                              fontFamily: 'gilroy_bold',
-                              color: color_gt_green,
-                              fontSize: 20.sp,
-                              fontStyle: FontStyle.normal),
-                          textAlign: TextAlign.center,
+                            fontFamily: 'gilroy_bolditalic',
+                            color: Color(0xffFED428),
+                          ),
                         ),
                       ),
                       elevation: 0.0,
@@ -65,192 +65,192 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                   50.0,
                 ),
               ),
-              backgroundColor: Colors.black,
+              backgroundColor: Color(0xff1A1F25),
               extendBody: true,
-              body: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xff122B32), Colors.black],
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Column(children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10.h,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 256.w,
-                              child: TextField(
-                                controller: _searchController,
-                                cursorHeight: 18.sp,
-                                cursorRadius: Radius.circular(30.r),
-                                style: TextStyle(
-                                    fontSize: 15.sp,
-                                    fontFamily: 'gilroy_regular',
-                                    color: Colors.white70),
-                                textInputAction: TextInputAction.done,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white10,
-                                  floatingLabelStyle: TextStyle(
-                                    fontFamily: "gilroy_bolditalic",
-                                    fontSize: 16.sp,
-                                    color: color_gt_headersTextColorWhite
-                                        .withOpacity(0.9),
-                                  ),
-                                  labelText: 'Search User',
-                                  labelStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: color_gt_headersTextColorWhite
-                                        .withOpacity(0.75),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    borderSide: BorderSide(
-                                        color: color_gt_textColorBlueGrey
-                                            .withOpacity(0.2)),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    borderSide:
-                                        const BorderSide(color: Colors.white10),
-                                  ),
-                                  errorStyle: TextStyle(
-                                      fontFamily: 'gilroy_regularitalic',
-                                      color: Colors.red[500]!,
-                                      fontSize: 12.sp),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    borderSide:
-                                        const BorderSide(color: Colors.white10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    borderSide: BorderSide(
-                                        color: color_gt_textColorBlueGrey
-                                            .withOpacity(0.2)),
-                                  ),
+              body: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.h,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            width: 256.w,
+                            child: TextField(
+                              controller: _searchController,
+                              cursorHeight: 18.sp,
+                              cursorRadius: Radius.circular(30.r),
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontFamily: 'gilroy_regular',
+                                  color: Colors.white70),
+                              textInputAction: TextInputAction.done,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Color(0xff20242A),
+                                floatingLabelStyle: TextStyle(
+                                  fontFamily: "gilroy_bolditalic",
+                                  fontSize: 16.sp,
+                                  color: color_gt_headersTextColorWhite
+                                      .withOpacity(0.9),
+                                ),
+                                labelText: 'Search User',
+                                labelStyle: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: color_gt_headersTextColorWhite
+                                      .withOpacity(0.75),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  borderSide: BorderSide(
+                                      color:
+                                          Color(0xff7e7d7d).withOpacity(0.05)),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  borderSide: BorderSide(
+                                      color: Colors.red, width: 0.25),
+                                ),
+                                errorStyle: TextStyle(
+                                    fontFamily: 'gilroy_regularitalic',
+                                    color: Colors.red[500]!,
+                                    fontSize: 12.sp),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  borderSide: BorderSide(
+                                      color:
+                                          Color(0xff7e7d7d).withOpacity(0.05)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  borderSide: BorderSide(
+                                      color:
+                                          Color(0xff7e7d7d).withOpacity(0.05)),
                                 ),
                               ),
                             ),
-                            Consumer(builder: (context, ref, child) {
-                              final _searchUsersState =
-                                  ref.watch(searchUsersProvider);
-                              return Material(
-                                borderRadius: BorderRadius.circular(10.r),
-                                child: Ink(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      color: (_searchController!.text
-                                              .trim()
-                                              .isNotEmpty)
-                                          ? (_searchUsersState.isSearchLoading)
-                                              ? Colors.grey
-                                              : color_gt_green
-                                          : Colors.grey),
-                                  height: 32.h,
-                                  width: 65.w,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      print(_searchController!.text
-                                          .replaceAll(RegExp("[ \n\t\r\f]"), '')
-                                          .length);
-                                      (_searchController!.text
-                                              .trim()
-                                              .isNotEmpty)
-                                          ? (_searchUsersState.isSearchLoading)
-                                              ? null
-                                              : _searchUsersState.searchForAUser(
-                                                  _searchController!.text
-                                                      .replaceAll(
-                                                          RegExp("[ \n\t\r\f]"),
-                                                          ''),
-                                                  context)
-                                          : null;
-                                    },
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.arrow_forward_ios_sharp,
-                                        color: Colors.white,
-                                        size: 20.r,
+                          ),
+                          Consumer(builder: (context, ref, child) {
+                            final _searchUsersState =
+                                ref.watch(searchUsersProvider);
+                            return (!_searchUsersState.isSearchLoading)
+                                ? Material(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                          color: (_searchController!.text
+                                                  .trim()
+                                                  .isNotEmpty)
+                                              ? (_searchUsersState
+                                                      .isSearchLoading)
+                                                  ? Color(0xff7E7D7D)
+                                                  : Color(0xffFED428)
+                                              : Color(0xff7E7D7D)),
+                                      height: 32.h,
+                                      width: 65.w,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          print(_searchController!.text
+                                              .replaceAll(
+                                                  RegExp("[ \n\t\r\f]"), '')
+                                              .length);
+                                          (_searchController!.text
+                                                  .trim()
+                                                  .isNotEmpty)
+                                              ? (_searchUsersState
+                                                      .isSearchLoading)
+                                                  ? null
+                                                  : _searchUsersState
+                                                      .searchForAUser(
+                                                          _searchController!
+                                                              .text
+                                                              .replaceAll(
+                                                                  RegExp(
+                                                                      "[ \n\t\r\f]"),
+                                                                  ''),
+                                                          context)
+                                              : null;
+                                        },
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.arrow_forward_ios_sharp,
+                                            color: Color(0xff1A1F25),
+                                            size: 20.r,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
+                                  )
+                                : Loader(
+                                    loadercolor: Color(0xffFED428),
+                                  );
+                          }),
+                        ],
                       ),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final _searchUsersState =
-                              ref.watch(searchUsersProvider);
-                          WidgetsBinding.instance!.addPostFrameCallback((_) {
-                            // Add Your Code here.
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final _searchUsersState =
+                            ref.watch(searchUsersProvider);
+                        WidgetsBinding.instance!.addPostFrameCallback((_) {
+                          // Add Your Code here.
 
-                            _searchUsersState.checkForInitial();
-                          });
-                          return (_searchUsersState.isInitital == true)
-                              ? SizedBox()
-                              : (_searchUsersState
-                                      .searchedUsersDataList.isNotEmpty)
-                                  ? (_searchUsersState.isSearchLoading)
-                                      ? Center(
-                                          child: Loader(
-                                            loadercolor: Color(0xff2D77D0),
-                                          ),
-                                        )
-                                      : ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          itemCount: _searchUsersState
-                                              .searchedUsersDataList.length,
-                                          itemBuilder: (context, index) {
-                                            return dataWidget(
-                                              Gender: _searchUsersState
-                                                  .searchedUsersDataList[index]
-                                                  .gender,
-                                              Name: _searchUsersState
-                                                  .searchedUsersDataList[index]
-                                                  .userName,
-                                              Phone: _searchUsersState
-                                                  .searchedUsersDataList[index]
-                                                  .phoneNumber
-                                                  .toString(),
-                                              joinedOn: _searchUsersState
-                                                  .searchedUsersDataList[index]
-                                                  .enrolledGymDate,
-                                              expiresOn: _searchUsersState
-                                                  .searchedUsersDataList[index]
-                                                  .membershipExpiry,
-                                              uid: _searchUsersState
-                                                  .searchedUsersDataList[index]
-                                                  .uid,
-                                            );
-                                          },
-                                        )
-                                  : Center(
-                                      child: Loader(
-                                        loadercolor: Color(0xff2D77D0),
-                                      ),
-                                    );
-                        },
-                      ),
-                    ]),
-                  ),
+                          _searchUsersState.checkForInitial();
+                        });
+                        return (_searchUsersState.isInitital == true)
+                            ? SizedBox()
+                            : (_searchUsersState
+                                    .searchedUsersDataList.isNotEmpty)
+                                ? (_searchUsersState.isSearchLoading)
+                                    ? Center(
+                                        child: Loader(
+                                          loadercolor: Color(0xff2D77D0),
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: _searchUsersState
+                                            .searchedUsersDataList.length,
+                                        itemBuilder: (context, index) {
+                                          return dataWidget(
+                                            Gender: _searchUsersState
+                                                .searchedUsersDataList[index]
+                                                .gender,
+                                            Name: _searchUsersState
+                                                .searchedUsersDataList[index]
+                                                .userName,
+                                            Phone: _searchUsersState
+                                                .searchedUsersDataList[index]
+                                                .phoneNumber
+                                                .toString(),
+                                            joinedOn: _searchUsersState
+                                                .searchedUsersDataList[index]
+                                                .enrolledGymDate,
+                                            expiresOn: _searchUsersState
+                                                .searchedUsersDataList[index]
+                                                .membershipExpiry,
+                                            uid: _searchUsersState
+                                                .searchedUsersDataList[index]
+                                                .uid,
+                                          );
+                                        },
+                                      )
+                                : Center(
+                                    child: Loader(
+                                      loadercolor: Color(0xff2D77D0),
+                                    ),
+                                  );
+                      },
+                    ),
+                  ]),
                 ),
               ),
             ),
@@ -350,7 +350,6 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                         ? const Color(0xff2D77D0)
                         : Colors.red,
             borderRadius: BorderRadius.circular(5.r),
-            border: Border.all(width: 1.w, color: Colors.white12),
           ),
           child: Padding(
             padding: EdgeInsets.all(6.r),

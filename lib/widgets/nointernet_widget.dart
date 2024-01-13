@@ -10,42 +10,32 @@ class NoInternetWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: const [Color(0xff122B32), Colors.black],
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LoadingAnimationWidget.beat(
+      backgroundColor: Color(0xff1A1F25),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LoadingAnimationWidget.beat(
+                color: Colors.red,
+                size: 30,
+              ),
+              //Loader(loadercolor: Colors.red),
+              SizedBox(
+                height: 15.h,
+              ),
+              Text(
+                'Oops, there\'s no internet connection ',
+                style: TextStyle(
+                  fontSize: 17.sp,
                   color: Colors.red,
-                  size: 30,
+                  fontFamily: 'gilroy_bolditalic',
                 ),
-                //Loader(loadercolor: Colors.red),
-                SizedBox(
-                  height: 15.h,
-                ),
-                Text(
-                  'Oops, there\'s no internet connection ',
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    color: Colors.red,
-                    fontFamily: 'gilroy_bolditalic',
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

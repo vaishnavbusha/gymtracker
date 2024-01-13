@@ -53,11 +53,9 @@ class _MyUsersState extends ConsumerState<MyUsers> {
                       child: Text(
                         'My GymMembers',
                         style: TextStyle(
-                            fontFamily: 'gilroy_bold',
-                            color: color_gt_green,
-                            fontSize: 20.sp,
-                            fontStyle: FontStyle.normal),
-                        textAlign: TextAlign.center,
+                          fontFamily: 'gilroy_bolditalic',
+                          color: Color(0xffFED428),
+                        ),
                       ),
                     ),
                     elevation: 0.0,
@@ -70,114 +68,102 @@ class _MyUsersState extends ConsumerState<MyUsers> {
                 50.0,
               ),
             ),
-            backgroundColor: Colors.black,
+            backgroundColor: Color(0xff1A1F25),
             extendBody: true,
-            body: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xff122B32), Colors.black],
-                ),
-              ),
-              child: Center(
-                child: Consumer(builder: (context, ref, child) {
-                  final enrolledUsersState = ref.watch(enrolledUsersProvider);
+            body: Center(
+              child: Consumer(builder: (context, ref, child) {
+                final enrolledUsersState = ref.watch(enrolledUsersProvider);
 
-                  return (enrolledUsersState.isLoading == false &&
-                          enrolledUsersState.initialPaginationLoading == false)
-                      ? SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
-                          child: Column(
-                            children: [
-                              ListView.builder(
-                                primary: false,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    enrolledUsersState.enrolledUsersData.length,
-                                itemBuilder: (context, index) {
-                                  return dataWidget(
-                                    Gender: enrolledUsersState
-                                        .enrolledUsersData[index].gender,
-                                    Name: enrolledUsersState
-                                        .enrolledUsersData[index].userName,
-                                    Phone: enrolledUsersState
-                                        .enrolledUsersData[index].phoneNumber
-                                        .toString(),
-                                    joinedOn: enrolledUsersState
-                                            .enrolledUsersData[index]
-                                            .recentRenewedOn ??
-                                        '',
-                                    expiresOn: enrolledUsersState
-                                        .enrolledUsersData[index]
-                                        .membershipExpiry,
-                                    uid: enrolledUsersState
-                                        .enrolledUsersData[index].uid,
-                                  );
-                                },
-                              ),
-                              (enrolledUsersState.paginationLoading)
-                                  ? LoadingAnimationWidget.staggeredDotsWave(
-                                      color: Colors.redAccent,
-                                      size: 30,
-                                    )
-                                  : (enrolledUsersState.hasMoreData)
-                                      ? InkWell(
-                                          onTap: () async {
-                                            (enrolledUsersState.hasMoreData)
-                                                ? (enrolledUsersState
-                                                        .paginationLoading)
-                                                    ? null
-                                                    : await enrolledUsersState
-                                                        .paginatedUsersData()
-                                                : null;
-                                          },
-                                          child: Padding(
+                return (enrolledUsersState.isLoading == false &&
+                        enrolledUsersState.initialPaginationLoading == false)
+                    ? SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                              primary: false,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  enrolledUsersState.enrolledUsersData.length,
+                              itemBuilder: (context, index) {
+                                return dataWidget(
+                                  Gender: enrolledUsersState
+                                      .enrolledUsersData[index].gender,
+                                  Name: enrolledUsersState
+                                      .enrolledUsersData[index].userName,
+                                  Phone: enrolledUsersState
+                                      .enrolledUsersData[index].phoneNumber
+                                      .toString(),
+                                  joinedOn: enrolledUsersState
+                                          .enrolledUsersData[index]
+                                          .recentRenewedOn ??
+                                      '',
+                                  expiresOn: enrolledUsersState
+                                      .enrolledUsersData[index]
+                                      .membershipExpiry,
+                                  uid: enrolledUsersState
+                                      .enrolledUsersData[index].uid,
+                                );
+                              },
+                            ),
+                            (enrolledUsersState.paginationLoading)
+                                ? LoadingAnimationWidget.staggeredDotsWave(
+                                    color: Colors.redAccent,
+                                    size: 30,
+                                  )
+                                : (enrolledUsersState.hasMoreData)
+                                    ? InkWell(
+                                        onTap: () async {
+                                          (enrolledUsersState.hasMoreData)
+                                              ? (enrolledUsersState
+                                                      .paginationLoading)
+                                                  ? null
+                                                  : await enrolledUsersState
+                                                      .paginatedUsersData()
+                                              : null;
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.all(10.w),
+                                          child: Container(
                                             padding: EdgeInsets.all(10.w),
-                                            child: Container(
-                                              padding: EdgeInsets.all(10.w),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.r)),
-                                                color: enrolledUsersState
-                                                        .paginationLoading
-                                                    ? Colors.grey
-                                                    : Colors.green,
-                                              ),
-                                              child: Text(
-                                                'load more',
-                                                style: TextStyle(
-                                                    color:
-                                                        color_gt_headersTextColorWhite,
-                                                    fontSize: 13.sp,
-                                                    fontFamily:
-                                                        'gilroy_bolditalic'),
-                                              ),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.r)),
+                                              color: enrolledUsersState
+                                                      .paginationLoading
+                                                  ? Color(0xff7E7D7D)
+                                                  : Color(0xffFED428),
+                                            ),
+                                            child: Text(
+                                              'load more',
+                                              style: TextStyle(
+                                                  color:
+                                                      color_gt_headersTextColorWhite,
+                                                  fontSize: 13.sp,
+                                                  fontFamily:
+                                                      'gilroy_bolditalic'),
                                             ),
                                           ),
-                                        )
-                                      : Padding(
-                                          padding: EdgeInsets.all(10.h),
-                                          child: Text(
-                                            'All users have been fetched.',
-                                            style: TextStyle(
-                                                color: Colors.orange,
-                                                fontSize: 13.sp,
-                                                fontFamily:
-                                                    'gilroy_bolditalic'),
-                                          ),
                                         ),
-                            ],
-                          ),
-                        )
-                      : Loader(
-                          loadercolor: Color(0xff2D77D0),
-                        );
-                }),
-              ),
+                                      )
+                                    : Padding(
+                                        padding: EdgeInsets.all(10.h),
+                                        child: Text(
+                                          'All users have been fetched.',
+                                          style: TextStyle(
+                                              color: Colors.orange,
+                                              fontSize: 13.sp,
+                                              fontFamily: 'gilroy_bolditalic'),
+                                        ),
+                                      ),
+                          ],
+                        ),
+                      )
+                    : Loader(
+                        loadercolor: Color(0xffFED428),
+                      );
+              }),
             ),
           )
         : NoInternetWidget();
@@ -199,7 +185,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
           Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Colors.white10,
+              color: Color(0xff20242A),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Padding(
@@ -281,7 +267,6 @@ class _MyUsersState extends ConsumerState<MyUsers> {
                           ? const Color(0xff2D77D0)
                           : Colors.red,
               borderRadius: BorderRadius.circular(5.r),
-              border: Border.all(width: 1, color: Colors.white12),
             ),
             child: Padding(
               padding: EdgeInsets.all(6.w),
@@ -334,7 +319,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
         '  :   ',
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_headersTextColorWhite,
+          color: Color(0xffFED428),
           fontFamily: 'gilroy_bold',
         ),
       ),
@@ -348,7 +333,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
         tagName,
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_green,
+          color: Color(0xffFED428),
           fontFamily: 'gilroy_bold',
         ),
       ),
@@ -364,7 +349,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
             : tagData,
         style: TextStyle(
           fontSize: 13.sp,
-          color: color_gt_headersTextColorWhite,
+          color: Color(0xff7E7D7D),
           fontFamily: 'gilroy_bolditalic',
         ),
       ),
