@@ -35,6 +35,8 @@ class ConnectivityStatusNotifier extends StateNotifier<ConnectivityStatus> {
         case ConnectivityResult.vpn:
           // TODO: Handle this case.
           break;
+        case ConnectivityResult.other:
+          default:break;
       }
       if (newState != lastResult) {
         state = newState!;

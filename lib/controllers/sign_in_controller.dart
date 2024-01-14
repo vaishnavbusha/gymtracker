@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gymtracker/models/user_model.dart';
@@ -54,9 +55,11 @@ class LoginController extends ChangeNotifier {
         //await getConstraints();
         Navigator.pushReplacement(
             ctx,
-            ScaleRoute(
-              page: const NavigationScreen(),
-            ));
+            CupertinoPageRoute(builder: (context) => const NavigationScreen(),)
+            // ScaleRoute(
+            //   page: const NavigationScreen(),
+            // )
+            );
         notifyListeners();
       }
     } on FirebaseAuthException catch (e) {

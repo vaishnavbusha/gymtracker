@@ -3,7 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:hive/hive.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class NavigationBarController extends ChangeNotifier {
   bool _disposed = false;

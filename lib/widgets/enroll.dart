@@ -286,47 +286,47 @@ class _RemoveButtonDialogState extends ConsumerState<RemoveButtonDialog> {
             ],
           ),
         ),
-        actions: <Widget>[
-          // ignore: deprecated_member_use
-          Padding(
-            padding: EdgeInsets.only(bottom: 5.h),
-            child: FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "NO",
-                style: TextStyle(
-                    fontFamily: 'gilroy_regular',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 8.w, bottom: 5.h),
-            child: FlatButton(
-              minWidth: 50,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              color: Colors.red,
-              onPressed: () async {
-                await approveButtonNotifierState.removeUser(
-                  approveeUID: widget.uid,
-                  context: context,
-                );
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "REMOVE",
-                style: TextStyle(
-                    fontFamily: 'gilroy_regular',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-          ),
-        ],
+        // actions: <Widget>[
+        //   // ignore: deprecated_member_use
+        //   Padding(
+        //     padding: EdgeInsets.only(bottom: 5.h),
+        //     child: FlatButton(
+        //       onPressed: () {
+        //         Navigator.of(context).pop();
+        //       },
+        //       child: Text(
+        //         "NO",
+        //         style: TextStyle(
+        //             fontFamily: 'gilroy_regular',
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.white),
+        //       ),
+        //     ),
+        //   ),
+        //   Padding(
+        //     padding: EdgeInsets.only(right: 8.w, bottom: 5.h),
+        //     child: FlatButton(
+        //       minWidth: 50,
+        //       shape: const RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        //       color: Colors.red,
+        //       onPressed: () async {
+        //         await approveButtonNotifierState.removeUser(
+        //           approveeUID: widget.uid,
+        //           context: context,
+        //         );
+        //         Navigator.of(context).pop();
+        //       },
+        //       child: Text(
+        //         "REMOVE",
+        //         style: TextStyle(
+        //             fontFamily: 'gilroy_regular',
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.white),
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
     );
   }

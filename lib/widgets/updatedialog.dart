@@ -86,40 +86,40 @@ class _UpdateDialogState extends State<UpdateDialog> {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              //Navigator.of(context).pop();
-              SystemNavigator.pop();
-            },
-            child: Text(
-              "EXIT",
-              style: TextStyle(
-                  fontFamily: 'gilroy_regular',
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff2D77D0)),
-            ),
-          ),
-          FlatButton(
-            minWidth: 70,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            color: Color(0xff2D77D0),
-            onPressed: () async {
-              launch(widget.applink);
-              // StoreRedirect.redirect(
-              //   androidAppId: "com.snapchat.android",
-              // );
-              //await launchUrl(Uri.parse(widget.applink));
-              //Navigator.of(context).pop();
-            },
-            child: Text(
-              "UPDATE",
-              style: TextStyle(
-                  fontFamily: 'gilroy_regular',
-                  fontWeight: FontWeight.bold,
-                  color: Color(widget.color)),
-            ),
-          ),
+          // FlatButton(
+          //   onPressed: () {
+          //     //Navigator.of(context).pop();
+          //     SystemNavigator.pop();
+          //   },
+          //   child: Text(
+          //     "EXIT",
+          //     style: TextStyle(
+          //         fontFamily: 'gilroy_regular',
+          //         fontWeight: FontWeight.bold,
+          //         color: Color(0xff2D77D0)),
+          //   ),
+          // ),
+          // FlatButton(
+          //   minWidth: 70,
+          //   shape: const RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          //   color: Color(0xff2D77D0),
+          //   onPressed: () async {
+          //     launch(widget.applink);
+          //     // StoreRedirect.redirect(
+          //     //   androidAppId: "com.snapchat.android",
+          //     // );
+          //     //await launchUrl(Uri.parse(widget.applink));
+          //     //Navigator.of(context).pop();
+          //   },
+          //   child: Text(
+          //     "UPDATE",
+          //     style: TextStyle(
+          //         fontFamily: 'gilroy_regular',
+          //         fontWeight: FontWeight.bold,
+          //         color: Color(widget.color)),
+          //   ),
+          // ),
         ],
       ),
     );

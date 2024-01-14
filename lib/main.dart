@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +19,8 @@ import 'models/gympartner_constraints_model.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent.withOpacity(0.1),
+    statusBarColor: Colors.transparent,
+
     systemNavigationBarColor: Color(0x00FFFFFF),
     systemNavigationBarContrastEnforced: false, // transparent status bar
   ));
@@ -48,11 +50,20 @@ class _MyAppState extends ConsumerState<MyApp> {
     if (Hive.box(miscellaneousDataHIVE).get('isLoggedIn') == null) {
       Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
     }
-    return ScreenUtilInit(builder: (context, child) {
+    return ScreenUtilInit(designSize: const Size(360,800),minTextAdapt: true,splitScreenMode: true,useInheritedMediaQuery: true,builder: (context, child) {
+      
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'GymTracker',
         theme: ThemeData(
+          //primaryColor: Color(0xffFED428),
+            textSelectionTheme: const TextSelectionThemeData(
+          //  cursorColor: Colors.red,
+                //  selectionColor: Colors.blue,
+                  selectionHandleColor: Color(0xffFED428),
+          ),
+          fontFamily: 'gilroy_regular',
+          useMaterial3: true,
           primarySwatch: Colors.blue,
         ),
         home: SplashScreen(),
@@ -61,6 +72,14 @@ class _MyAppState extends ConsumerState<MyApp> {
   }
 }
 
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
+}
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -73,9 +92,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    userModel = (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel);
 
     Timer(Duration(milliseconds: 1000), () {
+    userModel = (Hive.box(userDetailsHIVE).get('usermodeldata'));
       changepage();
     });
   }
@@ -104,7 +123,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.contain,
                   ),
                   blendMode: BlendMode.srcATop),
-              (userModel != null && userModel!.enrolledGym != null)
+              (userModel!=null && userModel!.enrolledGym != null)
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -170,11 +189,11 @@ class _SplashScreenState extends State<SplashScreen> {
           .get();
       UserModel.saveUserDataToHIVE(UserModel.toModel(userdataJSON));
     }
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
+    Navigator.of(context).pushReplacement(CupertinoPageRoute(
       builder: (_) => ValueListenableBuilder<Box<dynamic>>(
         valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
         builder: (context, value, child) {
-          if (value.get('isLoggedIn') == false) {
+          if (value.get('isLoggedIn') == false || value.get('isLoggedIn').isNull) {
             return SignInPage();
           } else {
             return NavigationScreen();
@@ -185,15 +204,15 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-hiveListenerAuthStatusCheck() {
-  return ValueListenableBuilder<Box<dynamic>>(
-    valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
-    builder: (context, value, child) {
-      if (value.get('isLoggedIn') == false) {
-        return SignInPage();
-      } else {
-        return NavigationScreen();
-      }
-    },
-  );
-}
+// hiveListenerAuthStatusCheck() {
+//   return ValueListenableBuilder<Box<dynamic>>(
+//     valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
+//     builder: (context, value, child) {
+//       if (value.get('isLoggedIn') == false) {
+//         return SignInPage();
+//       } else {
+//         return NavigationScreen();
+//       }
+//     },
+//   );
+// }

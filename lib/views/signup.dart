@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, duplicate_ignore, must_be_immutable, non_constant_identifier_names
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -361,9 +362,11 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                       onTap: () {
                                         Navigator.pushReplacement(
                                             context,
-                                            ScaleRoute(
-                                              page: SignInPage(),
-                                            ));
+                                            CupertinoPageRoute(builder: (context) => SignInPage(),)
+                                            // ScaleRoute(
+                                            //   page: SignInPage(),
+                                            // )
+                                            );
                                         // Navigator.pushReplacement(
                                         //     context,
                                         //     MaterialPageRoute(
@@ -456,7 +459,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
                 borderSide:
-                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
+                    BorderSide(color: Colors.transparent,),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
@@ -609,7 +612,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 ? TextInputType.phone
                 : TextInputType.emailAddress,
             textInputAction: tia,
-            decoration: InputDecoration(
+            decoration: InputDecoration( contentPadding: EdgeInsets.symmetric(vertical: 14.h,horizontal: 10),
               filled: true,
               fillColor: Color(0xff20242A),
               floatingLabelStyle: TextStyle(
@@ -683,7 +686,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
                 borderSide:
-                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
+                    BorderSide(color:Colors.transparent,),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),

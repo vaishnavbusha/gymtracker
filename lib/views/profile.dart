@@ -213,10 +213,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
                                                               onPressed: () {
                                                                 Navigator.push(
                                                                   context,
-                                                                  ScaleRoute(
-                                                                      page: ApprovalsPage(
+                                                                  CupertinoPageRoute(builder: (context) => ApprovalsPage(
                                                                           pendingApprovals:
-                                                                              userModelData.pendingApprovals!)),
+                                                                              userModelData.pendingApprovals!),)
+                                                                  // ScaleRoute(
+                                                                  //     page: ApprovalsPage(
+                                                                  //         pendingApprovals:
+                                                                  //             userModelData.pendingApprovals!)),
                                                                 );
                                                               },
                                                               child: Padding(
@@ -624,7 +627,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
       if (mounted) {
         // Perform updates to the UI
         Navigator.of(context, rootNavigator: true)
-            .pushReplacement(ScaleRoute(page: SignInPage()));
+            .pushReplacement(
+              CupertinoPageRoute(builder: (context) => SignInPage(),)
+             // ScaleRoute(page: SignInPage())
+              );
       }
     });
   }

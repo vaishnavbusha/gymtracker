@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -138,9 +139,11 @@ class SignUpController extends ChangeNotifier {
 
       Navigator.pushReplacement(
           ctx,
-          ScaleRoute(
-            page: const SignInPage(),
-          ));
+          CupertinoPageRoute(builder: (context) => const SignInPage(),)
+          // ScaleRoute(
+          //   page: const SignInPage(),
+          // )
+          );
       //}
       // else {
       //   CustomSnackBar.buildSnackbar(

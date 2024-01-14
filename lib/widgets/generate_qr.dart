@@ -103,8 +103,7 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        QrImage(
-                          foregroundColor: Colors.black,
+                        QrImageView( foregroundColor: Colors.black,
                           data: EncryptController.encryptData(QRData),
                           version: QrVersions.auto,
                           size: 300,
@@ -116,8 +115,22 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                                 textAlign: TextAlign.center,
                               ),
                             );
-                          },
-                        ),
+                          },),
+                        // QrImage(
+                        //   foregroundColor: Colors.black,
+                        //   data: EncryptController.encryptData(QRData),
+                        //   version: QrVersions.auto,
+                        //   size: 300,
+                        //   gapless: true,
+                        //   errorStateBuilder: (cxt, err) {
+                        //     return Center(
+                        //       child: Text(
+                        //         'Uh oh! Something went wrong...',
+                        //         textAlign: TextAlign.center,
+                        //       ),
+                        //     );
+                        //   },
+                        // ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

@@ -10,7 +10,8 @@ import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 
 import 'package:new_version/new_version.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+
 
 import '../controllers/network_controller.dart';
 

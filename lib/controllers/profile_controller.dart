@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -24,7 +25,7 @@ class ProfileController extends ChangeNotifier {
     await Hive.box(miscellaneousDataHIVE).put('membershipExpiry', null);
     await Hive.box(userDetailsHIVE).clear();
     Navigator.of(context, rootNavigator: true).pushReplacement(
-        MaterialPageRoute(builder: (context) => const SignInPage()));
+        CupertinoPageRoute(builder: (context) => const SignInPage()));
   }
 
   Future renewRequest(BuildContext context) async {
