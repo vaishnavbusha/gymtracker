@@ -68,13 +68,14 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                       child: AnimatedPadding(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
-                        duration: const Duration(milliseconds: 250),
+                        duration: Duration(milliseconds: 250,),
                         curve: Curves.easeInOut,
                         child: Center(
                           child: SingleChildScrollView(
                             physics: AlwaysScrollableScrollPhysics(),
                             child: Column(
                               children: [
+                                  SizedBox(height: 30.h,),
                                 Container(
                                   height: 80.h,
                                   decoration: BoxDecoration(
@@ -168,12 +169,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                             switchOutCurve:
                                                 Curves.fastEaseInToSlowEaseOut,
                                             duration:
-                                                Duration(milliseconds: 250),
+                                                Duration(milliseconds: 0),
                                             child:
                                                 (isLoginDetailsUploadingProgressState ==
                                                         false)
                                                     ? Text(
                                                         'Sign In',
+                                                           key: Key('1'),
                                                         style: TextStyle(
                                                           fontSize: 20.sp,
                                                           fontFamily:
@@ -183,6 +185,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                                     : Loader(
                                                         loadercolor:
                                                             Color(0xffFED428),
+                                                               key: Key('2'),
+                                                            
                                                       ),
                                           ),
                                         ),
@@ -222,7 +226,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 20.h,
+                                  height: 30.h,
                                 ),
                               ],
                             ),
@@ -232,45 +236,51 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     ),
                   ),
                 ),
-                bottomNavigationBar: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Don\'t have an account? ',
-                      style: TextStyle(
-                        color: color_gt_headersTextColorWhite,
-                        fontSize: 14.sp,
-                        fontFamily: 'gilroy_regularitalic',
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        Navigator.pushReplacement(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => SignUpPage(),
-                            ));
-                      },
-                      child: Text(
-                        'Sign-up here !',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Color(0xffFED428),
-                          fontFamily: 'gilroy_bolditalic',
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                bottomNavigationBar: customNavBar(),
                 backgroundColor: Color(0xff1A1F25),
                 resizeToAvoidBottomInset: false,
-                // floatingActionButtonLocation:
-                //     FloatingActionButtonLocation.centerFloat,
+            
               ),
             ),
           )
         : NoInternetWidget();
+  }
+
+  customNavBar(){
+    return  Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.h,),
+      child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Don\'t have an account? ',
+                        style: TextStyle(
+                          color: color_gt_headersTextColorWhite,
+                          fontSize: 14.sp,
+                          fontFamily: 'gilroy_regularitalic',
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => SignUpPage(),
+                              ));
+                        },
+                        child: Text(
+                          'Sign-up here !',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Color(0xffFED428),
+                            fontFamily: 'gilroy_bolditalic',
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+    );
   }
 }
 
@@ -295,123 +305,119 @@ class _CustmoModalBottomSheetNewState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        SingleChildScrollView(
-          child: AnimatedPadding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            duration: Duration(
-              milliseconds: 250,
-            ),
-            curve: Curves.decelerate,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30.r),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Consumer(builder: (context, ref, __) {
-                    return Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 2.h, bottom: 10.h),
-                          ),
-                          Container(
-                            width: 35.w,
-                            height: 4.h,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.r),
-                                color: Color(0xffFED428)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 15.h, bottom: 10.h),
-                            child: Text(
-                              'Forgot Password',
-                              style: TextStyle(
-                                fontFamily: 'gilroy_bold',
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 26.sp,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          // Divider(
-                          //   height: 1,
-                          //   color: Colors.white24,
-                          // ),
-                          CustomTextFieldSignIn(
-                            controller: loginGlobalReadState
-                                .passwordResetEmailController,
-                            icon: Icons.email,
-                            isObscure: false,
-                            labeltext: 'Email',
-                            iconName: 'email',
-                            tia: TextInputAction.done,
-                          ),
-                          Consumer(builder: (context, ref, __) {
-                            final isResetPasswordLoadingState =
-                                ref.watch(Providers.loginProvider.select(
-                              (value) => value.isResetPasswordLoading,
-                            ));
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 14.h),
-                              child: (isResetPasswordLoadingState)
-                                  ? Loader(
-                                      loadercolor: Colors.green,
-                                    )
-                                  : ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        onPrimary: Color(
-                                            0xff1A1F25), //to change text color
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10.h, horizontal: 20.h),
-                                        primary:
-                                            Color(0xffFED428), // button color
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              10.r), // <-- Radius
-                                        ),
-                                        textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15.sp,
-                                            fontFamily: 'gilroy_bold'),
-                                      ),
-                                      onPressed: () async {
-                                        SystemChannels.textInput.invokeMethod(
-                                          'TextInput.hide',
-                                        );
-                                        //validateAndSave();
-                                        final FormState form =
-                                            _formKey.currentState!;
-                                        if (form.validate()) {
-                                          await loginGlobalReadState
-                                              .resetPassword(context);
-                                        } else {
-                                          print('Form is invalid');
-                                        }
-
-                                        //await signOut();
-                                      },
-                                      child: Text(
-                                        'Reset Password',
-                                      ),
-                                    ),
-                            );
-                          }),
-                        ],
+    return SingleChildScrollView(
+      child: AnimatedPadding(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        duration: Duration(
+          milliseconds: 250,
+        ),
+        curve: Curves.elasticInOut,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30.r),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Consumer(builder: (context, ref, __) {
+                return Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.h, bottom: 10.h),
                       ),
-                    );
-                  }),
-                ),
-              ),
+                      Container(
+                        width: 35.w,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.r),
+                            color: Color(0xffFED428)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 15.h, bottom: 10.h),
+                        child: Text(
+                          'Forgot Password',
+                          style: TextStyle(
+                            fontFamily: 'gilroy_bold',
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 26.sp,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      // Divider(
+                      //   height: 1,
+                      //   color: Colors.white24,
+                      // ),
+                      CustomTextFieldSignIn(
+                        controller: loginGlobalReadState
+                            .passwordResetEmailController,
+                        icon: Icons.email,
+                        isObscure: false,
+                        labeltext: 'Email',
+                        iconName: 'email',
+                        tia: TextInputAction.done,
+                      ),
+                      Consumer(builder: (context, ref, __) {
+                        final isResetPasswordLoadingState =
+                            ref.watch(Providers.loginProvider.select(
+                          (value) => value.isResetPasswordLoading,
+                        ));
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 14.h),
+                          child: (isResetPasswordLoadingState)
+                              ? Loader(
+                                  loadercolor: Colors.green,
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Color(
+                                        0xff1A1F25), //to change text color
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10.h, horizontal: 20.h),
+                                    primary:
+                                        Color(0xffFED428), // button color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10.r), // <-- Radius
+                                    ),
+                                    textStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15.sp,
+                                        fontFamily: 'gilroy_bold'),
+                                  ),
+                                  onPressed: () async {
+                                    SystemChannels.textInput.invokeMethod(
+                                      'TextInput.hide',
+                                    );
+                                    //validateAndSave();
+                                    final FormState form =
+                                        _formKey.currentState!;
+                                    if (form.validate()) {
+                                      await loginGlobalReadState
+                                          .resetPassword(context);
+                                    } else {
+                                      print('Form is invalid');
+                                    }
+
+                                    //await signOut();
+                                  },
+                                  child: Text(
+                                    'Reset Password',
+                                  ),
+                                ),
+                        );
+                      }),
+                    ],
+                  ),
+                );
+              }),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -489,7 +495,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
             enableSuggestions: false,
             decoration: InputDecoration(
               contentPadding:
-                  EdgeInsets.symmetric(vertical: 14.h, horizontal: 10),
+                  EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
               filled: true,
               //fillColor: Colors.white10,
               fillColor: Color(0xff20242A),

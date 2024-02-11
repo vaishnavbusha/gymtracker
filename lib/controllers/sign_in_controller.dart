@@ -31,13 +31,7 @@ class LoginController extends ChangeNotifier {
   bool is_login_details_uploading = false;
   bool isResetPasswordLoading = false;
   bool cv = true;
-  change() {
-    //color = color == Color(0xffFED428) ? Color(0xff1A1F25) : Color(0xffFED428);
-    width = width == 50 ? 100 : 50;
-    cv = !cv;
-    print(width);
-    notifyListeners();
-  }
+
 
   Future loginuser({
     required BuildContext ctx,

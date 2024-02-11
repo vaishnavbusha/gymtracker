@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, avoid_print, use_build_context_synchronously
 
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/user_model.dart';
@@ -31,6 +32,7 @@ class SignUpController extends ChangeNotifier {
   late File pickedImage =
       File('/data/user/0/com.example.gymtracker/cache/Male.png');
   File? testfile;
+  double? width;
   SignUpController(DateTime value) {
     dateController = TextEditingController();
     phoneNumberController = TextEditingController();
@@ -47,6 +49,10 @@ class SignUpController extends ChangeNotifier {
   }
   changePassObscurity() {
     pass_isobscure = !pass_isobscure;
+    notifyListeners();
+  }
+ changeConfirmPassObscurity() {
+    confirmpass_isobscure = !confirmpass_isobscure;
     notifyListeners();
   }
 
@@ -78,11 +84,7 @@ class SignUpController extends ChangeNotifier {
   //   return (to.difference(from).inHours / 24).round();
   // }
 
-  changeConfirmPassObscurity() {
-    confirmpass_isobscure = !confirmpass_isobscure;
-    notifyListeners();
-  }
-
+ 
   updateDate(DateTime value) {
     pickedDate = value;
     notifyListeners();
@@ -93,6 +95,8 @@ class SignUpController extends ChangeNotifier {
     //File image,
     required BuildContext ctx,
   }) async {
+    width = 44.w;
+      is_register_details_uploading = true;
     notifyListeners();
     try {
       List userNamesList = [];
@@ -104,7 +108,7 @@ class SignUpController extends ChangeNotifier {
       //   if (password != confirmPassword) {
       //     throw ('Re-Confirm entered password !');
       //   }
-      is_register_details_uploading = true;
+    
       if (await isUserNameUnique(userModel.userName)) {
         throw '"${userModel.userName}" already exists, try with different name !';
       }
@@ -140,7 +144,6 @@ class SignUpController extends ChangeNotifier {
           .collection("users")
           .doc(cred.user!.uid)
           .set(userModel.toJson());
-      is_register_details_uploading = false;
 
       CustomSnackBar.buildSnackbar(
         context: ctx,
@@ -182,8 +185,6 @@ class SignUpController extends ChangeNotifier {
         textcolor: const Color(0xffFDFFFC),
         iserror: true,
       );
-      is_register_details_uploading = false;
-      notifyListeners();
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
@@ -195,8 +196,9 @@ class SignUpController extends ChangeNotifier {
         textcolor: const Color(0xffFDFFFC),
         iserror: true,
       );
-      is_register_details_uploading = false;
     }
+      is_register_details_uploading = false;
+    width = MediaQuery.of(ctx).size.width;
     notifyListeners();
   }
 

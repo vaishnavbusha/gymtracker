@@ -29,6 +29,7 @@ class CustomSnackBar {
                   child: Text(
                     message,
                     textAlign: TextAlign.start,
+                    
                     style: TextStyle(
                       fontFamily: 'gilroy_bolditalic',
                       color: textcolor,
