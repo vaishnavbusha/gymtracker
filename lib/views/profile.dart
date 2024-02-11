@@ -12,7 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 
 import 'package:gymtracker/models/user_model.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/animated_route.dart';
 
 import 'package:gymtracker/widgets/approvals.dart';
@@ -212,15 +212,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
                                                               ),
                                                               onPressed: () {
                                                                 Navigator.push(
-                                                                  context,
-                                                                  CupertinoPageRoute(builder: (context) => ApprovalsPage(
-                                                                          pendingApprovals:
-                                                                              userModelData.pendingApprovals!),)
-                                                                  // ScaleRoute(
-                                                                  //     page: ApprovalsPage(
-                                                                  //         pendingApprovals:
-                                                                  //             userModelData.pendingApprovals!)),
-                                                                );
+                                                                    context,
+                                                                    CupertinoPageRoute(
+                                                                      builder: (context) =>
+                                                                          ApprovalsPage(
+                                                                              pendingApprovals: userModelData.pendingApprovals!),
+                                                                    )
+                                                                    // ScaleRoute(
+                                                                    //     page: ApprovalsPage(
+                                                                    //         pendingApprovals:
+                                                                    //             userModelData.pendingApprovals!)),
+                                                                    );
                                                               },
                                                               child: Padding(
                                                                 padding: EdgeInsets
@@ -509,8 +511,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
                                                                 fontSize: 8.sp,
                                                                 fontFamily:
                                                                     'gilroy_bolditalic'),
-                                                            children: <
-                                                                TextSpan>[
+                                                            children: <TextSpan>[
                                                               TextSpan(
                                                                   text:
                                                                       'aquelastudios@gmail.com',
@@ -627,10 +628,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
       if (mounted) {
         // Perform updates to the UI
         Navigator.of(context, rootNavigator: true)
-            .pushReplacement(
-              CupertinoPageRoute(builder: (context) => SignInPage(),)
-             // ScaleRoute(page: SignInPage())
-              );
+            .pushReplacement(CupertinoPageRoute(
+          builder: (context) => SignInPage(),
+        )
+                // ScaleRoute(page: SignInPage())
+                );
       }
     });
   }
@@ -775,7 +777,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
                 ))
           ]),
           Consumer(builder: (context, ref, __) {
-            final profileState = ref.watch(profileControllerProvider);
+            final profileState = ref.watch(Providers.profileControllerProvider);
 
             return (profileState.isLoading)
                 ? Loader(

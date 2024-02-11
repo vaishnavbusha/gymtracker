@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 
 import '../constants.dart';
 import '../controllers/network_controller.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 
 class SearchUsers extends ConsumerStatefulWidget {
   const SearchUsers({Key? key}) : super(key: key);
@@ -31,7 +31,8 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
 
   @override
   Widget build(BuildContext context) {
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
 
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? GestureDetector(
@@ -137,7 +138,7 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                           ),
                           Consumer(builder: (context, ref, child) {
                             final _searchUsersState =
-                                ref.watch(searchUsersProvider);
+                                ref.watch(Providers.searchUsersProvider);
                             return (!_searchUsersState.isSearchLoading)
                                 ? Material(
                                     borderRadius: BorderRadius.circular(10.r),
@@ -198,8 +199,8 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                     Consumer(
                       builder: (context, ref, child) {
                         final _searchUsersState =
-                            ref.watch(searchUsersProvider);
-                        WidgetsBinding.instance!.addPostFrameCallback((_) {
+                            ref.watch(Providers.searchUsersProvider);
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
                           // Add Your Code here.
 
                           _searchUsersState.checkForInitial();
@@ -335,7 +336,7 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
   }
 
   expiryInDaysButton(var expiresOn, String uid) {
-    final searchUsersState = ref.read(searchUsersProvider);
+    final searchUsersState = ref.read(Providers.searchUsersProvider);
     final noOfDays = searchUsersState.calculateNoOfDays(expiresOn);
     final isRequestedForApproval = searchUsersState.isRequestedForApproval(uid);
     return Column(

@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +34,8 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
 
   @override
   Widget build(BuildContext context) {
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
 
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? GestureDetector(
@@ -136,7 +137,7 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
                         ),
                         Consumer(builder: (context, ref, child) {
                           final _searchUsersState =
-                              ref.watch(addManualAttendanceProvider);
+                              ref.watch(Providers.addManualAttendanceProvider);
 
                           return (!_searchUsersState.isSearchLoading)
                               ? Material(
@@ -197,8 +198,8 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
                   Consumer(
                     builder: (context, ref, child) {
                       final addManualAttendanceState =
-                          ref.watch(addManualAttendanceProvider);
-                      WidgetsBinding.instance!.addPostFrameCallback((_) {
+                          ref.watch(Providers.addManualAttendanceProvider);
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
                         // Add Your Code here.
 
                         addManualAttendanceState.checkForInitial();
@@ -311,7 +312,8 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
   }
 
   expiryInDaysButton(var expiresOn, String uid) {
-    final addManualAttendanceState = ref.read(addManualAttendanceProvider);
+    final addManualAttendanceState =
+        ref.read(Providers.addManualAttendanceProvider);
     final noOfDays = addManualAttendanceState.calculateNoOfDays(expiresOn);
     final isRequestedForApproval =
         addManualAttendanceState.isRequestedForApproval(uid);
@@ -319,7 +321,7 @@ class _ManualDailyAttendanceState extends ConsumerState<ManualDailyAttendance> {
       padding: EdgeInsets.only(right: 20.w),
       child: Consumer(builder: (context, ref, __) {
         final addAttendanceManuallyState =
-            ref.read(addManualAttendanceProvider);
+            ref.read(Providers.addManualAttendanceProvider);
         return Container(
           decoration: BoxDecoration(
             color: (noOfDays > 15)

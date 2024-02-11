@@ -24,7 +24,7 @@ import 'package:hive_flutter/adapters.dart';
 
 import '../constants.dart';
 import '../models/gympartner_constraints.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 import '../widgets/customsnackbar.dart';
 import '../widgets/loader.dart';
 import 'add_user_manually.dart';
@@ -53,7 +53,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
   }
 
   Future getData() async {
-    final globalAppState = ref.read(globalAppProvider);
+    final globalAppState = ref.read(Providers.globalAppProvider);
 
     await globalAppState.getConstraints();
     //getConstraints();
@@ -145,12 +145,15 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-                                                              CupertinoPageRoute(builder: (context) =>  QRGenerator(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         QRGenerator(),
-                                                            //         ),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                QRGenerator(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         QRGenerator(),
+                                                                //         ),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -183,11 +186,16 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                         ? Navigator.of(context,
                                                                 rootNavigator:
                                                                     true)
-                                                            .push( CupertinoPageRoute(builder: (context) =>    MyUsers(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         MyUsers()),
+                                                            .push(
+                                                                CupertinoPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    MyUsers(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         MyUsers()),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -220,11 +228,14 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                                   rootNavigator:
                                                                       true)
                                                               .push(
-                                                                CupertinoPageRoute(builder: (context) =>  AddUserManually(),)
-                                                              // ScaleRoute(
-                                                              //     page:
-                                                              //         AddUserManually(),),
+                                                                  CupertinoPageRoute(
+                                                              builder: (context) =>
+                                                                  AddUserManually(),
                                                             )
+                                                                  // ScaleRoute(
+                                                                  //     page:
+                                                                  //         AddUserManually(),),
+                                                                  )
                                                           : CustomSnackBar
                                                               .buildSnackbar(
                                                               color: Colors.red,
@@ -259,11 +270,14 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-                                                              CupertinoPageRoute(builder: (context) =>   ManualDailyAttendance(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         ManualDailyAttendance()),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                ManualDailyAttendance(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         ManualDailyAttendance()),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -296,11 +310,14 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-                                                              CupertinoPageRoute(builder: (context) =>  SearchUsers(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         SearchUsers()),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                SearchUsers(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         SearchUsers()),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -331,11 +348,14 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-                                                              CupertinoPageRoute(builder: (context) =>    ExpiredUsers(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         ExpiredUsers()),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                ExpiredUsers(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         ExpiredUsers()),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -370,11 +390,14 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-                                                              CupertinoPageRoute(builder: (context) => TodaysAttendance(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         TodaysAttendance()),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                TodaysAttendance(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         TodaysAttendance()),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -409,11 +432,14 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-CupertinoPageRoute(builder: (context) => AttendanceByDate(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         AttendanceByDate(),),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                AttendanceByDate(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         AttendanceByDate(),),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -448,11 +474,14 @@ CupertinoPageRoute(builder: (context) => AttendanceByDate(),)
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-                                                              CupertinoPageRoute(builder: (context) => AttendanceByMonth(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         AttendanceByMonth()),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                AttendanceByMonth(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         AttendanceByMonth()),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,
@@ -484,11 +513,14 @@ CupertinoPageRoute(builder: (context) => AttendanceByDate(),)
                                                                 rootNavigator:
                                                                     true)
                                                             .push(
-                                                              CupertinoPageRoute(builder: (context) => RenewMembershipsPage(),)
-                                                            // ScaleRoute(
-                                                            //     page:
-                                                            //         RenewMembershipsPage()),
+                                                                CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                RenewMembershipsPage(),
                                                           )
+                                                                // ScaleRoute(
+                                                                //     page:
+                                                                //         RenewMembershipsPage()),
+                                                                )
                                                         : CustomSnackBar
                                                             .buildSnackbar(
                                                             color: Colors.red,

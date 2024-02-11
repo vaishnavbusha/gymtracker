@@ -10,7 +10,7 @@ import 'package:gymtracker/views/scan.dart';
 import 'package:new_version/new_version.dart';
 
 import '../controllers/network_controller.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 import '../widgets/loader.dart';
 import '../widgets/nointernet_widget.dart';
 import '../widgets/updatedialog.dart';
@@ -31,7 +31,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen>
   @override
   void initState() {
     checkversion();
-    ref.read(navigationBarProvider);
+    ref.read(Providers.navigationBarProvider);
     tabcontroller = TabController(length: 2, vsync: this);
 
     super.initState();
@@ -71,8 +71,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    final navigationState = ref.watch(navigationBarProvider);
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    final navigationState = ref.watch(Providers.navigationBarProvider);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? (navigationState.isDataAvailable && navigationState.isUser != null)
             ? Scaffold(

@@ -10,7 +10,7 @@ import 'package:gymtracker/widgets/loader.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 
 class AddUserManually extends ConsumerStatefulWidget {
   const AddUserManually({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class AddUserManually extends ConsumerStatefulWidget {
 class _AddUserManuallyState extends ConsumerState<AddUserManually> {
   @override
   Widget build(BuildContext context) {
-    final addUserManuallyState = ref.watch(addUserManuallyProvider);
+    final addUserManuallyState = ref.watch(Providers.addUserManuallyProvider);
     return Scaffold(
       backgroundColor: Color(0xff1A1F25),
       appBar: PreferredSize(
@@ -75,7 +75,7 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
                         padding: EdgeInsets.only(top: 11.h, bottom: 5.h),
                         child: Consumer(builder: (context, ref, child) {
                           final addUserManuallyState =
-                              ref.watch(addUserManuallyProvider);
+                              ref.watch(Providers.addUserManuallyProvider);
                           return DropdownButtonFormField<String>(
                             isExpanded: true,
                             dropdownColor: Color(0xff7E7D7D),
@@ -163,7 +163,7 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
                         padding: EdgeInsets.only(top: 10.h),
                         child: Consumer(builder: (context, ref, __) {
                           final adduserManuallyProvider =
-                              ref.watch(addUserManuallyProvider);
+                              ref.watch(Providers.addUserManuallyProvider);
                           return (adduserManuallyProvider.isDataUploading)
                               ? Loader(
                                   loadercolor: Color(0xffFED428),
@@ -243,7 +243,8 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
-          final signUpControllerVar = ref.watch(signUpControllerProvider);
+          final signUpControllerVar =
+              ref.watch(Providers.signUpControllerProvider);
           return TextFormField(
             validator: (value) {
               if (labeltext == 'UserName') {
@@ -403,7 +404,8 @@ class _AddUserManuallyState extends ConsumerState<AddUserManually> {
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
-          final addUserManuallyState = ref.watch(addUserManuallyProvider);
+          final addUserManuallyState =
+              ref.watch(Providers.addUserManuallyProvider);
           return TextFormField(
             validator: (value) {
               return (addUserManuallyState.calculateAge() < 17)

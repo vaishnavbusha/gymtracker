@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:gymtracker/constants.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 
 import 'package:new_version/new_version.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-
 
 import '../controllers/network_controller.dart';
 
@@ -30,7 +29,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
   @override
   void initState() {
     checkversion();
-    ref.read(navigationBarProvider);
+    ref.read(Providers.navigationBarProvider);
     //navigationState.checkUserStatus();
     // isUser =
     //     (Hive.box(userDetailsHIVE).get('usermodeldata') as UserModel).isUser;
@@ -94,8 +93,9 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
 
   @override
   Widget build(BuildContext context) {
-    final navigationState = ref.watch(navigationBarProvider);
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    final navigationState = ref.watch(Providers.navigationBarProvider);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? (navigationState.isDataAvailable && navigationState.isUser != null)
             ? PersistentTabView(

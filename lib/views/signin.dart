@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, must_be_immutable
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, must_be_immutable, use_super_parameters
 
 import 'dart:ui';
 
@@ -9,14 +9,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:gymtracker/constants.dart';
+import 'package:gymtracker/controllers/sign_in_controller.dart';
 import 'package:gymtracker/views/signup.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
+import 'package:gymtracker/widgets/utils.dart';
 
 import '../controllers/network_controller.dart';
-import '../providers/authentication_providers.dart';
-import '../widgets/animated_route.dart';
-import '../widgets/customsnackbar.dart';
+import '../providers/providers.dart';
 
 class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -26,25 +26,16 @@ class SignInPage extends ConsumerStatefulWidget {
 }
 
 class _SignInPageState extends ConsumerState<SignInPage> {
-  late TextEditingController _passwordResetEmailController;
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  late final LoginController loginGlobalReadState;
   @override
   void initState() {
-    _passwordResetEmailController = TextEditingController();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
-
+    loginGlobalReadState = ref.read(Providers.loginProvider);
     super.initState();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-
     super.dispose();
   }
 
@@ -53,357 +44,277 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
   @override
   Widget build(BuildContext context) {
-    final connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    final connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
             },
-            child: Scaffold( resizeToAvoidBottomInset: false,
-          floatingActionButtonLocation:  FloatingActionButtonLocation.centerFloat,
-floatingActionButton:           Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Don\'t have an account? ',
-                                      style: TextStyle(
-                                        color: color_gt_headersTextColorWhite,
-                                        fontSize: 14.sp,
-                                        fontFamily: 'gilroy_bolditalic',
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () async {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            CupertinoPageRoute(builder: (context) => SignUpPage(),)
-                                            // ScaleRoute(
-                                            //   page: SignUpPage(),
-                                            // )
-                                            );
-                                      },
-                                      child: Text(
-                                        'Sign-up here !',
-                                        style: TextStyle(
-                                          fontSize: 15.sp,
-                                          color: Color(0xffFED428),
-                                          fontFamily: 'gilroy_bolditalic',
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-              //resizeToAvoidBottomInset: false,
-              body: Container(
-               
-                color: Color(0xff1A1F25),
-              
-                child: SafeArea(
+            child: WillPopScope(
+              onWillPop: () => CustomUtilities.onWillPop(
+                body: 'Do you want to exit ?',
+                context: context,
+                notificationName: 'Are you sure?',
+              ),
+              child: Scaffold(
+                body: SafeArea(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: 15.w,
                     ),
                     child: Form(
                       key: _formKey,
-                      child: Center(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/images/gymtracker_white.png',
-                                height: 80.h,
-                                fit: BoxFit.contain,
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              Text(
-                                'LOGIN',
-                                style: TextStyle(
-                                  //foreground: Paint()..shader = linearGradient,
-                                  //color: Colors.white,
-                                  fontFamily: "gilroy_bold",
-                                  fontSize: 35.sp,
-                                  foreground: Paint()
-                                    ..shader = linearGradient,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 15.h),
-                             
-                              CustomTextFieldSignIn(
-                                controller: _emailController,
-                                icon: Icons.email,
-                                isObscure: false,
-                                labeltext: 'Email',
-                                tia: TextInputAction.next,
-                              ),
-                              CustomTextFieldSignIn(
-                                controller: _passwordController,
-                                icon: Icons.security_outlined,
-                                isObscure: true,
-                                labeltext: 'Password',
-                                tia: TextInputAction.done,
-                              ),
-                                        
-                              Consumer(builder: (context, ref, _) {
-                                  final login = ref.watch(loginProvider);
-                                        
-                                  return (login
-                                        .is_login_details_uploading ==
-                                    false)
-                                ? GestureDetector(
-                                    onTap: () async {
-                                      SystemChannels.textInput
-                                          .invokeMethod(
-                                              'TextInput.hide',);
-                                      //validateAndSave();
-                                      final FormState form =
-                                          _formKey.currentState!;
-                                      if (form.validate()) {
-                                        await login.loginuser(
-                                          ctx: context,
-                                          email:
-                                              _emailController.text,
-                                          password:
-                                              _passwordController
-                                                  .text,
-                                        );
-                                      } else {
-                                        print('Form is invalid');
-                                      }
-                                      // login.loginuser(
-                                      //   ctx: context,
-                                      //   email: _emailController.text,
-                                      //   password: _passwordController.text,
-                                      // );
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context)
-                                          .size
-                                          .width,
-                                      height: 50.h,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffFED428),
-                                        borderRadius:
-                                            BorderRadius.all(
-                                          Radius.circular(10.r),
-                                        ),
+                      child: AnimatedPadding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOut,
+                        child: Center(
+                          child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 80.h,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                        'assets/images/gymtracker_white.png',
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          'Sign In',
-                                          style: TextStyle(
-                                              fontFamily:
-                                                  'gilroy_bold',
-                                              fontSize: 21.sp,
-                                              color: Color(
-                                                  0xff1A1F25)),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Loader(
-                                    loadercolor: Color(0xffFED428),
-                                  );
-                                }),
-                              Consumer(builder: (context, ref, __) {
-                                final signInState =
-                                    ref.watch(loginProvider);
-                                        
-                                return InkWell(
-                                  onTap: () {
-                                    signInState.isResetPasswordLoading =
-                                        false;
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft:
-                                                  Radius.circular(30.r),
-                                              topRight:
-                                                  Radius.circular(30.r)),
-                                        ),
-                                        backgroundColor:
-                                            Color(0xff1A1F25),
-                                        builder: (context) {
-                                          return CustmoModalBottomSheetNew(); 
-                                          modalbottomsheet(
-                                              context);
-                                        },
-                                        context: context,);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 15.h, bottom: 10.h),
-                                    child: Text(
-                                      'Forgot password ?',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 13.sp,
-                                          color: Color(0xffFED428),
-                                          fontFamily:
-                                              'gilroy_bolditalic'),
+                                      fit: BoxFit.contain,
                                     ),
                                   ),
-                                );
-                              }),
-                            ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                                  child: Text(
+                                    'LOGIN',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: "gilroy_bold",
+                                      fontSize: 36.sp,
+                                      foreground: Paint()
+                                        ..shader = linearGradient,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                CustomTextFieldSignIn(
+                                  controller:
+                                      loginGlobalReadState.emailController,
+                                  icon: Icons.email,
+                                  isObscure: false,
+                                  labeltext: 'Email',
+                                  iconName: 'email',
+                                  tia: TextInputAction.next,
+                                ),
+                                CustomTextFieldSignIn(
+                                  controller:
+                                      loginGlobalReadState.passwordController,
+                                  icon: Icons.security_outlined,
+                                  isObscure: true,
+                                  labeltext: 'Password',
+                                  iconName: 'password_2',
+                                  tia: TextInputAction.done,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 10.h,
+                                  ),
+                                  child: Consumer(builder: (context, ref, _) {
+                                    final isLoginDetailsUploadingProgressState =
+                                        ref.watch(
+                                            Providers.loginProvider.select(
+                                      (value) =>
+                                          value.is_login_details_uploading,
+                                    ));
+                                    final state =
+                                        ref.watch(Providers.loginProvider);
+                                    return Ink(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(60.r),
+                                        color: Color(0xffFED428),
+                                      ),
+                                      child: InkWell(
+                                        borderRadius:
+                                            BorderRadius.circular(60.r),
+                                        onTap: () async {
+                                          SystemChannels.textInput.invokeMethod(
+                                            'TextInput.hide',
+                                          );
+                                          final FormState form =
+                                              _formKey.currentState!;
+                                          if (form.validate()) {
+                                            await ref
+                                                .read(Providers.loginProvider)
+                                                .loginuser(
+                                                  ctx: context,
+                                                );
+                                          } else {
+                                            print('Form is invalid');
+                                          }
+                                        },
+                                        child: AnimatedContainer(
+                                          curve: Curves.fastEaseInToSlowEaseOut,
+                                          height: 47.h,
+                                          width: state.width ??
+                                              MediaQuery.of(context).size.width,
+                                          duration: Duration(milliseconds: 250),
+                                          child: AnimatedSwitcher(
+                                            switchInCurve:
+                                                Curves.fastEaseInToSlowEaseOut,
+                                            switchOutCurve:
+                                                Curves.fastEaseInToSlowEaseOut,
+                                            duration:
+                                                Duration(milliseconds: 250),
+                                            child:
+                                                (isLoginDetailsUploadingProgressState ==
+                                                        false)
+                                                    ? Text(
+                                                        'Sign In',
+                                                        style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontFamily:
+                                                              'gilroy_bold',
+                                                        ),
+                                                      )
+                                                    : Loader(
+                                                        loadercolor:
+                                                            Color(0xffFED428),
+                                                      ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    //signInState.isResetPasswordLoading = false;
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(30.r),
+                                          topRight: Radius.circular(30.r),
+                                        ),
+                                      ),
+                                      backgroundColor: Color(0xff1A1F25),
+                                      builder: (context) {
+                                        return CustmoModalBottomSheetNew();
+                                        //modalbottomsheet(context);
+                                      },
+                                      context: context,
+                                    );
+                                  },
+                                  child: Text(
+                                    'Forgot password ?',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color(0xffFED428),
+                                        fontFamily: 'gilroy_bolditalic'),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
+                bottomNavigationBar: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Don\'t have an account? ',
+                      style: TextStyle(
+                        color: color_gt_headersTextColorWhite,
+                        fontSize: 14.sp,
+                        fontFamily: 'gilroy_regularitalic',
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        Navigator.pushReplacement(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => SignUpPage(),
+                            ));
+                      },
+                      child: Text(
+                        'Sign-up here !',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Color(0xffFED428),
+                          fontFamily: 'gilroy_bolditalic',
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                backgroundColor: Color(0xff1A1F25),
+                resizeToAvoidBottomInset: false,
+                // floatingActionButtonLocation:
+                //     FloatingActionButtonLocation.centerFloat,
               ),
             ),
           )
         : NoInternetWidget();
   }
-
-  Widget modalbottomsheet(BuildContext context) {
-    print(MediaQuery.of(context).viewInsets.bottom);
-    //var textscaler = MediaQuery.of(context).textScaleFactor;
-    return SingleChildScrollView(padding: EdgeInsets.only(
-       bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Wrap(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30.r),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 2.h, bottom: 10.h),
-                    ),
-                    Container(
-                      width: 35.w,
-                      height: 4.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30.r),
-                          color: Color(0xffFED428)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 15.h, bottom: 10.h),
-                      child: Text(
-                        'Forgot Password',
-                        style: TextStyle(
-                          fontFamily: 'gilroy_bold',
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22.sp,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    // Divider(
-                    //   height: 1,
-                    //   color: Colors.white24,
-                    // ),
-                    CustomTextFieldSignIn(
-                      controller: _passwordResetEmailController,
-                      icon: Icons.email,
-                      isObscure: false,
-                      labeltext: 'Email',
-                      tia: TextInputAction.done,
-                    ),
-                    Consumer(builder: (context, ref, __) {
-                      final signInState = ref.watch(loginProvider);
-                      return Padding(
-                        padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
-                        child: (signInState.isResetPasswordLoading)
-                            ? Loader(
-                                loadercolor: Colors.green,
-                              )
-                            : ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  onPrimary: Color(
-                                      0xff1A1F25), //to change text color
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10.h, horizontal: 20.h),
-                                  primary: Color(0xffFED428), // button color
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        10.r), // <-- Radius
-                                  ),
-                                  textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15.sp,
-                                      fontFamily: 'gilroy_bold'),
-                                ),
-                                onPressed: () async {
-                                  if (_passwordResetEmailController
-                                      .text.isEmpty) {
-                                    Navigator.pop(context);
-                                    CustomSnackBar.buildSnackbar(
-                                      color: Colors.red[500]!,
-                                      context: context,
-                                      message:
-                                          'Enter email-ID for resetting your password !',
-                                      textcolor: const Color(0xffFDFFFC),
-                                      iserror: false,
-                                    );
-                                    _passwordResetEmailController.text = '';
-                                  } else {
-                                    await signInState.resetPassword(
-                                        _passwordResetEmailController.text,
-                                        context);
-                                    _passwordResetEmailController.text = '';
-                                  }
-                                  //await signOut();
-                                },
-                                child: Text(
-                                  'Reset Password',
-                                ),
-                              ),
-                      );
-                    }),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-class CustmoModalBottomSheetNew extends StatefulWidget {
+class CustmoModalBottomSheetNew extends ConsumerStatefulWidget {
   const CustmoModalBottomSheetNew({super.key});
 
   @override
-  State<CustmoModalBottomSheetNew> createState() => _CustmoModalBottomSheetNewState();
+  ConsumerState<CustmoModalBottomSheetNew> createState() =>
+      _CustmoModalBottomSheetNewState();
 }
 
-class _CustmoModalBottomSheetNewState extends State<CustmoModalBottomSheetNew> {
-   late TextEditingController _passwordResetEmailController = TextEditingController();
+class _CustmoModalBottomSheetNewState
+    extends ConsumerState<CustmoModalBottomSheetNew> {
+  late final LoginController loginGlobalReadState;
+  @override
+  void initState() {
+    loginGlobalReadState = ref.read(Providers.loginProvider);
+    loginGlobalReadState.passwordResetEmailController.clear();
+    super.initState();
+  }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).viewInsets.bottom);
-    return SingleChildScrollView(
-      child: AnimatedPadding(  duration: Duration(milliseconds: 250,),
-      curve: Curves.decelerate,
-        padding: EdgeInsets.only(
-       bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Wrap(
-          children: [
-            ClipRRect(
+    return Wrap(
+      children: [
+        SingleChildScrollView(
+          child: AnimatedPadding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            duration: Duration(
+              milliseconds: 250,
+            ),
+            curve: Curves.decelerate,
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(30.r),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Consumer(
-                    builder: (context,ref,__) {
-                      return Column(
+                  child: Consumer(builder: (context, ref, __) {
+                    return Form(
+                      key: _formKey,
+                      child: Column(
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 2.h, bottom: 10.h),
@@ -423,7 +334,7 @@ class _CustmoModalBottomSheetNewState extends State<CustmoModalBottomSheetNew> {
                                 fontFamily: 'gilroy_bold',
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 22.sp,
+                                fontSize: 26.sp,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -433,17 +344,22 @@ class _CustmoModalBottomSheetNewState extends State<CustmoModalBottomSheetNew> {
                           //   color: Colors.white24,
                           // ),
                           CustomTextFieldSignIn(
-                            controller: _passwordResetEmailController,
+                            controller: loginGlobalReadState
+                                .passwordResetEmailController,
                             icon: Icons.email,
                             isObscure: false,
                             labeltext: 'Email',
+                            iconName: 'email',
                             tia: TextInputAction.done,
                           ),
                           Consumer(builder: (context, ref, __) {
-                            final signInState = ref.watch(loginProvider);
+                            final isResetPasswordLoadingState =
+                                ref.watch(Providers.loginProvider.select(
+                              (value) => value.isResetPasswordLoading,
+                            ));
                             return Padding(
-                              padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
-                              child: (signInState.isResetPasswordLoading)
+                              padding: EdgeInsets.only(bottom: 14.h),
+                              child: (isResetPasswordLoadingState)
                                   ? Loader(
                                       loadercolor: Colors.green,
                                     )
@@ -453,7 +369,8 @@ class _CustmoModalBottomSheetNewState extends State<CustmoModalBottomSheetNew> {
                                             0xff1A1F25), //to change text color
                                         padding: EdgeInsets.symmetric(
                                             vertical: 10.h, horizontal: 20.h),
-                                        primary: Color(0xffFED428), // button color
+                                        primary:
+                                            Color(0xffFED428), // button color
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
                                               10.r), // <-- Radius
@@ -464,24 +381,19 @@ class _CustmoModalBottomSheetNewState extends State<CustmoModalBottomSheetNew> {
                                             fontFamily: 'gilroy_bold'),
                                       ),
                                       onPressed: () async {
-                                        if (_passwordResetEmailController
-                                            .text.isEmpty) {
-                                          Navigator.pop(context);
-                                          CustomSnackBar.buildSnackbar(
-                                            color: Colors.red[500]!,
-                                            context: context,
-                                            message:
-                                                'Enter email-ID for resetting your password !',
-                                            textcolor: const Color(0xffFDFFFC),
-                                            iserror: false,
-                                          );
-                                          _passwordResetEmailController.text = '';
+                                        SystemChannels.textInput.invokeMethod(
+                                          'TextInput.hide',
+                                        );
+                                        //validateAndSave();
+                                        final FormState form =
+                                            _formKey.currentState!;
+                                        if (form.validate()) {
+                                          await loginGlobalReadState
+                                              .resetPassword(context);
                                         } else {
-                                          await signInState.resetPassword(
-                                              _passwordResetEmailController.text,
-                                              context);
-                                          _passwordResetEmailController.text = '';
+                                          print('Form is invalid');
                                         }
+
                                         //await signOut();
                                       },
                                       child: Text(
@@ -491,37 +403,38 @@ class _CustmoModalBottomSheetNewState extends State<CustmoModalBottomSheetNew> {
                             );
                           }),
                         ],
-                      );
-                    }
-                  ),
+                      ),
+                    );
+                  }),
                 ),
               ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
+
 class CustomTextFieldSignIn extends StatelessWidget {
   TextEditingController controller;
   TextInputAction tia;
   String labeltext;
   bool isObscure;
-
+  String iconName;
   IconData icon;
 
-  CustomTextFieldSignIn(
-      {Key? key,
-      required this.controller,
-      required this.tia,
-      required this.labeltext,
-      required this.isObscure,
-      required this.icon,
-      required})
-      : super(key: key);
+  CustomTextFieldSignIn({
+    Key? key,
+    required this.controller,
+    required this.tia,
+    required this.labeltext,
+    required this.isObscure,
+    required this.icon,
+    required this.iconName,
+  }) : super(key: key);
   changeObscurity(WidgetRef ref) {
-    ref.read(signInpasswordObscurityProvider.notifier).update(
+    ref.read(Providers.signInpasswordObscurityProvider.notifier).update(
           (state) => !state,
         );
   }
@@ -530,8 +443,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: 5.sp,
-        top: 10.sp,
+        bottom: 14.w,
       ),
       child: Theme(
         data: Theme.of(context).copyWith(
@@ -540,9 +452,9 @@ class CustomTextFieldSignIn extends StatelessWidget {
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
-          bool isPassObscure = ref.watch(signInpasswordObscurityProvider);
+          bool isPassObscure =
+              ref.watch(Providers.signInpasswordObscurityProvider);
           return TextFormField(
-           
             validator: (value) {
               if (labeltext == 'Email') {
                 if (value!.isEmpty) {
@@ -557,25 +469,27 @@ class CustomTextFieldSignIn extends StatelessWidget {
                 }
               } else if (labeltext == 'Password') {
                 if (value!.isEmpty) {
-                  return '"password" field can\'t be empty';
+                  return '"password" field can\'t be empty !';
                 } else {
                   return null;
                 }
               }
+              return null;
             },
-         
-            cursorHeight: 18.sp,
             cursorRadius: Radius.circular(30.r),
             obscureText: (isObscure) ? isPassObscure : false,
-            style: TextStyle(decorationThickness: 0,
-                fontSize: 15.sp,
-                fontFamily: 'gilroy_regular',
-                color: Colors.white70,),
-            textInputAction: tia, autocorrect: false,
- enableSuggestions: false,
+            style: TextStyle(
+              decorationThickness: 0,
+              fontSize: 16.sp,
+              fontFamily: 'gilroy_regular',
+              color: Colors.white70,
+            ),
+            textInputAction: tia,
+            autocorrect: false,
+            enableSuggestions: false,
             decoration: InputDecoration(
-              
-              contentPadding: EdgeInsets.symmetric(vertical: 14.h,horizontal: 10),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 14.h, horizontal: 10),
               filled: true,
               //fillColor: Colors.white10,
               fillColor: Color(0xff20242A),
@@ -590,42 +504,57 @@ class CustomTextFieldSignIn extends StatelessWidget {
                 fontSize: 16.sp,
                 color: color_gt_headersTextColorWhite.withOpacity(0.75),
               ),
-              prefixIcon: Icon(
-                icon,
-                color: Color(0xff7e7d7d).withOpacity(0.7),
-              ),
-              
-              suffixIcon:(labeltext=='Email') ? null:  (isObscure)
-                  ? GestureDetector(
-                      onTap: () {
-                        changeObscurity(ref);
-                      },
-                      child: (isPassObscure)
-                          ? Icon(
-                              Icons.visibility_off,
-                              color: Color(0xffFED428).withOpacity(0.5),
-                            )
-                          : Icon(
-                              Icons.visibility,
-                              color: Color(0xffFED428),
-                            ))
-                  : GestureDetector(
-                      onTap: () {
-                        changeObscurity(ref);
-                      },
-                      child: (isPassObscure)
-                          ? Icon(
-                              Icons.visibility_off,
-                              color: Color(0xffFED428).withOpacity(0.5),
-                              size: 0,
-                            )
-                          : Icon(
-                              Icons.visibility,
-                              color: Color(0xffFED428),
-                              size: 0,
+
+              prefixIcon: CustomUtilities.prefixIcon(iconName: iconName),
+
+              suffixIcon: (labeltext == 'Email')
+                  ? null
+                  : (isObscure)
+                      ? GestureDetector(
+                          onTap: () {
+                            changeObscurity(ref);
+                          },
+                          child: AnimatedSwitcher(
+                            duration: Duration(
+                              milliseconds: 200,
                             ),
-                    ),
-     border: InputBorder.none,
+                            child: (isPassObscure)
+                                ? Icon(
+                                    Icons.visibility_off,
+                                    key: Key('1'),
+                                    color: Color(0xffFED428).withOpacity(0.5),
+                                  )
+                                : Icon(
+                                    Icons.visibility,
+                                    key: Key('2'),
+                                    color: Color(0xffFED428),
+                                  ),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            changeObscurity(ref);
+                          },
+                          child: AnimatedSwitcher(
+                            duration: Duration(
+                              milliseconds: 200,
+                            ),
+                            child: (isPassObscure)
+                                ? Icon(
+                                    Icons.visibility_off,
+                                    key: Key('1'),
+                                    color: Color(0xffFED428).withOpacity(0.5),
+                                    size: 0,
+                                  )
+                                : Icon(
+                                    Icons.visibility,
+                                    key: Key('2'),
+                                    color: Color(0xffFED428),
+                                    size: 0,
+                                  ),
+                          ),
+                        ),
+              border: InputBorder.none,
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
                 borderSide:
@@ -638,11 +567,12 @@ class CustomTextFieldSignIn extends StatelessWidget {
               errorStyle: TextStyle(
                   fontFamily: 'gilroy_regularitalic',
                   color: Colors.red[500]!,
-                  fontSize: 12.sp),
+                  fontSize: 14.sp),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide:
-                    BorderSide(color: Colors.transparent,),
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
@@ -651,7 +581,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
               ),
             ),
             controller: controller,
-            cursorColor:  Color(0xff7e7d7d).withOpacity(0.05),
+            cursorColor: Color(0xff7e7d7d).withOpacity(0.05),
           );
         }),
       ),
@@ -688,24 +618,6 @@ class CustomTextFieldSignIn extends StatelessWidget {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(bottom: 7.h, top: 2.h),
-              //   child: Text.rich(TextSpan(
-              //       text: 'NOTE: ',
-              //       style: TextStyle(
-              //         fontFamily: 'gilroy_bolditalic',
-              //         color: honolulu,
-              //       ),
-              //       children: <InlineSpan>[
-              //         TextSpan(
-              //           text: 'click on \'yes\' to update wallpaper.',
-              //           style: TextStyle(
-              //               fontFamily: 'gilroy_regularitalic',
-              //               color: honolulu.withOpacity(0.8),
-              //               fontWeight: FontWeight.bold),
-              //         )
-              //       ])),
-              // ),
               Divider(
                 color: Colors.white24,
                 indent: 20.w,

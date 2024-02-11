@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/loader.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,13 +34,15 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
   }
 
   getData() async {
-    final attendanceByMonthState = ref.read(attendanceByMonthProvider);
+    final attendanceByMonthState =
+        ref.read(Providers.attendanceByMonthProvider);
     attendanceByMonthState.getGymPartnerDetails();
   }
 
   @override
   Widget build(BuildContext context) {
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
 
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? Scaffold(
@@ -86,8 +88,8 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                               Hive.box(maxClickAttemptsHIVE).listenable(),
                           builder: (context, val, child) {
                             return Consumer(builder: (context, ref, child) {
-                              final attendanceByMonthState =
-                                  ref.watch(attendanceByMonthProvider);
+                              final attendanceByMonthState = ref
+                                  .watch(Providers.attendanceByMonthProvider);
                               return DropdownButtonFormField<String>(
                                 isExpanded: true,
                                 menuMaxHeight: 250.h,
@@ -166,7 +168,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
                     ),
                     Consumer(builder: (context, value, child) {
                       final attendanceByMonthState =
-                          ref.watch(attendanceByMonthProvider);
+                          ref.watch(Providers.attendanceByMonthProvider);
                       return (attendanceByMonthState.isDataLoading ||
                               attendanceByMonthState.isGettingDatesLoading)
                           ? Loader(
@@ -239,7 +241,7 @@ class _AttendanceByMonthState extends ConsumerState<AttendanceByMonth> {
               Center(
                 child: Consumer(builder: (context, val, __) {
                   final attendanceByMonthState =
-                      ref.watch(attendanceByMonthProvider);
+                      ref.watch(Providers.attendanceByMonthProvider);
                   return Padding(
                     padding: EdgeInsets.only(top: 20.h),
                     child: (attendanceByMonthState.attendanceByRow.isNotEmpty)

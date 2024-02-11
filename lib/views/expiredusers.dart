@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 
 import '../constants.dart';
 import '../controllers/network_controller.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 
 class ExpiredUsers extends ConsumerStatefulWidget {
   const ExpiredUsers({Key? key}) : super(key: key);
@@ -29,13 +29,14 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
   }
 
   getData() async {
-    final _expiredUsersState = ref.read(expiredUsersProvider);
+    final _expiredUsersState = ref.read(Providers.expiredUsersProvider);
     await _expiredUsersState.searchForExpiredUsers(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
 
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? GestureDetector(
@@ -75,7 +76,8 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final _expiredUsersState = ref.watch(expiredUsersProvider);
+                    final _expiredUsersState =
+                        ref.watch(Providers.expiredUsersProvider);
 
                     return (_expiredUsersState.isLoading)
                         ? const Center(
@@ -220,7 +222,7 @@ class _ExpiredUsersState extends ConsumerState<ExpiredUsers> {
 
   expiryInDaysButton(var expiresOn, String uid) {
     return Consumer(builder: (context, ref, __) {
-      final expiredUsersState = ref.watch(expiredUsersProvider);
+      final expiredUsersState = ref.watch(Providers.expiredUsersProvider);
       final noOfDays = expiredUsersState.calculateNoOfDays(expiresOn);
       final isRequestedForApproval =
           expiredUsersState.isRequestedForApproval(uid);

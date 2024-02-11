@@ -12,7 +12,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants.dart';
 import '../controllers/network_controller.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 
 class MyUsers extends ConsumerStatefulWidget {
   MyUsers({Key? key}) : super(key: key);
@@ -31,14 +31,15 @@ class _MyUsersState extends ConsumerState<MyUsers> {
   }
 
   getData() async {
-    final viewUsersState = ref.read(enrolledUsersProvider);
+    final viewUsersState = ref.read(Providers.enrolledUsersProvider);
     await viewUsersState.getEnrolledUsersData();
     await viewUsersState.loadInitialUserData();
   }
 
   @override
   Widget build(BuildContext context) {
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
 
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? Scaffold(
@@ -72,7 +73,8 @@ class _MyUsersState extends ConsumerState<MyUsers> {
             extendBody: true,
             body: Center(
               child: Consumer(builder: (context, ref, child) {
-                final enrolledUsersState = ref.watch(enrolledUsersProvider);
+                final enrolledUsersState =
+                    ref.watch(Providers.enrolledUsersProvider);
 
                 return (enrolledUsersState.isLoading == false &&
                         enrolledUsersState.initialPaginationLoading == false)
@@ -249,7 +251,7 @@ class _MyUsersState extends ConsumerState<MyUsers> {
   }
 
   expiryInDaysButton(var expiresOn, String uid) {
-    final enrolledUsersState = ref.read(enrolledUsersProvider);
+    final enrolledUsersState = ref.read(Providers.enrolledUsersProvider);
     final noOfDays = enrolledUsersState.calculateNoOfDays(expiresOn);
     final isRequestedForApproval =
         enrolledUsersState.isRequestedForApproval(uid);

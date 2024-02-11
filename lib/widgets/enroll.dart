@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/loader.dart';
 
 import '../constants.dart';
@@ -26,7 +26,7 @@ class _EnrollPageState extends ConsumerState<EnrollPage> {
 
   @override
   Widget build(BuildContext context) {
-    final enrollState = ref.watch(enrollControllerProvider);
+    final enrollState = ref.watch(Providers.enrollControllerProvider);
     return Scaffold(
       appBar: PreferredSize(
         child: ClipRRect(
@@ -170,7 +170,8 @@ class _EnrollPageState extends ConsumerState<EnrollPage> {
                 ),
               ),
               Consumer(builder: (context, ref, child) {
-                final enrollcontroller = ref.watch(enrollControllerProvider);
+                final enrollcontroller =
+                    ref.watch(Providers.enrollControllerProvider);
                 return Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 80.h, vertical: 30.h),
@@ -243,7 +244,7 @@ class _RemoveButtonDialogState extends ConsumerState<RemoveButtonDialog> {
   @override
   Widget build(BuildContext context) {
     final approveButtonNotifierState =
-        ref.watch(testApprovalProvider(widget.index).notifier);
+        ref.watch(Providers.testApprovalProvider(widget.index).notifier);
     return AnimatedContainer(
       duration: Duration(
         milliseconds: 500,

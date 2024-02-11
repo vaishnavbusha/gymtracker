@@ -1,12 +1,13 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, duplicate_ignore, must_be_immutable, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, duplicate_ignore, must_be_immutable, non_constant_identifier_names, use_super_parameters
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gymtracker/controllers/sign_up_controller.dart';
 import 'package:gymtracker/models/user_model.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/views/signin.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
@@ -15,6 +16,7 @@ import 'package:intl/intl.dart';
 import '../constants.dart';
 import '../controllers/network_controller.dart';
 import '../widgets/animated_route.dart';
+import '../widgets/utils.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -24,36 +26,12 @@ class SignUpPage extends ConsumerStatefulWidget {
 }
 
 class _SignUpPageState extends ConsumerState<SignUpPage> {
-  late TextEditingController _dateController;
-  late TextEditingController _userNameController;
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
-  late TextEditingController _confirmPasswordController;
-  late TextEditingController _phoneNumberController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  late final SignUpController signUpGlobalReadState;
   @override
   void initState() {
-    _dateController = TextEditingController();
-    _phoneNumberController = TextEditingController();
-    _userNameController = TextEditingController();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
-    _confirmPasswordController = TextEditingController();
-
+    signUpGlobalReadState = ref.read(Providers.signUpControllerProvider);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    _phoneNumberController.dispose();
-    _userNameController.dispose();
-    _confirmPasswordController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-
-    super.dispose();
   }
 
   final Shader linearGradient = LinearGradient(
@@ -61,29 +39,37 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
   @override
   Widget build(BuildContext context) {
-    final connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    final connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
             },
-            child: Scaffold(
-              backgroundColor: Color(0xff1A1F25),
-              body: SafeArea(
-                child: Container(
-                  alignment: Alignment.center,
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 16.w,
-                          right: 16.w,
-                          top: 15.h,
-                        ),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
+            child: WillPopScope(
+              onWillPop: () => CustomUtilities.onWillPop(
+                body: 'Do you want to exit ?',
+                context: context,
+                notificationName: 'Are you sure?',
+              ),
+              child: Scaffold(
+                //resizeToAvoidBottomInset: false,
+                backgroundColor: Color(0xff1A1F25),
+                body: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.w,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: AnimatedPadding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      child: Center(
+                        child: ListView(
+                            shrinkWrap: true,
+                            physics: AlwaysScrollableScrollPhysics(),
                             children: [
                               Center(
                                 child: Column(children: [
@@ -125,121 +111,57 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                               // ),
 
                               customTextFieldSignUp(
-                                controller: _userNameController,
+                                controller:
+                                    signUpGlobalReadState.userNameController,
                                 icon: Icons.contact_page_outlined,
                                 isObscure: false,
                                 labeltext: 'UserName',
+                                iconName: 'idcard',
                                 tia: TextInputAction.newline,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: 5.w,
-                                  top: 10.w,
-                                ),
-                                child: SizedBox(
-                                  //height: 44.h,
-                                  child:
-                                      Consumer(builder: (context, ref, child) {
-                                    final register =
-                                        ref.watch(signUpControllerProvider);
-                                    return DropdownButtonFormField<String>(
-                                      isExpanded: true,
-                                      dropdownColor: color_gt_textColorBlueGrey,
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Color(0xff20242A),
-                                        floatingLabelStyle: TextStyle(
-                                          fontFamily: "gilroy_bolditalic",
-                                          fontSize: 16.sp,
-                                          color: color_gt_headersTextColorWhite
-                                              .withOpacity(0.9),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.r),
-                                          borderSide: BorderSide(
-                                              color: Color(0xff7e7d7d)
-                                                  .withOpacity(0.05)),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.r),
-                                          borderSide: BorderSide(
-                                              color: Color(0xff7e7d7d)
-                                                  .withOpacity(0.05)),
-                                        ),
-                                        prefixIcon: Icon(
-                                          (register.selectedgender == 'Male')
-                                              ? Icons.male_rounded
-                                              : Icons.female_rounded,
-                                          color: Color(0xff7e7d7d)
-                                              .withOpacity(0.7),
-                                        ),
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: color_gt_headersTextColorWhite,
-                                        fontFamily: 'gilroy_regular',
-                                      ),
-
-                                      value: register.selectedgender,
-
-                                      hint: Text(
-                                        'Select Gender',
-                                        style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: color_gt_headersTextColorWhite
-                                              .withOpacity(0.7),
-                                          fontFamily: 'gilroy_regular',
-                                        ),
-                                      ),
-                                      onChanged: (value) {
-                                        register.changegender(value!);
-                                      },
-                                      // ignore: prefer_const_literals_to_create_immutables
-                                      items: genders.map((item) {
-                                        return DropdownMenuItem<String>(
-                                          child: Text(item),
-                                          value: item,
-                                        );
-                                      }).toList(),
-                                    );
-                                  }),
-                                ),
-                              ),
+                              genderDropDown(),
                               BirthYearSelectionWidget(),
                               customTextFieldSignUp(
-                                controller: _emailController,
+                                controller:
+                                    signUpGlobalReadState.emailController,
                                 icon: Icons.email,
                                 isObscure: false,
                                 labeltext: 'Email',
+                                iconName: 'email',
                                 tia: TextInputAction.newline,
                               ),
 
                               customTextFieldSignUp(
-                                controller: _phoneNumberController,
+                                controller:
+                                    signUpGlobalReadState.phoneNumberController,
                                 icon: Icons.phone,
                                 isObscure: false,
                                 labeltext: 'Phone',
+                                iconName: 'phone',
                                 tia: TextInputAction.newline,
                               ),
                               customTextFieldSignUp(
-                                controller: _passwordController,
+                                controller:
+                                    signUpGlobalReadState.passwordController,
                                 icon: Icons.security_outlined,
                                 isObscure: true,
+                                iconName: 'password_2',
                                 labeltext: 'Password',
                                 tia: TextInputAction.newline,
                               ),
                               customTextFieldSignUp(
-                                controller: _confirmPasswordController,
+                                controller: signUpGlobalReadState
+                                    .confirmPasswordController,
                                 icon: Icons.security_outlined,
                                 isObscure: true,
+                                iconName: 'password_2',
                                 labeltext: 'Confirm Password',
                                 tia: TextInputAction.done,
                               ),
+
                               Consumer(builder: (context, ref, child) {
-                                final registerprovider =
-                                    ref.watch(signUpControllerProvider);
+                                final registerprovider = ref
+                                    .watch(Providers.signUpControllerProvider);
 
                                 return Padding(
                                   padding: EdgeInsets.only(top: 17.h),
@@ -254,14 +176,18 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                         UserModel userData = UserModel(
                                           pendingApprovals: null,
                                           isAwaitingEnrollment: false,
-                                          phoneNumber: _phoneNumberController
-                                              .text
+                                          phoneNumber: signUpGlobalReadState
+                                              .phoneNumberController.text
                                               .trim(),
-                                          DOB: _dateController.text,
-                                          email: _emailController.text.trim(),
+                                          DOB: signUpGlobalReadState
+                                              .dateController.text,
+                                          email: signUpGlobalReadState
+                                              .emailController.text
+                                              .trim(),
                                           isUser: true,
                                           registeredDate: DateTime.now(),
-                                          userName: _userNameController.text
+                                          userName: signUpGlobalReadState
+                                              .userNameController.text
                                               .toLowerCase()
                                               .trim(),
                                           userType: userLevels[0]!,
@@ -270,8 +196,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                         );
                                         registerprovider.registerUser(
                                           userModel: userData,
-                                          password:
-                                              _passwordController.text.trim(),
                                           ctx: context,
                                         );
                                       } else {
@@ -312,6 +236,41 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                   ),
                                 );
                               }),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: 30.h, bottom: 10.h),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Already have an account? ',
+                                      style: TextStyle(
+                                        color: color_gt_headersTextColorWhite,
+                                        fontSize: 14.sp,
+                                        fontFamily: 'gilroy_regularitalic',
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  SignInPage(),
+                                            ));
+                                      },
+                                      child: Text(
+                                        'Sign-in !',
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Color(0xffFED428),
+                                          fontFamily: 'gilroy_bolditalic',
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                               // Padding(
                               //   padding: EdgeInsets.only(
                               //     top: 7.w,
@@ -344,47 +303,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                               //         )),
                               //       ]),
                               // ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(top: 20.h, bottom: 20.h),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Already have an account? ',
-                                      style: TextStyle(
-                                        color: color_gt_headersTextColorWhite,
-                                        fontSize: 14.sp,
-                                        fontFamily: 'gilroy_bolditalic',
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            CupertinoPageRoute(builder: (context) => SignInPage(),)
-                                            // ScaleRoute(
-                                            //   page: SignInPage(),
-                                            // )
-                                            );
-                                        // Navigator.pushReplacement(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder: (context) => SignInPage(),
-                                        //     ));
-                                      },
-                                      child: Text(
-                                        'Sign-in !',
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: Color(0xffFED428),
-                                          fontFamily: 'gilroy_bolditalic',
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
                             ]),
                       ),
                     ),
@@ -394,6 +312,82 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             ),
           )
         : NoInternetWidget();
+  }
+
+  genderDropDown() {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: 5.w,
+        top: 10.w,
+      ),
+      child: SizedBox(
+        //height: 44.h,
+        child: Consumer(builder: (context, ref, child) {
+          final register = ref.watch(Providers.signUpControllerProvider);
+          return Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: Colors.blue.shade200,
+            ),
+            child: DropdownButtonFormField<String>(
+              borderRadius: BorderRadius.circular(20.0),
+              isExpanded: true,
+              dropdownColor: Color(0xff20242A),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xff20242A),
+                floatingLabelStyle: TextStyle(
+                  fontFamily: "gilroy_bolditalic",
+                  fontSize: 16.sp,
+                  color: color_gt_headersTextColorWhite.withOpacity(0.9),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                  borderSide:
+                      BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                  borderSide:
+                      BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
+                ),
+                prefixIcon: Icon(
+                  (register.selectedgender == 'Male')
+                      ? Icons.male_rounded
+                      : Icons.female_rounded,
+                  color: Color(0xff7e7d7d).withOpacity(0.7),
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: color_gt_headersTextColorWhite,
+                fontFamily: 'gilroy_regular',
+              ),
+
+              value: register.selectedgender,
+
+              hint: Text(
+                'Select Gender',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: color_gt_headersTextColorWhite.withOpacity(0.7),
+                  fontFamily: 'gilroy_regular',
+                ),
+              ),
+              onChanged: (value) {
+                register.changegender(value!);
+              },
+              // ignore: prefer_const_literals_to_create_immutables
+              items: genders.map((item) {
+                return DropdownMenuItem<String>(
+                  child: Text(item),
+                  value: item,
+                );
+              }).toList(),
+            ),
+          );
+        }),
+      ),
+    );
   }
 
   BirthYearSelectionWidget() {
@@ -409,13 +403,18 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
-          final signupcontroller = ref.watch(signUpControllerProvider);
+          final signupcontroller =
+              ref.watch(Providers.signUpControllerProvider);
           return TextFormField(
+            scrollPadding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             validator: (value) {
               return (signupcontroller.calculateAge() < 17)
                   ? 'must be atleast 17 years !'
                   : null;
             },
+            // scrollPadding: EdgeInsets.only(
+            //     bottom: MediaQuery.of(context).viewInsets.bottom + 15.sp * 4),
             enableInteractiveSelection: false,
             showCursor: false,
             keyboardType: TextInputType.none,
@@ -444,13 +443,11 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide:
-                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
+                borderSide: BorderSide(color: Colors.red.withOpacity(0.05)),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide:
-                    BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
+                borderSide: BorderSide(color: Colors.red.withOpacity(0.05)),
               ),
               errorStyle: TextStyle(
                   fontFamily: 'gilroy_regularitalic',
@@ -458,8 +455,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   fontSize: 12.sp),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide:
-                    BorderSide(color: Colors.transparent,),
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
@@ -467,7 +465,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     BorderSide(color: Color(0xff7e7d7d).withOpacity(0.05)),
               ),
             ),
-            controller: _dateController,
+            controller: signupcontroller.dateController,
             cursorColor: color_gt_textColorBlueGrey,
             onTap: () async {
               DateTime? pickedDate = await showDatePicker(
@@ -486,7 +484,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 signupcontroller.updateDate(pickedDate);
                 print(signupcontroller.calculateAge());
 
-                _dateController.text = dateForDb;
+                signupcontroller.dateController.text = dateForDb;
               }
             },
           );
@@ -524,6 +522,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
     required TextInputAction tia,
     required String labeltext,
     required bool isObscure,
+    required String iconName,
     required IconData icon,
   }) {
     return Padding(
@@ -538,7 +537,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
-          final signUpController_var = ref.watch(signUpControllerProvider);
+          final signUpController_var =
+              ref.watch(Providers.signUpControllerProvider);
           return TextFormField(
             validator: (value) {
               if (labeltext == 'UserName') {
@@ -579,10 +579,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         r'^((?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9!@\-+()#$%&*]{6,20})$')
                     .hasMatch(value)) {
                   return 'minimum 6 characters, atleast one letter and one number is must!';
-                } else if (_passwordController.text !=
-                    _confirmPasswordController.text) {
-                  _passwordController.text = '';
-                  _confirmPasswordController.text = '';
+                } else if (signUpController_var.passwordController.text !=
+                    signUpController_var.confirmPasswordController.text) {
+                  signUpController_var.passwordController.text = '';
+                  signUpController_var.confirmPasswordController.text = '';
                   return 'Re-Confirm the password!';
                 } else {
                   return null;
@@ -612,7 +612,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 ? TextInputType.phone
                 : TextInputType.emailAddress,
             textInputAction: tia,
-            decoration: InputDecoration( contentPadding: EdgeInsets.symmetric(vertical: 14.h,horizontal: 10),
+            decoration: InputDecoration(
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 14.h, horizontal: 10),
               filled: true,
               fillColor: Color(0xff20242A),
               floatingLabelStyle: TextStyle(
@@ -625,16 +627,29 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 fontSize: 16.sp,
                 color: color_gt_headersTextColorWhite.withOpacity(0.75),
               ),
-              prefixIcon: Icon(
-                icon,
-                color: Color(0xff7e7d7d).withOpacity(0.7),
+              prefixIcon: Padding(
+                padding: EdgeInsets.all(10.h),
+                child: Image.asset(
+                  "assets/icons/$iconName.png",
+                  fit: BoxFit.fitHeight,
+                  height: 10.h,
+                  color: Color(0xff7e7d7d).withOpacity(0.7),
+                ),
               ),
+              //  Icon(
+              //   icon,
+              //   color: Color(0xff7e7d7d).withOpacity(0.7),
+              // ),
               suffixIcon: (isObscure)
                   ? GestureDetector(
                       onTap: () {
                         (labeltext == "Password")
-                            ? signUpController_var.changePassObscurity()
-                            : signUpController_var.changeConfirmPassObscurity();
+                            ? ref
+                                .read(Providers.signUpControllerProvider)
+                                .changePassObscurity()
+                            : ref
+                                .read(Providers.signUpControllerProvider)
+                                .changeConfirmPassObscurity();
                       },
                       child: (labeltext == "Password")
                           ? (signUpController_var.pass_isobscure)
@@ -657,7 +672,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                 ))
                   : GestureDetector(
                       onTap: () {
-                        signUpController_var.changePassObscurity();
+                        ref
+                            .read(Providers.signUpControllerProvider)
+                            .changePassObscurity();
                       },
                       child: (signUpController_var.pass_isobscure)
                           ? Icon(
@@ -685,8 +702,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   fontSize: 12.sp),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
-                borderSide:
-                    BorderSide(color:Colors.transparent,),
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),

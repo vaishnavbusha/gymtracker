@@ -11,7 +11,7 @@ import 'package:gymtracker/widgets/loader.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 
 class ApprovalsPage extends ConsumerStatefulWidget {
   List pendingApprovals;
@@ -41,7 +41,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
   }
 
   void getDetailsFromController() {
-    ref.read(approvalControllerProvider)
+    ref.read(Providers.approvalControllerProvider)
       ..getConstraintDetails()
       ..getApproveeUID(widget.pendingApprovals)
       ..getAllUsersDataFromFireStore();
@@ -58,7 +58,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final approvalState = ref.watch(approvalControllerProvider);
+    final approvalState = ref.watch(Providers.approvalControllerProvider);
     //approvalState.getAllUsersDataFromFireStore();
     return GestureDetector(
       onTap: () {
@@ -104,9 +104,9 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
                 itemBuilder: (context, index) {
                   return Consumer(builder: (context, ref, __) {
                     final approveButtonState =
-                        ref.watch(testApprovalProvider(index));
-                    final approveButtonNotifierState =
-                        ref.watch(testApprovalProvider(index).notifier);
+                        ref.watch(Providers.testApprovalProvider(index));
+                    final approveButtonNotifierState = ref
+                        .watch(Providers.testApprovalProvider(index).notifier);
                     return Form(
                       key: approveButtonNotifierState.formKey,
                       child: Column(
@@ -379,7 +379,7 @@ class _ApprovalsPageState extends ConsumerState<ApprovalsPage> {
               ),
         ),
         child: Consumer(builder: (context, ref, child) {
-          final approvalState = ref.watch(approvalControllerProvider);
+          final approvalState = ref.watch(Providers.approvalControllerProvider);
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -637,7 +637,7 @@ class _RemoveButtonDialogState extends ConsumerState<RemoveButtonDialog> {
   @override
   Widget build(BuildContext context) {
     final approveButtonNotifierState =
-        ref.watch(testApprovalProvider(widget.index).notifier);
+        ref.watch(Providers.testApprovalProvider(widget.index).notifier);
     return AnimatedContainer(
       duration: Duration(
         milliseconds: 500,

@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/views/datatable.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
@@ -33,15 +33,16 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
   }
 
   getdates() async {
-    final x = ref.read(attendanceByDateProvider);
+    final x = ref.read(Providers.attendanceByDateProvider);
     await x.getDatesListFromGymPartner();
   }
 
   final monthData = DateFormat('MMM').format(DateTime.now());
   @override
   Widget build(BuildContext context) {
-    final attendanceByDateState = ref.watch(attendanceByDateProvider);
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    final attendanceByDateState = ref.watch(Providers.attendanceByDateProvider);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? Scaffold(
             appBar: PreferredSize(
@@ -123,8 +124,8 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                                           return Consumer(
                                               builder: (context, ref, child) {
                                             final attendanceByDateState =
-                                                ref.watch(
-                                                    attendanceByDateProvider);
+                                                ref.watch(Providers
+                                                    .attendanceByDateProvider);
                                             return DropdownButtonFormField<
                                                 String>(
                                               menuMaxHeight: 250.h,
@@ -220,7 +221,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                             ),
                             Consumer(builder: (context, value, child) {
                               final attendanceByDateState =
-                                  ref.watch(attendanceByDateProvider);
+                                  ref.watch(Providers.attendanceByDateProvider);
                               return (attendanceByDateState.isDataLoading)
                                   ? Loader(
                                       loadercolor: Color(0xffFED428),
@@ -294,7 +295,7 @@ class _AttendanceByDateState extends ConsumerState<AttendanceByDate> {
                             }),
                             Consumer(builder: (context, val, __) {
                               final attendanceByDateState =
-                                  ref.watch(attendanceByDateProvider);
+                                  ref.watch(Providers.attendanceByDateProvider);
                               return Padding(
                                 padding: EdgeInsets.only(top: 20.h),
                                 child: (attendanceByDateState

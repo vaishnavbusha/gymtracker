@@ -28,7 +28,7 @@ class Loader extends StatelessWidget {
               angle: -45 * math.pi / 180,
               child: LoadingAnimationWidget.threeArchedCircle(
                 color: const Color(0xff1A1F25),
-                size: 30,
+                size: 35,
               ),
             ),
           ),

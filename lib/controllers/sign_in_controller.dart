@@ -1,9 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/models/user_model.dart';
 import 'package:gymtracker/views/navigation.dart';
 import 'package:gymtracker/views/tabview_navigation.dart';
@@ -16,31 +17,46 @@ import '../constants.dart';
 import '../models/gympartner_constraints_model.dart';
 
 class LoginController extends ChangeNotifier {
-  bool pass_isobscure = true;
+  late TextEditingController passwordResetEmailController;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  double? width;
 
+  // Color color = Color(0xffFED428);
+  LoginController() {
+    passwordResetEmailController = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+  }
   bool is_login_details_uploading = false;
-
   bool isResetPasswordLoading = false;
-  //String auth;
-  changeObscurity() {
-    pass_isobscure = !pass_isobscure;
-    //is_login_details_uploading = !is_login_details_uploading;
+  bool cv = true;
+  change() {
+    //color = color == Color(0xffFED428) ? Color(0xff1A1F25) : Color(0xffFED428);
+    width = width == 50 ? 100 : 50;
+    cv = !cv;
+    print(width);
     notifyListeners();
   }
 
-  Future loginuser(
-      {required String email,
-      required String password,
-      required BuildContext ctx}) async {
+  Future loginuser({
+    required BuildContext ctx,
+  }) async {
+    is_login_details_uploading = true;
+    //color = color != Color(0xffFED428) ? Color(0xff1A1F25) : Color(0xffFED428);
+    width = 44.w;
     notifyListeners();
     try {
-      if (email.isNotEmpty && password.isNotEmpty) {
+      if (emailController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty) {
         is_login_details_uploading = true;
         final creds = await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email.trim(), password: password.trim());
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
         is_login_details_uploading = false;
         await storeUserDetailsToHive(creds.user!.uid);
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           CustomSnackBar.buildSnackbar(
             color: const Color(0xff4CB944),
             context: ctx,
@@ -48,14 +64,15 @@ class LoginController extends ChangeNotifier {
             textcolor: const Color(0xffFDFFFC),
             iserror: false,
           );
-          // ... show the culprit SnackBar here.
         });
         // final todaysdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
         // Hive.box(miscellaneousDataHIVE).put('todaysdate', todaysdate);
         //await getConstraints();
         Navigator.pushReplacement(
             ctx,
-            CupertinoPageRoute(builder: (context) => const NavigationScreen(),)
+            CupertinoPageRoute(
+              builder: (context) => const NavigationScreen(),
+            )
             // ScaleRoute(
             //   page: const NavigationScreen(),
             // )
@@ -63,14 +80,12 @@ class LoginController extends ChangeNotifier {
         notifyListeners();
       }
     } on FirebaseAuthException catch (e) {
-      if (kDebugMode) {
-        print('ecode =' + e.code);
-      }
       if (e.code == 'user-not-found' ||
           e.code == 'wrong-password' ||
-          e.code == 'unknown') {
+          e.code == 'unknown' ||
+          e.code == 'invalid-credential') {
         CustomSnackBar.buildSnackbar(
-          color: Colors.red[500]!,
+          color: Color(0xfff34213),
           context: ctx,
           message: 'wrong email/password, try again !',
           textcolor: const Color(0xffFDFFFC),
@@ -78,30 +93,24 @@ class LoginController extends ChangeNotifier {
         );
       } else {
         CustomSnackBar.buildSnackbar(
-          color: Colors.red[500]!,
+          color: Color(0xfff34213),
           context: ctx,
           message: e.message!,
           textcolor: const Color(0xffFDFFFC),
           iserror: true,
         );
       }
-      if (kDebugMode) {
-        print(e.toString());
-      }
-      is_login_details_uploading = false;
     } catch (e) {
       CustomSnackBar.buildSnackbar(
-        color: Colors.red[500]!,
+        color: Color(0xfff34213),
         context: ctx,
         message: e.toString(),
         textcolor: const Color(0xffFDFFFC),
         iserror: true,
       );
-      if (kDebugMode) {
-        print(e.toString());
-      }
-      is_login_details_uploading = false;
     }
+    is_login_details_uploading = false;
+    width = MediaQuery.of(ctx).size.width;
     notifyListeners();
   }
 
@@ -117,23 +126,28 @@ class LoginController extends ChangeNotifier {
       throw 'Privileged user\'s can\'t sign-in here, sign-in failed !';
     } else {
       UserModel.saveUserDataToHIVE(userModelData);
-
-      Hive.box(miscellaneousDataHIVE)
-          .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
-      Hive.box(miscellaneousDataHIVE)
-          .put('membershipExpiry', userModelData.membershipExpiry);
-      Hive.box(miscellaneousDataHIVE)
-          .put('awaitingRenewal', userModelData.awaitingRenewal);
+      Hive.box(miscellaneousDataHIVE).putAll({
+        'isAwaitingEnrollment': userModelData.isAwaitingEnrollment,
+        'membershipExpiry': userModelData.membershipExpiry,
+        'awaitingRenewal': userModelData.awaitingRenewal
+      });
+      // Hive.box(miscellaneousDataHIVE)
+      //     .put('isAwaitingEnrollment', userModelData.isAwaitingEnrollment);
+      // Hive.box(miscellaneousDataHIVE)
+      //     .put('membershipExpiry', userModelData.membershipExpiry);
+      // Hive.box(miscellaneousDataHIVE)
+      //     .put('awaitingRenewal', userModelData.awaitingRenewal);
     }
   }
 
-  Future resetPassword(String _emailID, BuildContext context) async {
-    notifyListeners();
+  Future resetPassword(BuildContext context) async {
     isResetPasswordLoading = true;
+
+    notifyListeners();
     try {
       bool isUserExists = await fireBaseFireStore
           .collection('users')
-          .where('email', isEqualTo: _emailID)
+          .where('email', isEqualTo: passwordResetEmailController.text.trim())
           .get()
           .then(
         (value) {
@@ -143,13 +157,16 @@ class LoginController extends ChangeNotifier {
       if (!isUserExists) {
         throw 'Check your entered email-ID. No user found.';
       }
-      await fireBaseAuth.sendPasswordResetEmail(email: _emailID).then(
+      await fireBaseAuth
+          .sendPasswordResetEmail(email: passwordResetEmailController.text)
+          .then(
         (value) {
           Navigator.pop(context);
           CustomSnackBar.buildSnackbar(
             color: Colors.green,
             context: context,
-            message: 'Email sent to $_emailID for password reset',
+            message:
+                'Email sent to ${passwordResetEmailController.text} for password reset.',
             textcolor: const Color(0xffFDFFFC),
             iserror: false,
           );
@@ -169,7 +186,8 @@ class LoginController extends ChangeNotifier {
         iserror: false,
       );
     }
-    isResetPasswordLoading = true;
+    isResetPasswordLoading = false;
+    passwordResetEmailController.clear();
     notifyListeners();
   }
 

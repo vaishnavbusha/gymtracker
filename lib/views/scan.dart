@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/models/user_model.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -33,12 +33,12 @@ class _ScanPageState extends ConsumerState<ScanPage>
   }
 
   getData() async {
-    await ref.read(scanControllerProvider).initialCheckInOrOutTime();
+    await ref.read(Providers.scanControllerProvider).initialCheckInOrOutTime();
   }
 
   @override
   Widget build(BuildContext context) {
-    final globalScanState = ref.watch(scanControllerProvider);
+    final globalScanState = ref.watch(Providers.scanControllerProvider);
     return Scaffold(
       backgroundColor: Color(0xff1A1F25),
       extendBody: true,
@@ -249,7 +249,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
                                 : Container(),
                             Consumer(builder: (context, ref, __) {
                               final scanState =
-                                  ref.watch(scanControllerProvider);
+                                  ref.watch(Providers.scanControllerProvider);
                               return (scanState.isSearchLoading &&
                                       (Hive.box(miscellaneousDataHIVE)
                                               .get("membershipExpiry") !=

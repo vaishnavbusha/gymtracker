@@ -10,7 +10,7 @@ import 'package:gymtracker/models/user_model.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
-import '../providers/authentication_providers.dart';
+import '../providers/providers.dart';
 
 class TestApprovalsPage extends ConsumerStatefulWidget {
   List pendingApprovals;
@@ -35,7 +35,7 @@ class _TestApprovalsPageState extends ConsumerState<TestApprovalsPage> {
   }
 
   void getDetailsFromController() {
-    ref.read(approvalControllerProvider)
+    ref.read(Providers.approvalControllerProvider)
       ..getApproveeUID(widget.pendingApprovals)
       ..getAllUsersDataFromFireStore();
   }
@@ -48,7 +48,7 @@ class _TestApprovalsPageState extends ConsumerState<TestApprovalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final approvalState = ref.watch(approvalControllerProvider);
+    final approvalState = ref.watch(Providers.approvalControllerProvider);
 
     //approvalState.getAllUsersDataFromFireStore();
     return GestureDetector(
@@ -98,9 +98,10 @@ class _TestApprovalsPageState extends ConsumerState<TestApprovalsPage> {
           child: ListView.builder(
             itemCount: approvalState.usersModelData.length,
             itemBuilder: (context, index) {
-              final testApprovalState = ref.watch(testApprovalProvider(index));
+              final testApprovalState =
+                  ref.watch(Providers.testApprovalProvider(index));
               final testApprovalNotifierState =
-                  ref.watch(testApprovalProvider(index).notifier);
+                  ref.watch(Providers.testApprovalProvider(index).notifier);
               return Consumer(builder: (context, ref, __) {
                 return Form(
                   key: testApprovalNotifierState.formKey,

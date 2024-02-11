@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -30,13 +30,14 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
   }
 
   getdata() async {
-    final renewMemberShipState = ref.read(renewMemberShipProvider);
+    final renewMemberShipState = ref.read(Providers.renewMemberShipProvider);
     await renewMemberShipState.getUIDsAwaitingRenewal();
   }
 
   @override
   Widget build(BuildContext context) {
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
 
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? GestureDetector(
@@ -76,7 +77,7 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
               body: Consumer(
                 builder: (context, ref, child) {
                   final renewMemberShipState =
-                      ref.watch(renewMemberShipProvider);
+                      ref.watch(Providers.renewMemberShipProvider);
 
                   return (renewMemberShipState.isLoading == false)
                       ? (renewMemberShipState.expiredUsersData.isNotEmpty)
@@ -86,9 +87,11 @@ class _RenewMembershipsPageState extends ConsumerState<RenewMembershipsPage> {
                                   renewMemberShipState.expiredUsersData.length,
                               itemBuilder: (context, index) {
                                 final renewFamilyState = ref.watch(
-                                    renewMemberShipFamilyProvider(index));
+                                    Providers.renewMemberShipFamilyProvider(
+                                        index));
                                 final renewFamilyNotifierState = ref.watch(
-                                    renewMemberShipFamilyProvider(index)
+                                    Providers.renewMemberShipFamilyProvider(
+                                            index)
                                         .notifier);
                                 return Form(
                                   key: renewFamilyNotifierState.formKey,

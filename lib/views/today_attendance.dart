@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/controllers/todays_attendance_controller.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/views/datatable.dart';
 import 'package:gymtracker/widgets/loader.dart';
 import 'package:gymtracker/widgets/nointernet_widget.dart';
@@ -28,7 +28,7 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
   }
 
   getData() async {
-    TodaysAttendanceController x = ref.read(todaysAttendanceProvider);
+    TodaysAttendanceController x = ref.read(Providers.todaysAttendanceProvider);
 
     //await x.getGymName();
     await x.fetchTodaysAttendance();
@@ -36,9 +36,10 @@ class _TodaysAttendanceState extends ConsumerState<TodaysAttendance> {
 
   @override
   Widget build(BuildContext context) {
-    final todaysAttendanceState = ref.watch(todaysAttendanceProvider);
+    final todaysAttendanceState = ref.watch(Providers.todaysAttendanceProvider);
     final datetime = DateFormat('dd-MM-yyyy').format(DateTime.now());
-    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
+    var connectivityStatusProvider =
+        ref.watch(Providers.connectivityStatusProviders);
 
     return (connectivityStatusProvider == ConnectivityStatus.isConnected)
         ? Scaffold(

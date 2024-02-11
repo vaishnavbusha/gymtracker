@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unused_local_variable
+// ignore_for_file: prefer_const_constructors, unused_local_variable, use_build_context_synchronously
 
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,7 +20,8 @@ import 'models/gympartner_constraints_model.dart';
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-
+    statusBarBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.light,
     systemNavigationBarColor: Color(0x00FFFFFF),
     systemNavigationBarContrastEnforced: false, // transparent status bar
   ));
@@ -50,25 +51,35 @@ class _MyAppState extends ConsumerState<MyApp> {
     if (Hive.box(miscellaneousDataHIVE).get('isLoggedIn') == null) {
       Hive.box(miscellaneousDataHIVE).put('isLoggedIn', false);
     }
-    return ScreenUtilInit(designSize: const Size(360,800),minTextAdapt: true,splitScreenMode: true,useInheritedMediaQuery: true,builder: (context, child) {
-      
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'GymTracker',
-        theme: ThemeData(
-          //primaryColor: Color(0xffFED428),
-            textSelectionTheme: const TextSelectionThemeData(
-          //  cursorColor: Colors.red,
+    return ScreenUtilInit(
+        designSize: const Size(360, 800),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        useInheritedMediaQuery: true,
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'GymTracker',
+            theme: ThemeData(
+              //primaryColor: Color(0xffFED428),
+              textSelectionTheme: const TextSelectionThemeData(
+                //  cursorColor: Colors.red,
                 //  selectionColor: Colors.blue,
-                  selectionHandleColor: Color(0xffFED428),
-          ),
-          fontFamily: 'gilroy_regular',
-          useMaterial3: true,
-          primarySwatch: Colors.blue,
-        ),
-        home: SplashScreen(),
-      );
-    });
+                selectionHandleColor: Color(0xffFED428),
+              ),
+
+              fontFamily: 'gilroy_regular',
+              useMaterial3: true,
+
+              dialogTheme: DialogTheme(
+                surfaceTintColor: Color(0xff20242A),
+                backgroundColor: Color(0xff20242A),
+              ),
+              primarySwatch: Colors.blue,
+            ),
+            home: SplashScreen(),
+          );
+        });
   }
 }
 
@@ -80,6 +91,7 @@ class MyWidget extends StatelessWidget {
     return Scaffold();
   }
 }
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -94,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(Duration(milliseconds: 1000), () {
-    userModel = (Hive.box(userDetailsHIVE).get('usermodeldata'));
+      userModel = (Hive.box(userDetailsHIVE).get('usermodeldata'));
       changepage();
     });
   }
@@ -123,7 +135,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.contain,
                   ),
                   blendMode: BlendMode.srcATop),
-              (userModel!=null && userModel!.enrolledGym != null)
+              (userModel != null && userModel!.enrolledGym != null)
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -193,7 +205,8 @@ class _SplashScreenState extends State<SplashScreen> {
       builder: (_) => ValueListenableBuilder<Box<dynamic>>(
         valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
         builder: (context, value, child) {
-          if (value.get('isLoggedIn') == false || value.get('isLoggedIn').isNull) {
+          if (value.get('isLoggedIn') == false ||
+              value.get('isLoggedIn').isNull) {
             return SignInPage();
           } else {
             return NavigationScreen();

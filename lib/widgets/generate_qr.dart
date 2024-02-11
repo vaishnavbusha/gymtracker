@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gymtracker/constants.dart';
 import 'package:gymtracker/controllers/encrypt_controller.dart';
-import 'package:gymtracker/providers/authentication_providers.dart';
+import 'package:gymtracker/providers/providers.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -34,7 +34,7 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
 
   @override
   Widget build(BuildContext context) {
-    final qrGeneratorState = ref.watch(qrGeneratorProvider);
+    final qrGeneratorState = ref.watch(Providers.qrGeneratorProvider);
     double pixelRatio = MediaQuery.of(context).devicePixelRatio;
     qrGeneratorState.screenshotController!.capture(pixelRatio: pixelRatio);
     final QRData =
@@ -103,7 +103,8 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        QrImageView( foregroundColor: Colors.black,
+                        QrImageView(
+                          foregroundColor: Colors.black,
                           data: EncryptController.encryptData(QRData),
                           version: QrVersions.auto,
                           size: 300,
@@ -115,7 +116,8 @@ class _QRGeneratorState extends ConsumerState<QRGenerator> {
                                 textAlign: TextAlign.center,
                               ),
                             );
-                          },),
+                          },
+                        ),
                         // QrImage(
                         //   foregroundColor: Colors.black,
                         //   data: EncryptController.encryptData(QRData),

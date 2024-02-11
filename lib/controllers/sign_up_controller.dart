@@ -15,6 +15,12 @@ import '../widgets/animated_route.dart';
 import '../widgets/customsnackbar.dart';
 
 class SignUpController extends ChangeNotifier {
+  late TextEditingController dateController;
+  late TextEditingController userNameController;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
+  late TextEditingController phoneNumberController;
   bool pass_isobscure = true;
   DateTime? pickedDate;
   bool? isInputDateValidFormat;
@@ -26,6 +32,12 @@ class SignUpController extends ChangeNotifier {
       File('/data/user/0/com.example.gymtracker/cache/Male.png');
   File? testfile;
   SignUpController(DateTime value) {
+    dateController = TextEditingController();
+    phoneNumberController = TextEditingController();
+    userNameController = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
     pickedDate = value;
     // convertImageToFile().then(
     //   (value) {
@@ -78,7 +90,6 @@ class SignUpController extends ChangeNotifier {
 
   void registerUser({
     required UserModel userModel,
-    required String password,
     //File image,
     required BuildContext ctx,
   }) async {
@@ -99,7 +110,9 @@ class SignUpController extends ChangeNotifier {
       }
 
       UserCredential cred = await fireBaseAuth.createUserWithEmailAndPassword(
-          email: userModel.email, password: password);
+        email: userModel.email,
+        password: passwordController.text.trim(),
+      );
       // String downloadurl = await _uploadtoStorage(pickedImage);
       // if (kDebugMode) {
       //   print(downloadurl);
@@ -139,7 +152,9 @@ class SignUpController extends ChangeNotifier {
 
       Navigator.pushReplacement(
           ctx,
-          CupertinoPageRoute(builder: (context) => const SignInPage(),)
+          CupertinoPageRoute(
+            builder: (context) => const SignInPage(),
+          )
           // ScaleRoute(
           //   page: const SignInPage(),
           // )
@@ -209,61 +224,4 @@ class SignUpController extends ChangeNotifier {
     );
     return (y == 1) ? true : false;
   }
-  // changeToDefaultProfilePhoto(BuildContext ctx) async {
-  //   no_of_times_profilechanged = 0;
-  //   CustomSnackBar.buildSnackbar(
-  //     context: ctx,
-  //     color: Colors.red[500]!,
-  //     message: 'You have de-selected your profile picture!',
-  //     textcolor: const Color(0xffFDFFFC),
-  //     iserror: true,
-  //   );
-  //   print(await convertImageToFile());
-  //   pickedImage = await convertImageToFile();
-  //   notifyListeners();
-  // }
-
-  // Future<File> convertImageToFile() async {
-  //   var bytes = await rootBundle.load('assets/images/$selectedgender.png');
-  //   String tempPath = (await getTemporaryDirectory()).path;
-  //   File file = File('$tempPath/$selectedgender.png');
-  //   await file.writeAsBytes(
-  //       bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
-
-  //   notifyListeners();
-  //   return file;
-  // }
-
-  // void pickimage(BuildContext ctx) async {
-  //   final pickedimage = await ImagePicker().pickImage(
-  //       source: ImageSource.gallery,
-  //       maxHeight: 480,
-  //       maxWidth: 640,
-  //       imageQuality: 50);
-  //   if (pickedimage != null) {
-  //     no_of_times_profilechanged++;
-  //     CustomSnackBar.buildSnackbar(
-  //       context: ctx,
-  //       color: const Color(0xff4CB944),
-  //       message: 'You have successfuly selected your profile picture!',
-  //       textcolor: const Color(0xffFDFFFC),
-  //       iserror: true,
-  //     );
-  //     pickedImage = (File(pickedimage.path));
-  //   }
-  //   notifyListeners();
-  //   print(pickedImage);
-  // }
-
-  // Future<String> _uploadtoStorage(File image) async {
-  //   Reference ref = fireBaseStorage
-  //       .ref()
-  //       .child('profilepics')
-  //       .child(FirebaseAuth.instance.currentUser!.uid);
-  //   UploadTask uploadtask = ref.putFile(image);
-  //   TaskSnapshot snap = await uploadtask;
-  //   String downloadurl = await snap.ref.getDownloadURL();
-  //   notifyListeners();
-  //   return downloadurl;
-  // }
 }
