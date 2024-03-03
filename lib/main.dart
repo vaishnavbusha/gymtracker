@@ -206,7 +206,7 @@ class _SplashScreenState extends State<SplashScreen> {
         valueListenable: Hive.box(miscellaneousDataHIVE).listenable(),
         builder: (context, value, child) {
           if (value.get('isLoggedIn') == false ||
-              value.get('isLoggedIn').isNull) {
+              value.get('isLoggedIn') == null) {
             return SignInPage();
           } else {
             return NavigationScreen();

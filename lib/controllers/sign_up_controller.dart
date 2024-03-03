@@ -29,6 +29,7 @@ class SignUpController extends ChangeNotifier {
   bool is_register_details_uploading = false;
   String selectedgender = 'Male';
   int no_of_times_profilechanged = 0;
+  DateTime? pickedDateTime;
   late File pickedImage =
       File('/data/user/0/com.example.gymtracker/cache/Male.png');
   File? testfile;
@@ -51,7 +52,8 @@ class SignUpController extends ChangeNotifier {
     pass_isobscure = !pass_isobscure;
     notifyListeners();
   }
- changeConfirmPassObscurity() {
+
+  changeConfirmPassObscurity() {
     confirmpass_isobscure = !confirmpass_isobscure;
     notifyListeners();
   }
@@ -84,7 +86,6 @@ class SignUpController extends ChangeNotifier {
   //   return (to.difference(from).inHours / 24).round();
   // }
 
- 
   updateDate(DateTime value) {
     pickedDate = value;
     notifyListeners();
@@ -95,8 +96,8 @@ class SignUpController extends ChangeNotifier {
     //File image,
     required BuildContext ctx,
   }) async {
+    is_register_details_uploading = true;
     width = 44.w;
-      is_register_details_uploading = true;
     notifyListeners();
     try {
       List userNamesList = [];
@@ -108,7 +109,7 @@ class SignUpController extends ChangeNotifier {
       //   if (password != confirmPassword) {
       //     throw ('Re-Confirm entered password !');
       //   }
-    
+
       if (await isUserNameUnique(userModel.userName)) {
         throw '"${userModel.userName}" already exists, try with different name !';
       }
@@ -197,7 +198,7 @@ class SignUpController extends ChangeNotifier {
         iserror: true,
       );
     }
-      is_register_details_uploading = false;
+    is_register_details_uploading = false;
     width = MediaQuery.of(ctx).size.width;
     notifyListeners();
   }

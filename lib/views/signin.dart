@@ -68,14 +68,18 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                       child: AnimatedPadding(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
-                        duration: Duration(milliseconds: 250,),
+                        duration: Duration(
+                          milliseconds: 250,
+                        ),
                         curve: Curves.easeInOut,
                         child: Center(
                           child: SingleChildScrollView(
                             physics: AlwaysScrollableScrollPhysics(),
                             child: Column(
                               children: [
-                                  SizedBox(height: 30.h,),
+                                SizedBox(
+                                  height: 30.h,
+                                ),
                                 Container(
                                   height: 80.h,
                                   decoration: BoxDecoration(
@@ -132,66 +136,100 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                     ));
                                     final state =
                                         ref.watch(Providers.loginProvider);
-                                    return Ink(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(60.r),
-                                        color: Color(0xffFED428),
+                                    return CustomUtilities.customAnimatedButton(
+                                      buttonAction: () async {
+                                        SystemChannels.textInput.invokeMethod(
+                                          'TextInput.hide',
+                                        );
+                                        final FormState form =
+                                            _formKey.currentState!;
+                                        if (form.validate()) {
+                                          await ref
+                                              .read(Providers.loginProvider)
+                                              .loginuser(
+                                                ctx: context,
+                                              );
+                                        } else {
+                                          print('Form is invalid');
+                                        }
+                                      },
+                                      widthWhileAnimating: state.width,
+                                      buttonHeight: 47.h,
+                                      condition:
+                                          (isLoginDetailsUploadingProgressState ==
+                                              false),
+                                      context: context,
+                                      falseWidget: Loader(
+                                        loadercolor: Color(0xffFED428),
+                                        key: Key('2'),
                                       ),
-                                      child: InkWell(
-                                        borderRadius:
-                                            BorderRadius.circular(60.r),
-                                        onTap: () async {
-                                          SystemChannels.textInput.invokeMethod(
-                                            'TextInput.hide',
-                                          );
-                                          final FormState form =
-                                              _formKey.currentState!;
-                                          if (form.validate()) {
-                                            await ref
-                                                .read(Providers.loginProvider)
-                                                .loginuser(
-                                                  ctx: context,
-                                                );
-                                          } else {
-                                            print('Form is invalid');
-                                          }
-                                        },
-                                        child: AnimatedContainer(
-                                          curve: Curves.fastEaseInToSlowEaseOut,
-                                          height: 47.h,
-                                          width: state.width ??
-                                              MediaQuery.of(context).size.width,
-                                          duration: Duration(milliseconds: 250),
-                                          child: AnimatedSwitcher(
-                                            switchInCurve:
-                                                Curves.fastEaseInToSlowEaseOut,
-                                            switchOutCurve:
-                                                Curves.fastEaseInToSlowEaseOut,
-                                            duration:
-                                                Duration(milliseconds: 0),
-                                            child:
-                                                (isLoginDetailsUploadingProgressState ==
-                                                        false)
-                                                    ? Text(
-                                                        'Sign In',
-                                                           key: Key('1'),
-                                                        style: TextStyle(
-                                                          fontSize: 20.sp,
-                                                          fontFamily:
-                                                              'gilroy_bold',
-                                                        ),
-                                                      )
-                                                    : Loader(
-                                                        loadercolor:
-                                                            Color(0xffFED428),
-                                                               key: Key('2'),
-                                                            
-                                                      ),
-                                          ),
+                                      trueWidget: Text(
+                                        'Sign In',
+                                        key: Key('1'),
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontFamily: 'gilroy_bold',
                                         ),
                                       ),
                                     );
+                                    // Ink(
+                                    //   decoration: BoxDecoration(
+                                    //     borderRadius:
+                                    //         BorderRadius.circular(60.r),
+                                    //     color: Color(0xffFED428),
+                                    //   ),
+                                    //   child: InkWell(
+                                    //     borderRadius:
+                                    //         BorderRadius.circular(60.r),
+                                    //     onTap: () async {
+                                    //       SystemChannels.textInput.invokeMethod(
+                                    //         'TextInput.hide',
+                                    //       );
+                                    //       final FormState form =
+                                    //           _formKey.currentState!;
+                                    //       if (form.validate()) {
+                                    //         await ref
+                                    //             .read(Providers.loginProvider)
+                                    //             .loginuser(
+                                    //               ctx: context,
+                                    //             );
+                                    //       } else {
+                                    //         print('Form is invalid');
+                                    //       }
+                                    //     },
+                                    //     child: AnimatedContainer(
+                                    //       curve: Curves.fastEaseInToSlowEaseOut,
+                                    //       height: 47.h,
+                                    //       width: state.width ??
+                                    //           MediaQuery.of(context).size.width,
+                                    //       duration: Duration(milliseconds: 250),
+                                    //       child: AnimatedSwitcher(
+                                    //         switchInCurve:
+                                    //             Curves.fastEaseInToSlowEaseOut,
+                                    //         switchOutCurve:
+                                    //             Curves.fastEaseInToSlowEaseOut,
+                                    //         duration: Duration(milliseconds: 0),
+                                    //         child:
+                                    //             (isLoginDetailsUploadingProgressState ==
+                                    //                     false)
+                                    //                 ? Text(
+                                    //                     'Sign In',
+                                    //                     key: Key('1'),
+                                    //                     style: TextStyle(
+                                    //                       fontSize: 20.sp,
+                                    //                       fontFamily:
+                                    //                           'gilroy_bold',
+                                    //                     ),
+                                    //                   )
+                                    //                 : Loader(
+                                    //                     loadercolor:
+                                    //                         Color(0xffFED428),
+                                    //                     key: Key('2'),
+                                    //                   ),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // );
                                   }),
                                 ),
                                 SizedBox(
@@ -239,47 +277,48 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 bottomNavigationBar: customNavBar(),
                 backgroundColor: Color(0xff1A1F25),
                 resizeToAvoidBottomInset: false,
-            
               ),
             ),
           )
         : NoInternetWidget();
   }
 
-  customNavBar(){
-    return  Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h,),
+  customNavBar() {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: 20.h,
+      ),
       child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Don\'t have an account? ',
-                        style: TextStyle(
-                          color: color_gt_headersTextColorWhite,
-                          fontSize: 14.sp,
-                          fontFamily: 'gilroy_regularitalic',
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () async {
-                          Navigator.pushReplacement(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => SignUpPage(),
-                              ));
-                        },
-                        child: Text(
-                          'Sign-up here !',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Color(0xffFED428),
-                            fontFamily: 'gilroy_bolditalic',
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Don\'t have an account? ',
+            style: TextStyle(
+              color: color_gt_headersTextColorWhite,
+              fontSize: 14.sp,
+              fontFamily: 'gilroy_regularitalic',
+            ),
+          ),
+          InkWell(
+            onTap: () async {
+              Navigator.pushReplacement(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => SignUpPage(),
+                  ));
+            },
+            child: Text(
+              'Sign-up here !',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: Color(0xffFED428),
+                fontFamily: 'gilroy_bolditalic',
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -307,8 +346,8 @@ class _CustmoModalBottomSheetNewState
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: AnimatedPadding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         duration: Duration(
           milliseconds: 250,
         ),
@@ -352,8 +391,8 @@ class _CustmoModalBottomSheetNewState
                       //   color: Colors.white24,
                       // ),
                       CustomTextFieldSignIn(
-                        controller: loginGlobalReadState
-                            .passwordResetEmailController,
+                        controller:
+                            loginGlobalReadState.passwordResetEmailController,
                         icon: Icons.email,
                         isObscure: false,
                         labeltext: 'Email',
@@ -377,8 +416,7 @@ class _CustmoModalBottomSheetNewState
                                         0xff1A1F25), //to change text color
                                     padding: EdgeInsets.symmetric(
                                         vertical: 10.h, horizontal: 20.h),
-                                    primary:
-                                        Color(0xffFED428), // button color
+                                    primary: Color(0xffFED428), // button color
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           10.r), // <-- Radius
@@ -520,44 +558,38 @@ class CustomTextFieldSignIn extends StatelessWidget {
                           onTap: () {
                             changeObscurity(ref);
                           },
-                          child: AnimatedSwitcher(
-                            duration: Duration(
-                              milliseconds: 200,
+                          child: CustomUtilities.customAnimatedSwitcher(
+                            condition: isPassObscure,
+                            trueWidget: Icon(
+                              Icons.visibility_off,
+                              key: Key('1'),
+                              color: Color(0xffFED428).withOpacity(0.5),
                             ),
-                            child: (isPassObscure)
-                                ? Icon(
-                                    Icons.visibility_off,
-                                    key: Key('1'),
-                                    color: Color(0xffFED428).withOpacity(0.5),
-                                  )
-                                : Icon(
-                                    Icons.visibility,
-                                    key: Key('2'),
-                                    color: Color(0xffFED428),
-                                  ),
+                            falseWidget: Icon(
+                              Icons.visibility,
+                              key: Key('2'),
+                              color: Color(0xffFED428),
+                            ),
                           ),
                         )
                       : GestureDetector(
                           onTap: () {
                             changeObscurity(ref);
                           },
-                          child: AnimatedSwitcher(
-                            duration: Duration(
-                              milliseconds: 200,
+                          child: CustomUtilities.customAnimatedSwitcher(
+                            condition: isPassObscure,
+                            trueWidget: Icon(
+                              Icons.visibility_off,
+                              key: Key('1'),
+                              color: Color(0xffFED428).withOpacity(0.5),
+                              size: 0,
                             ),
-                            child: (isPassObscure)
-                                ? Icon(
-                                    Icons.visibility_off,
-                                    key: Key('1'),
-                                    color: Color(0xffFED428).withOpacity(0.5),
-                                    size: 0,
-                                  )
-                                : Icon(
-                                    Icons.visibility,
-                                    key: Key('2'),
-                                    color: Color(0xffFED428),
-                                    size: 0,
-                                  ),
+                            falseWidget: Icon(
+                              Icons.visibility,
+                              key: Key('2'),
+                              color: Color(0xffFED428),
+                              size: 0,
+                            ),
                           ),
                         ),
               border: InputBorder.none,

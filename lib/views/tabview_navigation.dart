@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, use_key_in_widget_constructors, implementation_imports
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, use_key_in_widget_constructors, implementation_imports, use_build_context_synchronously
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/src/size_extension.dart';
 import 'package:gymtracker/views/explore.dart';
+import 'package:gymtracker/views/newqrscan.dart';
 import 'package:gymtracker/views/profile.dart';
 import 'package:gymtracker/views/scan.dart';
 import 'package:new_version/new_version.dart';
@@ -30,7 +31,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen>
   // bool get wantKeepAlive => true;
   @override
   void initState() {
-    checkversion();
+    //checkversion();
     ref.read(Providers.navigationBarProvider);
     tabcontroller = TabController(length: 2, vsync: this);
 
@@ -82,18 +83,20 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen>
                     TabBarView(
                       controller: tabcontroller,
                       children: [
-                        (navigationState.isUser!) ? ScanPage() : ExplorePage(),
+                        (navigationState.isUser!)
+                            ? NewQRScanPage()
+                            : ExplorePage(),
                         ProfilePage(),
                       ],
                     ),
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.h),
+                        padding: EdgeInsets.only(bottom: 15.h),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.73,
                               decoration: BoxDecoration(
                                 color: Colors.white10,
                                 borderRadius: BorderRadius.circular(80.r),
@@ -105,39 +108,56 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen>
                                       ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                                   child: Column(
                                     children: [
-                                      Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: TabBar(
-                                            controller: tabcontroller,
-                                            unselectedLabelColor:
-                                                Color(0xffFED428)
-                                                    .withOpacity(0.2),
-                                            labelColor: Color(0xffFED428),
-                                            labelStyle: TextStyle(
-                                              fontFamily: 'gilroy_regular',
-                                              fontSize: 13.sp,
-                                            ),
-                                            indicator: BoxDecoration(
-                                              color: Colors.black
-                                                  .withOpacity(0.15),
-                                              borderRadius:
-                                                  BorderRadius.circular(80.r),
-                                            ),
-                                            tabs: [
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Icon((navigationState
-                                                        .isUser!)
-                                                    ? Icons
-                                                        .qr_code_scanner_rounded
-                                                    : Icons.explore),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 5.h,
+                                        ),
+                                        child: TabBar(
+                                          dividerColor: Colors.transparent,
+                                          physics:
+                                              AlwaysScrollableScrollPhysics(),
+                                          controller: tabcontroller,
+                                          unselectedLabelColor:
+                                              Color(0xffFED428)
+                                                  .withOpacity(0.2),
+                                          labelColor: Color(0xffFED428),
+                                          labelStyle: TextStyle(
+                                            fontFamily: 'gilroy_regular',
+                                            fontSize: 13.sp,
+                                          ),
+                                          indicatorSize:
+                                              TabBarIndicatorSize.label,
+                                          labelPadding: EdgeInsets.zero,
+                                          indicatorPadding: EdgeInsets.zero,
+                                          indicatorColor: Colors.transparent,
+                                          indicator: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.15),
+                                            borderRadius:
+                                                BorderRadius.circular(80.r),
+                                          ),
+                                          tabs: [
+                                            Container(
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: 50.w,
+                                                vertical: 10.h,
                                               ),
-                                              Icon(
+                                              child: Icon((navigationState
+                                                      .isUser!)
+                                                  ? Icons
+                                                      .qr_code_scanner_rounded
+                                                  : Icons.explore),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: 50.w,
+                                                vertical: 10.h,
+                                              ),
+                                              child: Icon(
                                                 Icons.person,
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],

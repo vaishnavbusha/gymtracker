@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class CustomUtilities {
   static Padding prefixIcon({required String iconName}) {
@@ -9,9 +10,117 @@ class CustomUtilities {
       child: Image.asset(
         "assets/icons/$iconName.png",
         fit: BoxFit.fitHeight,
-        height: 10.h,
+        height: 8.h,
         color: const Color(0xff7e7d7d).withOpacity(0.7),
       ),
+    );
+  }
+
+  static Color hexColor({required String colorCode, double opacity = 1}) {
+    // String c =
+    //     (colorCode.contains('#')) ? colorCode.split('#').last : colorCode;
+
+    return Color(int.parse(
+            '0xff${(colorCode.contains('#')) ? colorCode.split('#').last : colorCode}'))
+        .withOpacity(opacity);
+  }
+
+  static Widget customAnimatedButton({
+    double? widthWhileAnimating,
+    required BuildContext context,
+    required bool condition,
+    required Widget trueWidget,
+    required Widget falseWidget,
+    required Function buttonAction,
+    required double buttonHeight,
+    int animatedContainerDuration = 200,
+    int animatedSwitcherDuration = 0,
+    Curve animatedContainerCurveAnimation = Curves.fastEaseInToSlowEaseOut,
+    double? buttonRadius,
+    Color buttonColor = const Color(0xffFED428),
+  }) {
+    return Ink(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(buttonRadius ?? 60.r),
+        color: buttonColor,
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(buttonRadius ?? 60.r),
+        onTap: () async => buttonAction(),
+        child: AnimatedContainer(
+          curve: animatedContainerCurveAnimation,
+          height: buttonHeight,
+          width: widthWhileAnimating ?? MediaQuery.of(context).size.width,
+          duration: Duration(milliseconds: animatedContainerDuration),
+          child: AnimatedSwitcher(
+            switchInCurve: Curves.fastEaseInToSlowEaseOut,
+            switchOutCurve: Curves.fastEaseInToSlowEaseOut,
+            duration: Duration(milliseconds: animatedSwitcherDuration),
+            child: condition ? trueWidget : falseWidget,
+          ),
+        ),
+      ),
+    );
+  }
+
+  static customToaster({
+    required BuildContext context,
+    required String toasterMessage,
+    required Color toasterBackgroundColor,
+    required Color textColor,
+    double? fontSize,
+    bool showToastAtBottom = true,
+    Duration animationDuration = const Duration(seconds: 1),
+    Duration toasterDuration = const Duration(seconds: 4),
+    Curve curve = Curves.linearToEaseOut,
+    Curve revCurve = Curves.linearToEaseOut,
+  }) {
+    showToastWidget(
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.w),
+        child: Container(
+          padding: EdgeInsets.all(10.w),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: toasterBackgroundColor,
+            borderRadius: BorderRadius.circular(
+              10.r,
+            ),
+          ),
+          child: Text(
+            toasterMessage,
+            style: TextStyle(
+              fontSize: fontSize ?? 14.sp,
+              color: textColor,
+            ),
+          ),
+        ),
+      ),
+      context: context,
+      animation: StyledToastAnimation.fade,
+      reverseAnimation: StyledToastAnimation.fade,
+      curve: curve,
+      reverseCurve: revCurve,
+      position: (showToastAtBottom)
+          ? StyledToastPosition.bottom
+          : StyledToastPosition.top,
+      animDuration: animationDuration,
+      duration: toasterDuration,
+    );
+  }
+
+  static Widget customAnimatedSwitcher({
+    // dont forget to mention Key parameters and only then the animation will function.
+    int milliSecs = 200,
+    required bool condition,
+    required Widget trueWidget,
+    required Widget falseWidget,
+  }) {
+    return AnimatedSwitcher(
+      duration: Duration(
+        milliseconds: milliSecs,
+      ),
+      child: condition ? trueWidget : falseWidget,
     );
   }
 

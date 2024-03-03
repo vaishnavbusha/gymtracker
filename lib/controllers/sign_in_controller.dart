@@ -10,6 +10,7 @@ import 'package:gymtracker/views/navigation.dart';
 import 'package:gymtracker/views/tabview_navigation.dart';
 import 'package:gymtracker/widgets/animated_route.dart';
 import 'package:gymtracker/widgets/customsnackbar.dart';
+import 'package:gymtracker/widgets/utils.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
@@ -31,7 +32,6 @@ class LoginController extends ChangeNotifier {
   bool is_login_details_uploading = false;
   bool isResetPasswordLoading = false;
   bool cv = true;
-
 
   Future loginuser({
     required BuildContext ctx,
@@ -78,30 +78,49 @@ class LoginController extends ChangeNotifier {
           e.code == 'wrong-password' ||
           e.code == 'unknown' ||
           e.code == 'invalid-credential') {
-        CustomSnackBar.buildSnackbar(
-          color: Color(0xfff34213),
+        CustomUtilities.customToaster(
           context: ctx,
-          message: 'wrong email/password, try again !',
-          textcolor: const Color(0xffFDFFFC),
-          iserror: true,
+          textColor: Colors.white,
+          showToastAtBottom: false,
+          toasterMessage: 'wrong email/password, try again !',
+          toasterBackgroundColor: Colors.black,
         );
+        // CustomSnackBar.buildSnackbar(
+        //   color: Color(0xfff34213),
+        //   context: ctx,
+        //   message: 'wrong email/password, try again !',
+        //   textcolor: const Color(0xffFDFFFC),
+        //   iserror: true,
+        // );
       } else {
-        CustomSnackBar.buildSnackbar(
-          color: Color(0xfff34213),
+        CustomUtilities.customToaster(
           context: ctx,
-          message: e.message!,
-          textcolor: const Color(0xffFDFFFC),
-          iserror: true,
+          textColor: Colors.white,
+          toasterMessage: e.message!,
+          toasterBackgroundColor: Color(0xff1A1F25),
         );
+        // CustomSnackBar.buildSnackbar(
+        //   color: Color(0xfff34213),
+        //   context: ctx,
+        //   message: e.message!,
+        //   textcolor: const Color(0xffFDFFFC),
+        //   iserror: true,
+        // );
       }
     } catch (e) {
-      CustomSnackBar.buildSnackbar(
-        color: Color(0xfff34213),
+      CustomUtilities.customToaster(
         context: ctx,
-        message: e.toString(),
-        textcolor: const Color(0xffFDFFFC),
-        iserror: true,
+        textColor: Colors.white,
+        toasterMessage: e.toString(),
+        toasterBackgroundColor: Colors.black,
       );
+      // CustomSnackBar.buildSnackbar(
+      //   color: Color(0xfff34213),
+      //   context: ctx,
+      //   message: e.toString(),
+      //   textcolor: const Color(0xffFDFFFC),
+      //   iserror: true,
+      // );
     }
     is_login_details_uploading = false;
     width = MediaQuery.of(ctx).size.width;

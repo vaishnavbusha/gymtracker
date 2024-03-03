@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, must_call_super
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, must_call_super, sort_child_properties_last
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,7 +111,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                           padding: EdgeInsets.only(right: 5.w, left: 5.w),
                           child: Center(
                             child: SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
+                              physics: AlwaysScrollableScrollPhysics(),
                               child: StreamBuilder(
                                   stream: fireBaseFireStore
                                       .collection(userModel.enrolledGym!)

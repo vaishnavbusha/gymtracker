@@ -16,6 +16,7 @@ import 'package:gymtracker/providers/providers.dart';
 import 'package:gymtracker/widgets/animated_route.dart';
 
 import 'package:gymtracker/widgets/approvals.dart';
+
 import 'package:gymtracker/widgets/generate_qr.dart';
 import 'package:gymtracker/views/signin.dart';
 
@@ -113,7 +114,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
                               'pendingRenewalsLength',
                               userModelData.pendingRenewals?.length ?? 0);
                           return SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
+                            //controller: AdjustableScrollController(),
+                            physics: AlwaysScrollableScrollPhysics(),
                             child: SafeArea(
                               child: Consumer(builder: (context, ref, child) {
                                 return Column(
